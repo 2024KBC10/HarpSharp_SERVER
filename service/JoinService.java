@@ -1,6 +1,7 @@
 package com.harpsharp.auth.service;
 
 import com.harpsharp.auth.dto.JoinDTO;
+import com.harpsharp.auth.dto.UserDTO;
 import com.harpsharp.auth.entity.UserEntity;
 import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
 import com.harpsharp.auth.repository.RefreshRepository;
@@ -18,7 +19,6 @@ public class JoinService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RefreshRepository refreshRepository;
 
     public void registerUser(JoinDTO joinDTO, String role) {
         String username = joinDTO.getUsername();
@@ -50,5 +50,4 @@ public class JoinService {
 
         userRepository.save(user);
     }
-
 }

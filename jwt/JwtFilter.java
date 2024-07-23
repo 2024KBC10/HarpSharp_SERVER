@@ -25,6 +25,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -79,5 +80,21 @@ public class JwtFilter extends OncePerRequestFilter {
         // 특정 경로에 접근 가능
 
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String[] excludePath = {"/swagger-ui/index.html",
+                "/swagger-ui/swagger-ui-standalone-preset.js",
+                "/swagger-ui/swagger-initializer.js",
+                "/swagger-ui/swagger-ui-bundle.js",
+                "/swagger-ui/swagger-ui.css",
+                "/swagger-ui/index.css",
+                "/swagger-ui/favicon-32x32.png",
+                "/swagger-ui/favicon-16x16.png",
+                "/api-docs/json/swagger-config",
+                "/api-docs/json"};
+        String path = request.getRequestURI();
+        return Arrays.stream(excludePath).anyMatch(path::startsWith);
     }
 }

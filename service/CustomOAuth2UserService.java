@@ -43,7 +43,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String email = oAuth2Response.getEmail();
 
-        UserEntity duplicated = userRepository.findByUsername(email);
+        UserEntity duplicated = userRepository
+                .findByUsername(email)
+                .orElseThrow(NullPointerException::new);
 
         if(duplicated == null){
             UserEntity userEntity = UserEntity.builder()

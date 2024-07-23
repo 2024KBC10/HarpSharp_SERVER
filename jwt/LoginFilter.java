@@ -3,12 +3,8 @@ package com.harpsharp.auth.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.dto.CustomUserDetails;
 import com.harpsharp.auth.dto.response.ApiResponse;
-import com.harpsharp.auth.entity.RefreshEntity;
-import com.harpsharp.auth.exceptions.JwtAuthenticationException;
-import com.harpsharp.auth.repository.RefreshRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 
 @RequiredArgsConstructor
@@ -49,6 +44,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        Long   userId   = customUserDetails.getUserId();
         String username = customUserDetails.getUsername();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -56,13 +53,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String accessToken   = jwtUtil.createAccessToken(username, role);
-        String refreshToken  = jwtUtil.createRefreshToken(username, role);
+        String accessToken   = jwtUtil.createAccessToken(userId, username, role);
+        String refreshToken  = jwtUtil.createRefreshToken(userId, username, role);
 
         jwtUtil.addRefreshEntity(accessToken, refreshToken);
 
+
         ApiResponse responseDTO = ApiResponse.builder()
-                .code(200)
+                .code("USER_LOGGED_IN")
                 .message(username + " logged in successfully")
                 .build();
 
@@ -73,7 +71,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader("access", accessToken);
         response.addCookie(jwtUtil.createCookie("refresh", refreshToken));
         response.setContentType("application/json");
-        response.setStatus(HttpStatus.OK.value());
+        response.setStatus(HttpStatus.CREATED.value());
         response.getWriter().write(json);
         response.getWriter().flush();
     }

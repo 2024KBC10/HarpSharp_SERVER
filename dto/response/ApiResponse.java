@@ -8,6 +8,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class ApiResponse {
-    private final int code;
+    private final String code;
     private final String message;
 }

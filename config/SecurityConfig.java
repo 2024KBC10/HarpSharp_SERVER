@@ -78,9 +78,23 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join").permitAll()
-                        .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/reissue").permitAll()
+                        .requestMatchers("/login", "/", "/join")
+                        .permitAll()
+
+                        .requestMatchers("/admin")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/reissue")
+                        .permitAll()
+
+                        .requestMatchers("/api-docs",
+                                "/swagger-ui-custom.html",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-custom-ui.html")
+                        .permitAll()
                         .anyRequest().authenticated())
                 // login filter로 등록
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
@@ -88,6 +102,8 @@ public class SecurityConfig {
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil), LogoutFilter.class)
                 .sessionManagement((session)->session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // session을 stateless로 관리
+
+
 
         return http.build();
     }

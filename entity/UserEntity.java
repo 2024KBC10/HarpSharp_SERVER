@@ -3,6 +3,7 @@ package com.harpsharp.auth.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
+@DynamicUpdate
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,12 +53,24 @@ public class UserEntity {
     @Column(name = "updated_at")
     private LocalDateTime updated_at;
 
-    @Builder
+    @Builder(toBuilder = true)
     public UserEntity(String username, String password, String email, String social_type, String role){
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
         this.social_type = social_type;
+    }
+
+    public void updateUser(UserEntity updatedUser){
+        if(updatedUser.username != null){
+            this.username = updatedUser.getUsername();
+        }
+        if(updatedUser.password != null){
+            this.password = updatedUser.getPassword();
+        }
+        if(updatedUser.email != null){
+            this.email = updatedUser.getEmail();
+        }
     }
 }

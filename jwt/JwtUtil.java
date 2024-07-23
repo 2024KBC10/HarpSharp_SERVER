@@ -40,7 +40,11 @@ public class JwtUtil {
         return refreshTokenExpireTime.toMillis();
     }
 
-    public String getUsername(String token){
+    public Long getUserId(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("user_id", Long.class);
+    }
+
+    public String getUsername(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
     }
 
@@ -57,19 +61,20 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createAccessToken(String username, String role){
-        return createJwt("access", username, role, accessTokenExpireTime.toMillis());
+    public String createAccessToken(Long userId, String username, String role){
+        return createJwt("access", userId, username, role, accessTokenExpireTime.toMillis());
     }
 
 
-    public String createRefreshToken(String username, String role){
-        return createJwt("refresh",username, role, refreshTokenExpireTime.toMillis());
+    public String createRefreshToken(Long userId, String username, String role){
+        return createJwt("refresh", userId, username, role, refreshTokenExpireTime.toMillis());
     }
 
-    protected String createJwt(String category, String username, String role, Long expiredMs){
+    protected String createJwt(String category, Long userId, String username, String role, Long expiredMs){
         return Jwts.builder()
-                .claim("category", category)
+                .claim("user_id", userId)
                 .claim("username", username)
+                .claim("category", category)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
@@ -107,4 +112,6 @@ public class JwtUtil {
     public Optional<RefreshEntity> findByAccess(String access){
         return refreshRepository.findById(access);
     }
+
+
 }
