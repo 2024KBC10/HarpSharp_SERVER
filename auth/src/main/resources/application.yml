@@ -6,7 +6,7 @@ spring:
       preferred-json-mapper: gson
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/harpsharp?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://mysql:3306/harpsharp?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
     password: wlghks24461!
   jpa:
@@ -26,5 +26,5 @@ spring:
 
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379

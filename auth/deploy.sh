@@ -16,7 +16,7 @@ fi
 cd /home/ubuntu/deploy/zip/
 
 docker build -t auth ./          # Docker Image 생성
-docker run --name mysql --network=app-network -e MYSQL_ROOT_PASSWORD=wlghks24461! -d -p 3306:3306 -v mysql-data:/var/lib/mysql mysql:latest
-docker run --name redis --network=app-network -d -p 6379:6379 -v redis-data:/data redis
-docker run --name swagger --network=app-network -d -p 80:8080 swaggerapi/swagger-ui
-docker run -d -p 4242:4242 auth  # Docker Container 생성
+docker run --name mysql --network=harpsharp -e MYSQL_ROOT_PASSWORD=wlghks24461! -d -p 3306:3306 -v mysql-data:/var/lib/mysql mysql:latest
+docker run --name redis --network=harpsharp -d -p 6379:6379 -v redis-data:/data redis
+docker run --name swagger --network=harpsharp -d -p 80:8080 swaggerapi/swagger-ui
+docker run --name auth -- network=harpsharp -d -p 4242:4242 auth  # Docker Container 생성
