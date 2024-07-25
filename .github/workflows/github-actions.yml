@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      mysql:
+      db:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: wlghks24461!
@@ -36,7 +36,7 @@ jobs:
       - name: Verify MySQL connection from host
         run: |
           sudo apt-get install -y mysql-client
-          mysql --host mysql --port 3306 -u root -p wlghks24461! -e "SHOW DATABASES"
+          mysql --host db --port 3306 -u root -p wlghks24461! -e "SHOW DATABASES"
       - name: Verify Redis connection from host
         run: |
           sudo apt-get install -y redis-tools
