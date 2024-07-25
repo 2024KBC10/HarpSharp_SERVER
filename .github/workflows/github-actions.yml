@@ -56,6 +56,10 @@ jobs:
           ./gradlew openapi3 --no-build-cache
           aws s3 cp auth/build/api-spec/HarpSharp_API_AUTH.json s3://${{secrets.AWS_BUCKET_NAME}}/HarpSharp_API_AUTH.json
         shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
