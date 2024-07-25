@@ -35,11 +35,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Verify MySQL connection from host
         run: |
-          sudo apt-get install -y mysql-client
-          sudo mysql -h 127.0.0.1 --port=3306 -u root -p wlghks24461! -e "SHOW DATABASES"
+          mysql -h 127.0.0.1 --port=3306 -u root -p wlghks24461! -e "SHOW DATABASES"
       - name: Verify Redis connection from host
         run: |
-          sudo apt-get install -y redis-tools
           sudo redis-cli -h redis -p 6379 ping
       - name: JDK 17 설정
         uses: actions/setup-java@v3
