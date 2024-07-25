@@ -20,6 +20,16 @@ jobs:
           java-version: "17"
           distribution: "corretto"
 
+      - name: Setup MySQL
+        uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: '8.0'
+
+      - name: Setup Redis
+        uses: supercharge/redis-github-action@v1.7.0
+        with:
+          redis-version: '6'
+
       - name: Application YML 생성
         run: |
           mkdir -p auth/src/main/resources
