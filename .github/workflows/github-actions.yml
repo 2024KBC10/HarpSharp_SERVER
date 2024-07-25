@@ -10,6 +10,27 @@ on:
 jobs:
   backend-CI:
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: wlghks24461!
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+        options: --entrypoint redis-server
+
+      swagger-ui:
+        image: swaggerapi/swagger-ui
+        ports:
+          - 80:8080
+
     steps:
       - name: 체크아웃
         uses: actions/checkout@v2
@@ -19,16 +40,6 @@ jobs:
         with:
           java-version: "17"
           distribution: "corretto"
-
-      - name: Setup MySQL
-        uses: shogo82148/actions-setup-mysql@v1
-        with:
-          mysql-version: '8.0'
-
-      - name: Setup Redis
-        uses: supercharge/redis-github-action@v1.7.0
-        with:
-          redis-version: '6'
 
       - name: Application YML 생성
         run: |
