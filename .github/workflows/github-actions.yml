@@ -53,17 +53,8 @@ jobs:
           mkdir -p build/generated-snippets/
           chmod +x gradlew
           ./gradlew build
-          ./gradlew openapi3
-        shell: bash
-
-      - name: OpenApi Specification 업로드 to S3
-        run: |
           ./gradlew openapi3 --no-build-cache
-          aws s3 cp auth/build/api-spec/HarpSharp_API_AUTH.json s3://${{secrets.AWS_BUCKET_NAME}}/HarpSharp_API_AUTH.json
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
+        shell: bash
 
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
@@ -84,6 +75,7 @@ jobs:
           cd before-deploy-auth && zip -r before-deploy-auth *
           cd ../ && mkdir -p deploy-auth
           mv before-deploy-auth/before-deploy-auth.zip deploy-auth/deploy-auth.zip
+          aws s3 cp auth/build/api-spec/HarpSharp_API_AUTH.json s3://${{secrets.AWS_BUCKET_NAME}}/HarpSharp_API_AUTH.json
           aws s3 cp deploy-auth/deploy-auth.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-auth.zip
           aws deploy create-deployment \
           --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
