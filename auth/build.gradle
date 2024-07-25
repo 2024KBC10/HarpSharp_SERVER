@@ -47,7 +47,7 @@ openapi3 {
 
 swaggerSources {
 	sample {
-		setInputFile(file("${project.buildDir}/api-spec/HarpSharp_API_Auth.yaml"))
+		setInputFile(file("${project.buildDir}/api-spec/HarpSharp_API_Auth.json"))
 	}
 }
 
