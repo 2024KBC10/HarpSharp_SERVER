@@ -68,6 +68,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
           mkdir -p before-deploy-auth
+          aws s3 cp auth/build/api-spec/HarpSharp_API_AUTH.json s3://${{secrets.AWS_BUCKET_NAME}}/HarpSharp_API_AUTH.json
           cp auth/build/libs/auth-*.jar before-deploy-auth/
           cp auth/scripts/*.sh before-deploy-auth/
           cp auth/appspec.yml before-deploy-auth/
@@ -75,7 +76,6 @@ jobs:
           cd before-deploy-auth && zip -r before-deploy-auth *
           cd ../ && mkdir -p deploy-auth
           mv before-deploy-auth/before-deploy-auth.zip deploy-auth/deploy-auth.zip
-          aws s3 cp auth/build/api-spec/HarpSharp_API_AUTH.json s3://${{secrets.AWS_BUCKET_NAME}}/HarpSharp_API_AUTH.json
           aws s3 cp deploy-auth/deploy-auth.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-auth.zip
           aws deploy create-deployment \
           --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
