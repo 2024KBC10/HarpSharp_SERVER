@@ -53,7 +53,7 @@ jobs:
           mkdir -p build/generated-snippets/
           chmod +x gradlew
           ./gradlew build
-          ./gradlew openapi3 --no-build-cache
+          ./gradlew openapi3
           aws s3 cp auth/build/api-spec/HarpSharp_API_AUTH.json s3://${{secrets.AWS_BUCKET_NAME}}/HarpSharp_API_AUTH.json
         shell: bash
         env:
