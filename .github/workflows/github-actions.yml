@@ -70,8 +70,8 @@ jobs:
           mkdir -p before-deploy-auth
           cp auth/build/libs/auth-*.jar before-deploy-auth/
           cp auth/scripts/*.sh before-deploy-auth/
-          cp appspec.yml before-deploy-auth/
-          cp Dockerfile before-deploy-auth/
+          cp auth/appspec.yml before-deploy-auth/
+          cp auth/Dockerfile before-deploy-auth/
           cd before-deploy-auth && zip -r before-deploy-auth *
           cd ../ && mkdir -p deploy-auth
           mv before-deploy-auth/before-deploy-auth.zip deploy-auth/deploy-auth.zip
