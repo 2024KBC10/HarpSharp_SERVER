@@ -16,6 +16,10 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: wlghks24461!
+          MYSQL_DATABASE: harpsharp
+          MYSQL_USE_SSL: false
+          MYSQL_SERVER_TIMEZONE: Asia/Seoul
+          MYSQL_CHARACTER_ENCODING: UTF-8
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -26,15 +30,17 @@ jobs:
           - 6379:6379
         options: --entrypoint redis-server
 
-      swagger-ui:
-        image: swaggerapi/swagger-ui
-        ports:
-          - 80:8080
-
     steps:
       - name: 체크아웃
         uses: actions/checkout@v2
-
+      - name: Verify MySQL connection from host
+        run: |
+          sudo apt-get install -y mysql-client
+          mysql --host mysql --port 3306 -u root -p wlghks24461! -e "SHOW DATABASES"
+      - name: Verify Redis connection from host
+        run: |
+          sudo apt-get install -y redis-tools
+          redis-cli -h redis -p 6379 ping
       - name: JDK 17 설정
         uses: actions/setup-java@v3
         with:
