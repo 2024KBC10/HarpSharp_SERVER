@@ -1,0 +1,62 @@
+name: CI/CD
+on:
+  push:
+    branches:
+      - feature/auth
+      - dev
+      - main
+  workflow_dispatch:
+
+jobs:
+  backend-CI:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v2
+
+      - name: JDK 17 설정
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "corretto"
+
+      - name: Application YML 생성
+        run: |
+          mkdir -p auth/src/main/resources
+          echo "${{ secrets.APPLICATION_AUTH_YML }}" | base64 --decode > auth/src/main/resources/application.yml
+
+      - name: Gradle 빌드
+        run: |
+          cd auth
+          mkdir -p build/generated-snippets/
+          chmod +x gradlew
+          ./gradlew build
+          ./gradlew openapi3
+        shell: bash
+
+      - name: Configure AWS credentials
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: S3에 업로드
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
+        run: |
+          mkdir -p before-deploy-auth
+          cp auth/build/libs/auth-*.jar before-deploy-auth/
+          cp scripts/*.sh before-deploy-auth/
+          cp appspec.yml before-deploy-auth/
+          cp Dockerfile before-deploy-auth/
+          cd before-deploy-auth && zip -r before-deploy-auth *
+          cd ../ && mkdir -p deploy-auth
+          mv before-deploy-auth/before-deploy-auth.zip deploy-auth/deploy-auth.zip
+          aws s3 cp deploy-auth/deploy-auth.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-auth.zip
+          aws deploy create-deployment \
+          --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=${{ secrets.AWS_BUCKET_NAME }},bundleType=zip,key=deploy.zip
