@@ -56,6 +56,15 @@ jobs:
           ./gradlew openapi3
         shell: bash
 
+      - name: OpenApi Specification 업로드 to S3
+        run: |
+          ./gradlew openapi3 --no-build-cache
+          aws s3 cp auth/build/api-spec/HarpSharp_API_AUTH.json s3://${{secrets.AWS_BUCKET_NAME}}/HarpSharp_API_AUTH.json
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         uses: aws-actions/configure-aws-credentials@v1
