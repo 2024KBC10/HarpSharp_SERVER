@@ -45,7 +45,7 @@ jobs:
       - name: Application YML 생성
         run: |
           mkdir -p auth/src/main/resources
-          echo "${{ secrets.APPLICATION_AUTH_YML }}" | base64 --decode > auth/src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_AUTH_YML }}" | base64 --decode > auth/src/main/resources/application.yaml
 
       - name: Gradle 빌드
         run: |
