@@ -1,7 +1,7 @@
 #!/bin/bash
 
-mkdir -p /home/ec2-user/deploy/zip/
-echo "> 현재 실행 중인 Docker 컨테이너 pid 확인" >> /home/ec2-user/deploy/deploy-auth.log
+mkdir -p /home/ubuntu/deploy-auth/zip/
+echo "> 현재 실행 중인 Docker 컨테이너 pid 확인" >> /home/ubuntu/deploy/deploy-auth.log
 CURRENT_PID=$(docker container ls -q)
 
 if [ -z $CURRENT_PID ]
@@ -13,7 +13,7 @@ else
   sleep 5
 fi
 
-cd /home/ubuntu/deploy/zip/
+cd /home/ubuntu/deploy-auth/zip/
 
 docker build -t auth ./          # Docker Image 생성
 docker network create harpsharp

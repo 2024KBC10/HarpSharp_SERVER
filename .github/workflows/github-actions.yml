@@ -33,19 +33,10 @@ jobs:
     steps:
       - name: 체크아웃
         uses: actions/checkout@v2
-      - name: Wait for MySQL
-        run: |
-            for i in {1..10}; do
-              if sudo mysql --host=127.0.0.1 --port=3306 -u root -p wlghks24461! -e 'SELECT 1'; then
-                break
-              fi
-              echo "Waiting for MySQL..."
-              sleep 10
-            done
       - name: Verify MySQL connection from host
         run: |
           sudo apt-get install -y mysql-client
-          sudo mysql --host 127.0.0.1 --port 3306 -u root -p wlghks24461! -e "SHOW DATABASES"
+          sudo mysql -u root -p wlghks24461! --host=127.0.0.1 --port=3306 -e "SHOW DATABASES"
       - name: Verify Redis connection from host
         run: |
           sudo apt-get install -y redis-tools

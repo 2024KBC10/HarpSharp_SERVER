@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/deploy/zip/
+    destination: /home/ubuntu/deploy-auth/zip/
     overwrite: yes
 
 permissions:
