@@ -13,6 +13,6 @@ permissions:
 
 hooks:
   ApplicationStart:
-    - location: deploy.sh
+    - location: deploy-auth.sh
       timeout: 60
       runas: ubuntu
