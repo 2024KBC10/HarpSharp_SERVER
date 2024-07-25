@@ -47,13 +47,14 @@ jobs:
           mkdir -p auth/src/main/resources
           echo "${{ secrets.APPLICATION_AUTH_YML }}" | base64 --decode > auth/src/main/resources/application.yaml
 
-      - name: Gradle 빌드
+      - name: Gradle 빌드 && API 명세서 업로드
         run: |
           cd auth
           mkdir -p build/generated-snippets/
           chmod +x gradlew
           ./gradlew build
           ./gradlew openapi3 --no-build-cache
+          aws s3 cp auth/build/api-spec/HarpSharp_API_AUTH.json s3://${{secrets.AWS_BUCKET_NAME}}/HarpSharp_API_AUTH.json
         shell: bash
 
       - name: Configure AWS credentials
@@ -68,7 +69,6 @@ jobs:
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
           mkdir -p before-deploy-auth
-          aws s3 cp auth/build/api-spec/HarpSharp_API_AUTH.json s3://${{secrets.AWS_BUCKET_NAME}}/HarpSharp_API_AUTH.json
           cp auth/build/libs/auth-*.jar before-deploy-auth/
           cp auth/scripts/*.sh before-deploy-auth/
           cp auth/appspec.yml before-deploy-auth/
