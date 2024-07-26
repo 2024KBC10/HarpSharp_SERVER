@@ -1,11 +1,7 @@
 #!/bin/bash
 
 mkdir -p /home/ubuntu/deploy-auth/zip/
-
 docker rm  -f $(docker ps -a -q)
-docker rmi -f $(docker images -q)
-
-sudo service docker restart
 
 cd /home/ubuntu/deploy-auth/zip/
 
