@@ -52,10 +52,9 @@ jobs:
           cd auth
           mkdir -p build/generated-snippets/
           chmod +x gradlew
-          ./gradlew build
+          ./gradlew clean build -p auth
           ./gradlew openapi3 --no-build-cache
-          FILE_PATH=$(find . -name HarpSharp_API_Auth.json)
-          aws s3 cp $FILE_PATH s3://${{secrets.AWS_BUCKET_NAME}}/HarpSharp_API_Auth.json
+
         shell: bash
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
@@ -73,6 +72,8 @@ jobs:
       - name: S3에 업로드
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
+          FILE_PATH=$(find . -name HarpSharp_API_Auth.json)
+          aws s3 cp $FILE_PATH s3://${{secrets.AWS_BUCKET_NAME}}/HarpSharp_API_Auth.json
           mkdir -p before-deploy-auth
           cp auth/build/libs/auth-*.jar before-deploy-auth/
           cp auth/scripts/*.sh before-deploy-auth/
