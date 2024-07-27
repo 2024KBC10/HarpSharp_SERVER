@@ -45,9 +45,9 @@ jobs:
       - name: YML 파일 생성
         run: |
           mkdir -p auth/src/main/resources
-          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > src/main/resources/application.yaml
-          echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > src/main/resources/application-prod.yaml
-          echo "${{ secrets.DOCKER_COMPOSE_AUTH    }}" | base64 --decode > ./docker-compose.yml
+          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > auth/src/main/resources/application.yaml
+          echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > auth/src/main/resources/application-prod.yaml
+          echo "${{ secrets.DOCKER_COMPOSE_AUTH    }}" | base64 --decode > auth/docker-compose.yml
       - name: Gradle 빌드 && API 명세서 업로드
         run: |
           mkdir -p auth/build/generated-snippets/
