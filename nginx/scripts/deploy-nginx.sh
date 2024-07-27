@@ -1,10 +1,8 @@
 #!/bin/bash
 
-mkdir -p /home/ubuntu/deploy-auth/zip/
+mkdir -p /home/ubuntu/deploy-nginx/zip/
 
-docker rm  -f $(docker ps -a -q)
-
-cd /home/ubuntu/deploy-auth/zip/
+cd /home/ubuntu/deploy-nginx/zip/
 
 # 네트워크가 존재하는지 확인
 if [ -z "$(docker network ls | grep harpsharp)" ]
