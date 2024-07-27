@@ -100,11 +100,10 @@ jobs:
           mv before-deploy-nginx/before-deploy-nginx.zip deploy-nginx/deploy-nginx.zip
           aws s3 cp deploy-nginx/deploy-nginx.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-nginx.zip
           
-          DEPLOYMENT_JSON=$(aws deploy list-deployments \
+          DEPLOYMENT_ID=$(aws deploy list-deployments \
           --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
           --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
           --query "deployments[0]")
-          DEPLOYMENT_ID=$(echo $DEPLOYMENT_JSON | jq -r '.deploymentId')
           aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID
           
           aws deploy create-deployment \
