@@ -1,10 +1,11 @@
 ## 🍀 HarpSharp_SERVER
-HarpSharp backend입니다.
-Auth/Board/TODO로 구성되어 있습니다.
-각각의 서버들은 AWS EC2 환경에서 도커라이즈화 시켜 배포 중입니다.
+HarpSharp backend입니다. <br>
+Auth/Board/TODO로 구성되어 있습니다. <br>
+각각의 서버들은 AWS EC2 환경에서 도커라이즈화 시켜 배포 중입니다. <br>
 
 ## 구성도
-![배포 구성도 drawio (2)](https://github.com/user-attachments/assets/c2697fe1-96ae-4a6e-bb92-9a34cf6cff1d)
+![배포 구성도 drawio (3)](https://github.com/user-attachments/assets/4498d7f3-23cb-4b54-84c9-1ccd05f7451b)
+
 
 
 ## API
