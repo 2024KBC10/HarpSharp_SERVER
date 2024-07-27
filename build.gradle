@@ -41,6 +41,12 @@ subprojects {
     // 관리하는 모듈의 공통 dependencies
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        testImplementation 'org.projectlombok:lombok:1.18.20'
+        testImplementation "com.epages:restdocs-api-spec-mockmvc:${restdocsApiSpecVersion}"
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.springframework.security:spring-security-test'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     }
 
     test {
