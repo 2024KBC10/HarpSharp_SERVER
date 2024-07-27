@@ -69,7 +69,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: S3에 업로드(Auth)
-        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/feature/auth'}}
         run: |
           FILE_PATH=$(find . -name HarpSharp_API_Auth.json)
           mkdir -p before-deploy-auth
