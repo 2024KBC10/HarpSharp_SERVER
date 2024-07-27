@@ -94,7 +94,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run : |
           mkdir -p before-deploy-nginx
-          cp -r nginx before-deploy-nginx/
+          cp -r ./nginx before-deploy-nginx/
           cd before-deploy-nginx && zip -r before-deploy-nginx *
           cd ../ && mkdir -p deploy-nginx
           mv before-deploy-nginx/before-deploy-nginx.zip deploy-nginx/deploy-nginx.zip
