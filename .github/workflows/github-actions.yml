@@ -103,7 +103,7 @@ jobs:
           DEPLOYMENT_ID=$(aws deploy list-deployments \
           --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
           --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
-          --query "deployments[0]")
+          --query "deployments[0]" --output text)
           aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID
           
           aws deploy create-deployment \
