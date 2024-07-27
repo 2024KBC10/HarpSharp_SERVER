@@ -106,8 +106,8 @@ jobs:
           --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
           --query "deployments[0]")
           DEPLOYMENT_ID=$(echo DEPLOYMENT_JSON | jq -r '.deploymentId')
-          echo DEPOLYMENT_JSON
-          echo DEPLOYMENT_ID
+          echo $DEPOLYMENT_JSON
+          echo $DEPLOYMENT_ID
           aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID
           
           aws deploy create-deployment \
