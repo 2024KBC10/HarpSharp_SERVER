@@ -3,6 +3,7 @@
 mkdir -p /home/ubuntu/deploy-auth/zip/
 
 docker rm  -f $(docker ps -a -q)
+docker rmi auth
 
 cd /home/ubuntu/deploy-auth/zip/
 
