@@ -40,9 +40,6 @@ subprojects {
 
     // 관리하는 모듈의 공통 dependencies
     dependencies {
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
-        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     }
 
     test {
