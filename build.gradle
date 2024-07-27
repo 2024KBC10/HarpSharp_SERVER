@@ -40,6 +40,7 @@ subprojects {
 
     // 관리하는 모듈의 공통 dependencies
     dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
     }
 
     test {
