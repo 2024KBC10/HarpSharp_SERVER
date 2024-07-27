@@ -1,0 +1,3 @@
+rootProject.name = 'harpsharp-backend'
+include 'auth'
+include 'board'

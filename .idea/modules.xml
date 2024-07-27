@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/harpsharp.iml" filepath="$PROJECT_DIR$/.idea/harpsharp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auth/harpsharp-backend.auth.main.iml" filepath="$PROJECT_DIR$/.idea/modules/auth/harpsharp-backend.auth.main.iml" />
     </modules>
   </component>
 </project>
