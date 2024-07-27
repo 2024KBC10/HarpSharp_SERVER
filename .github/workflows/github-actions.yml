@@ -47,7 +47,6 @@ jobs:
           mkdir -p auth/src/main/resources
           echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > auth/src/main/resources/application.yaml
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > auth/src/main/resources/application-prod.yaml
-          echo "${{ secrets.DOCKER_COMPOSE_AUTH    }}" | base64 --decode > auth/docker-compose.yml
       - name: Gradle 빌드 && API 명세서 업로드
         run: |
           mkdir -p auth/build/generated-snippets/
@@ -106,7 +105,6 @@ jobs:
           --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
           --query "deployments[0]")
           DEPLOYMENT_ID=$(cat $DEPLOYMENT_JSON | jq -r '.deploymentId')
-          echo $DEPLOYMENT_ID
           aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID
           
           aws deploy create-deployment \
