@@ -1,0 +1,59 @@
+version: "3"
+services:
+  mysql:
+    container_name: mysql
+    image: mysql/mysql-server:8.0
+    environment:
+      MYSQL_DATABASE: harpsharp
+      MYSQL_ROOT_PASSWORD: wlghks24461!
+      MYSQL_ROOT_HOST: '%'
+      TZ: 'Asia/Seoul'
+    command:
+      - "mysqld"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    expose:
+      - "3306"
+    networks:
+      - harpsharp
+
+  redis:
+    container_name: redis
+    image: redis
+    expose:
+      - "6379"
+    networks:
+      - harpsharp
+
+  auth:
+    container_name: auth
+    restart: on-failure
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    expose:
+      - "8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/harpsharp?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "wlghks24461!"
+    networks:
+      - harpsharp
+    depends_on:
+      - mysql
+      - redis
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    volumes:
+      - ./HarpSharp_API_Auth.json:/HarpSharp_API_Auth.json
+    expose:
+      - "8000"
+    environment:
+      SWAGGER_JSON: ./HarpSharp_API_Auth.json
+    networks:
+      - harpsharp
+
+networks:
+  harpsharp:
+    external: true

@@ -29,7 +29,14 @@ public class ReissueController {
     @PostMapping("/reissue")
     public ResponseEntity<ApiResponse> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String refreshToken = null;
-        String accessToken  = request.getHeader("access");
+        String accessToken  = request.getHeader("Authorization");
+
+        if(accessToken == null || !accessToken.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Invalid token");
+        }
+
+        accessToken = accessToken.substring("Bearer ".length());
+
         Cookie[] cookies = request.getCookies();
 
         if(cookies == null) {
@@ -78,7 +85,7 @@ public class ReissueController {
                             .build());
         }
 
-        Boolean isExist = jwtUtil.existsByAccess(accessToken);
+        Boolean isExist = jwtUtil.existsById(jwtUtil.getUserId(accessToken));
 
         if(!isExist){
             //return new ResponseEntity<>("Refresh token does not exist", HttpStatus.BAD_REQUEST);
@@ -97,10 +104,10 @@ public class ReissueController {
         String newRefresh = jwtUtil.createRefreshToken(userId, username, role);
 
         // DB에 존재하는 Refresh 토큰 삭제 후 재발급
-        jwtUtil.deleteByAccess(accessToken);
-        jwtUtil.addRefreshEntity(newAccess, newRefresh);
+        jwtUtil.deleteById(userId);
+        jwtUtil.addRefreshEntity(userId, newRefresh);
 
-        response.setHeader("access", newAccess);
+        response.setHeader("Authorization", "Bearer " + newAccess);
         response.addCookie(jwtUtil.createCookie("refresh", newRefresh));
 
         ObjectMapper mapper = new ObjectMapper();

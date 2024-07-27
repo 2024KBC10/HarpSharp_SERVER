@@ -72,7 +72,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String accessToken   = jwtUtil.createAccessToken(userId, username, role);
         String refreshToken  = jwtUtil.createRefreshToken(userId, username, role);
 
-        jwtUtil.addRefreshEntity(accessToken, refreshToken);
+        jwtUtil.addRefreshEntity(userId, refreshToken);
 
 
         ApiResponse responseDTO = ApiResponse.builder()
@@ -84,7 +84,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String json = mapper.writeValueAsString(responseDTO);
 
 
-        response.setHeader("access", accessToken);
+        response.setHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(jwtUtil.createCookie("refresh", refreshToken));
         response.setContentType("application/json");
         response.setStatus(HttpStatus.CREATED.value());

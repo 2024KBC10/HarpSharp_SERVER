@@ -6,13 +6,13 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface RefreshRepository extends CrudRepository<RefreshEntity, String> {
+public interface RefreshRepository extends CrudRepository<RefreshEntity, Long> {
     @Transactional
-    boolean existsById(String access);
+    boolean existsById(Long userId);
 
     @Transactional
-    void deleteById(String refresh);
+    void deleteById(Long userId);
 
     @Transactional
-    Optional<RefreshEntity> findById(String access);
+    Optional<RefreshEntity> findById(Long userId);
 }

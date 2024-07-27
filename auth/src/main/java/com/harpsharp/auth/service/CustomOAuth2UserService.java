@@ -45,7 +45,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         UserEntity duplicated = userRepository
                 .findByUsername(email)
-                .orElseThrow(NullPointerException::new);
+                .orElseThrow(IllegalArgumentException::new);
 
         if(duplicated == null){
             UserEntity userEntity = UserEntity.builder()

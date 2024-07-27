@@ -63,7 +63,7 @@ public class JwtUtil {
     }
 
     public String createAccessToken(Long userId, String username, String role){
-        return createJwt("access", userId, username, role, accessTokenExpireTime.toMillis());
+        return createJwt("Authorization", userId, username, role, accessTokenExpireTime.toMillis());
     }
 
 
@@ -92,26 +92,26 @@ public class JwtUtil {
                 .toCookie();
     }
 
-    public void addRefreshEntity(String access, String refresh){
+    public void addRefreshEntity(Long userId, String refresh){
         RefreshEntity refreshEntity = RefreshEntity
                 .builder()
-                .accessToken(access)
+                .userId(userId)
                 .refreshToken(refresh)
                 .build();
 
         refreshRepository.save(refreshEntity);
     }
 
-    public void deleteByAccess(String access){
-        refreshRepository.deleteById(access);
+    public void deleteById(Long userId){
+        refreshRepository.deleteById(userId);
     }
 
-    public Boolean existsByAccess(String access){
-        return refreshRepository.existsById(access);
+    public Boolean existsById(Long userId){
+        return refreshRepository.existsById(userId);
     }
 
-    public Optional<RefreshEntity> findByAccess(String access){
-        return refreshRepository.findById(access);
+    public Optional<RefreshEntity> findByAccess(Long userId){
+        return refreshRepository.findById(userId);
     }
 
     public void clearRefreshRepository(){

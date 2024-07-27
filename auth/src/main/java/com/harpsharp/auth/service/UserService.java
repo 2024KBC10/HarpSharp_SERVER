@@ -59,12 +59,13 @@ public class UserService {
                 .email(updatedEmail)
                 .build();
 
-        if(updatedUser == null) throw new NullPointerException();
+        if(updatedUser == null) throw new IllegalArgumentException();
 
-        userRepository.save(updatedUser);
+        ;
+        userRepository.save(existUser.updateUser(updatedUser));
     }
 
-    public void deleteUser(Long userId){
+    public void deleteById(Long userId){
         userRepository.deleteById(userId);
     }
 }

@@ -62,7 +62,7 @@ public class UserEntity {
         this.social_type = social_type;
     }
 
-    public void updateUser(UserEntity updatedUser){
+    public UserEntity updateUser(UserEntity updatedUser){
         if(updatedUser.username != null){
             this.username = updatedUser.getUsername();
         }
@@ -72,5 +72,7 @@ public class UserEntity {
         if(updatedUser.email != null){
             this.email = updatedUser.getEmail();
         }
+
+        return this;
     }
 }

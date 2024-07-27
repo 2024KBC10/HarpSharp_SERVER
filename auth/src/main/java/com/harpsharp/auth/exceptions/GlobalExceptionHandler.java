@@ -49,4 +49,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(e.getMessage()).build();
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    private ResponseEntity<ErrorResponse> handlerIllegalArgumentException(ExpiredJwtException e) {
+        log.error(e.getMessage(), e);
+        final ErrorResponse errorResponse = ErrorResponse.builder()
+                .code("IS_NULL")
+                .message("유효하지 않은 값 입니다.")
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
 }

@@ -1,15 +1,22 @@
 #!/bin/bash
 
 mkdir -p /home/ubuntu/deploy-auth/zip/
+
 docker rm  -f $(docker ps -a -q)
 
 cd /home/ubuntu/deploy-auth/zip/
 
-docker build -t auth ./          # Docker Image 생성
+# 네트워크가 존재하는지 확인
+if [ -z "$(docker network ls | grep harpsharp)" ]
+then
+    echo "harpsharp 네트워크를 생성합니다."
+    docker network create harpsharp
+else
+    echo "harpsharp 네트워크가 이미 존재합니다."
+fi
 
-aws s3 cp s3://haaaarp/HarpSharp_API_Auth.json ./
+# 실행 중인 컨테이너의 포트를 kill
+echo "실행 중인 컨테이너의 포트를 kill합니다."
+docker ps -q | xargs -r docker kill
 
-docker run --name db --network=harpsharp -e MYSQL_ROOT_PASSWORD=wlghks24461! -d -p 3306:3306 -v mysql-data:/var/lib/mysql mysql:latest
-docker run --name redis --network=harpsharp -d -p 6379:6379 -v redis-data:/data redis
-docker run -d -p 80:8000 --name swagger -e SWAGGER_JSON=/tmp/HarpSharp_API_Auth.json -v ./:/tmp swaggerapi/swagger-ui
-docker run --name auth --network=harpsharp -d -p 8080:8080 auth  # Docker Container 생성
+docker-compose up --build -d

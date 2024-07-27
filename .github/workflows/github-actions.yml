@@ -42,18 +42,18 @@ jobs:
           java-version: "17"
           distribution: "corretto"
 
-      - name: Application YML 생성
+      - name: YML 파일 생성
         run: |
           mkdir -p auth/src/main/resources
-          echo "${{ secrets.APPLICATION_AUTH_YML }}" | base64 --decode > auth/src/main/resources/application.yaml
-
+          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > src/main/resources/application.yaml
+          echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > src/main/resources/application-prod.yaml
+          echo "${{ secrets.DOCKER_COMPOSE_AUTH    }}" | base64 --decode > ./docker-compose.yml
       - name: Gradle 빌드 && API 명세서 업로드
         run: |
-          cd auth
-          mkdir -p build/generated-snippets/
-          chmod +x gradlew
-          ./gradlew clean build -p auth
-          ./gradlew openapi3 --no-build-cache
+          mkdir -p auth/build/generated-snippets/
+          chmod +x auth/gradlew
+          auth/gradlew build --no-build-cache --warning-mode all
+          auth/gradlew openapi3 --no-build-cache --warning-mode all
 
         shell: bash
         env:
@@ -73,12 +73,13 @@ jobs:
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
           FILE_PATH=$(find . -name HarpSharp_API_Auth.json)
-          aws s3 cp $FILE_PATH s3://${{secrets.AWS_BUCKET_NAME}}/HarpSharp_API_Auth.json
           mkdir -p before-deploy-auth
           cp auth/build/libs/auth-*.jar before-deploy-auth/
           cp auth/scripts/*.sh before-deploy-auth/
           cp auth/appspec.yml before-deploy-auth/
           cp auth/Dockerfile before-deploy-auth/
+          cp auth/docker-compose.yml before-deploy-auth/
+          cp $FILE_PATH before-deploy-auth/
           cd before-deploy-auth && zip -r before-deploy-auth *
           cd ../ && mkdir -p deploy-auth
           mv before-deploy-auth/before-deploy-auth.zip deploy-auth/deploy-auth.zip

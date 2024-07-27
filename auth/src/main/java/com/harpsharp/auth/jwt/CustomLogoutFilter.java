@@ -24,18 +24,23 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
     private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         //path and method verify
-        String accessToken = request.getHeader("access");
+        String accessToken = request.getHeader("Authorization");
         String requestUri = request.getRequestURI();
-        if(accessToken == null){
+
+        if(accessToken == null || !accessToken.startsWith("Bearer ")){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        }
-
-
-        if (!requestUri.matches("^\\/logout$")) {
-
             filterChain.doFilter(request, response);
             return;
         }
+
+        accessToken = accessToken.substring("Bearer ".length());
+        Long userId = jwtUtil.getUserId(accessToken);
+
+        if (!requestUri.matches("^\\/logout$")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String requestMethod = request.getMethod();
         if (!requestMethod.equals("POST")) {
 
@@ -46,17 +51,16 @@ public class CustomLogoutFilter extends GenericFilterBean {
         //get refresh token
         String refresh = null;
         Cookie[] cookies = request.getCookies();
+
         for (Cookie cookie : cookies) {
 
             if (cookie.getName().equals("refresh")) {
-
                 refresh = cookie.getValue();
             }
         }
 
         //refresh null check
         if (refresh == null) {
-
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
@@ -81,7 +85,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         }
 
         //DB에 저장되어 있는지 확인
-        Boolean isExist = jwtUtil.existsByAccess(accessToken);
+        Boolean isExist = jwtUtil.existsById(userId);
 
         if (!isExist) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -90,7 +94,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         //로그아웃 진행
         //Refresh 토큰 DB에서 제거
-        jwtUtil.deleteByAccess(accessToken);
+        jwtUtil.deleteById(userId);
 
         //Refresh 토큰 Cookie 값 0
         Cookie cookie = new Cookie("refresh", null);

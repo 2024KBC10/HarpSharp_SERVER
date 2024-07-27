@@ -13,13 +13,13 @@ import org.springframework.data.redis.core.RedisHash;
 public class RefreshEntity {
 
     @Id
-    private String access;
+    private Long userId;
     private String refresh;
 
 
     @Builder
-    public RefreshEntity(String accessToken, String refreshToken){
-        this.access  = accessToken;
+    public RefreshEntity(Long userId, String refreshToken){
+        this.userId  = userId;
         this.refresh = refreshToken;
     }
 }

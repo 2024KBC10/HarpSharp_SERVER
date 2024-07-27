@@ -90,7 +90,7 @@ class AuthApplicationTests {
 				.andExpect(status().isCreated())
 				.andReturn();
 
-		accessToken  = result.getResponse().getHeader("access");
+		accessToken  = result.getResponse().getHeader("Authorization").split(" ")[1];
 		refreshToken = result.getResponse().getCookie("refresh");
 		System.out.println("accessToken = " + accessToken);
 		System.out.println("refreshToken = " + refreshToken);
@@ -159,7 +159,7 @@ class AuthApplicationTests {
 								fieldWithPath("message").type(JsonFieldType.STRING)
 										.description("상세 메시지")
 						),
-						responseHeaders(headerWithName("access").description("발급된 access token"))
+						responseHeaders(headerWithName("Authorization").description("발급된 access token"))
 				));
 	}
 
@@ -180,7 +180,7 @@ class AuthApplicationTests {
 
 		this.mockMvc.perform(
 						patch("/user/update")
-								.header("access", accessToken)
+								.header("Authorization", "Bearer " + accessToken)
 								.cookie(refreshToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(updateJson))
@@ -191,7 +191,7 @@ class AuthApplicationTests {
 								fieldWithPath("password").description("새 비밀번호 (if null: 변경 X)"),
 								fieldWithPath("email").description("새 이메일 (if null: 변경 X)")
 						),
-						requestHeaders(headerWithName("access").description("유효한 access token")),
+						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						requestCookies(cookieWithName("refresh").description("유효한 refresh token")),
 						responseFields(
 								fieldWithPath("code").type(JsonFieldType.STRING)
@@ -199,7 +199,7 @@ class AuthApplicationTests {
 								fieldWithPath("message").type(JsonFieldType.STRING)
 										.description("상세 메시지")
 						),
-						responseHeaders(headerWithName("access").description("재발급된 access token"))
+						responseHeaders(headerWithName("Authorization").description("재발급된 access token"))
 				));
 	}
 
@@ -210,12 +210,12 @@ class AuthApplicationTests {
 		login();
 		this.mockMvc.perform(
 				delete("/user/delete")
-						.header("access", accessToken)
+						.header("Authorization", "Bearer " + accessToken)
 						.cookie(refreshToken)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andDo(document("Delete", // 문서화할 때 사용할 경로와 이름
-						requestHeaders(headerWithName("access").description("유효한 access token")),
+						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						requestCookies(cookieWithName("refresh").description("유효한 refresh token")),
 						responseFields(
 								fieldWithPath("code").type(JsonFieldType.STRING)

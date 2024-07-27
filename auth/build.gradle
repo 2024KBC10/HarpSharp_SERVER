@@ -1,5 +1,3 @@
-import org.hidetake.gradle.swagger.generator.GenerateSwaggerUI
-import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 buildscript{
 	ext {
@@ -36,7 +34,10 @@ repositories {
 }
 
 openapi3 {
-	server = "http://localhost:8080"
+	servers = [
+			{ url = "http://localhost:8080" },
+			{ url = "http://harpsharp.com/swagger" }
+	]
 	title = "Harp Sharp Auth API"
 	description = "Harp Sharp 회원가입, 회원 정보 수정, JWT 인증/인가와 관련된 API입니다."
 	version = "1.0.0"
@@ -78,31 +79,15 @@ dependencies {
 	swaggerUI 'org.webjars:swagger-ui:4.11.1'
 }
 
+bootJar {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
 
-tasks.withType(GenerateSwaggerUI) {
-	dependsOn 'openapi3'
-}
 
-tasks.register('copySwaggerUI', Copy){
-	dependsOn 'generateSwaggerUISample'
-	def generateSwaggerUISampleTask = tasks.named('generatedSwaggerUISample', GenerateSwaggerUI).get()
-	from("${generateSwaggerUISampleTask.outputDir}")
-	into(layout.buildDirectory.dir("/resources/main/static/docs").get().asFile)
-}
-
-tasks.withType(Jar) {
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-	manifest {
-		attributes["Main-Class"] = "com.example.harpsharp.AuthApplication"
-	}
-}
-
-bootJar {
-	dependsOn generateSwaggerUISample
-}
 
 
 
