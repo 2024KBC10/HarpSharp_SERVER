@@ -1,15 +1,10 @@
 package com.harpsharp.auth.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.harpsharp.auth.dto.JoinDTO;
 import com.harpsharp.auth.dto.RedisDTO;
 import com.harpsharp.auth.dto.response.ApiResponse;
 import com.harpsharp.auth.jwt.JwtUtil;
 import io.jsonwebtoken.JwtException;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

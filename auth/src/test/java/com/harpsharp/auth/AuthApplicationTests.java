@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -34,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @RequiredArgsConstructor
+@ComponentScan("com.harpsharp.auth")
 class AuthApplicationTests {
 	@Autowired
 	private MockMvc mockMvc;

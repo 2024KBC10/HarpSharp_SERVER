@@ -1,7 +1,6 @@
 package com.harpsharp.auth.jwt;
 
 import jakarta.servlet.http.Cookie;
-import org.springframework.stereotype.Component;
 
 public class CookieBuilder {
     private final String name;

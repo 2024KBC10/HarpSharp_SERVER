@@ -50,7 +50,7 @@ services:
     expose:
       - "8000"
     environment:
-      - SWAGGER_JSON=mnt/HarpSharp_API_Auth.json
+      - SWAGGER_JSON=mnt/auth.json
     networks:
       - harpsharp
 

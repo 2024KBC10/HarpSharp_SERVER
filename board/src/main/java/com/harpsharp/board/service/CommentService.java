@@ -1,6 +1,7 @@
 package com.harpsharp.board.service;
 
 import com.harpsharp.infra_rds.entity.Comment;
+import com.harpsharp.infra_rds.entity.Post;
 import com.harpsharp.infra_rds.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,8 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public List<Comment> getCommentsByPostId(Long postId) {
-        return commentRepository.findByPostId(postId);
+    public List<Comment> getCommentsByPost(Post post) {
+        return commentRepository.findByPost(post);
     }
 
     public Optional<Comment> getCommentById(Long id) {

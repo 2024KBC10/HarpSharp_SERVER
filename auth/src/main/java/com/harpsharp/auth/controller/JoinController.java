@@ -3,9 +3,7 @@ package com.harpsharp.auth.controller;
 import com.harpsharp.auth.dto.JoinDTO;
 import com.harpsharp.auth.dto.response.ApiResponse;
 import com.harpsharp.auth.service.JoinService;
-import io.swagger.v3.oas.annotations.Operation;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

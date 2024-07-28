@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Component
+@Primary
 public class JwtUtil {
     private final SecretKey secretKey;
     private final Duration accessTokenExpireTime;

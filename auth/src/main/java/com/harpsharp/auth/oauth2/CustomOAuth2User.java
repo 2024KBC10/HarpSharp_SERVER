@@ -4,11 +4,13 @@ import com.harpsharp.infra_rds.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+@Component
 @RequiredArgsConstructor
 public class CustomOAuth2User implements OAuth2User {
     private final UserDTO userDTO;

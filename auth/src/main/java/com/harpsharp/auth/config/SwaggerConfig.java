@@ -13,7 +13,7 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         Info info = new Info()
                 .version("v1.0") //버전
-                .title("Harp Sharp_Auth") //이름
+                .title("Harp Sharp Auth Server") //이름
                 .description("회원 서비스 및 인증/인가 API"); //설명
         return new OpenAPI()
                 .info(info);

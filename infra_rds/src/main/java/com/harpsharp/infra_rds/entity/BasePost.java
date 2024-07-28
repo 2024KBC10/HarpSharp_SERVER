@@ -3,12 +3,14 @@ package com.harpsharp.infra_rds.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @MappedSuperclass
 public abstract class BasePost {
     @NotNull
