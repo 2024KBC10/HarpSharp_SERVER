@@ -1,12 +1,14 @@
 package com.harpsharp.auth.repository;
 
-import com.harpsharp.auth.entity.RefreshEntity;
+import com.harpsharp.auth.entity.RefreshToken;
 import jakarta.transaction.Transactional;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-public interface RefreshRepository extends CrudRepository<RefreshEntity, Long> {
+@Repository
+public interface RefreshRepository extends CrudRepository<RefreshToken, Long> {
     @Transactional
     boolean existsById(Long userId);
 
@@ -14,5 +16,5 @@ public interface RefreshRepository extends CrudRepository<RefreshEntity, Long> {
     void deleteById(Long userId);
 
     @Transactional
-    Optional<RefreshEntity> findById(Long userId);
+    Optional<RefreshToken> findById(Long userId);
 }

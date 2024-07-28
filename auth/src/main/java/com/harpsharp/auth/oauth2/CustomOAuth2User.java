@@ -1,6 +1,6 @@
 package com.harpsharp.auth.oauth2;
 
-import com.harpsharp.auth.dto.UserDTO;
+import com.harpsharp.infra_rds.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;

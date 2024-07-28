@@ -1,25 +1,17 @@
 package com.harpsharp.auth.controller;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.harpsharp.auth.dto.RedisDTO;
-import com.harpsharp.auth.dto.UserDTO;
 import com.harpsharp.auth.dto.response.ApiResponse;
 import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.harpsharp.infra_rds.dto.UserDTO;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @RestController
 @RequiredArgsConstructor

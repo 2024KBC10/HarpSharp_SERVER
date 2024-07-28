@@ -1,36 +1,9 @@
-
-buildscript{
-	ext {
-		restdocsApiSpecVersion = '0.18.2'
-	}
-}
-
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.1'
 	id 'io.spring.dependency-management' version '1.1.5'
 	id 'com.epages.restdocs-api-spec' version "${restdocsApiSpecVersion}"
 	id 'org.hidetake.swagger.generator' version '2.18.2'
-}
-
-
-group = 'com.harpsharp'
-version = '0.0.1-SNAPSHOT'
-
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
-
-repositories {
-	mavenCentral()
 }
 
 openapi3 {
@@ -41,53 +14,30 @@ openapi3 {
 	title = "Harp Sharp Auth API"
 	description = "Harp Sharp 회원가입, 회원 정보 수정, JWT 인증/인가와 관련된 API입니다."
 	version = "1.0.0"
-	outputFileNamePrefix = 'HarpSharp_API_Auth'
 	format = 'json'
 }
 
 
 swaggerSources {
 	sample {
-		setInputFile(file("${project.buildDir}/api-spec/HarpSharp_API_Auth.json"))
+		setInputFile(file("${project.buildDir}/api-spec/auth.json"))
 	}
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation project(':infra_rds')
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	annotationProcessor 'org.projectlombok:lombok'
-
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 	swaggerUI 'org.webjars:swagger-ui:4.11.1'
-
-	testImplementation 'org.projectlombok:lombok:1.18.20'
-	testImplementation "com.epages:restdocs-api-spec-mockmvc:${restdocsApiSpecVersion}"
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 bootJar {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-
-tasks.named('test') {
-	useJUnitPlatform()
-}
-
 
 
 

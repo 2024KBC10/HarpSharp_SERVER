@@ -1,30 +1,21 @@
 package com.harpsharp.auth.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.dto.CustomUserDetails;
-import com.harpsharp.auth.dto.response.ApiResponse;
-import com.harpsharp.auth.entity.UserEntity;
+import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.auth.exceptions.JwtAuthenticationException;
-import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
-import com.harpsharp.auth.oauth2.CustomOAuth2User;
-import com.harpsharp.auth.dto.UserDTO;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Arrays;
 
 @Slf4j
@@ -70,12 +61,12 @@ public class JwtFilter extends OncePerRequestFilter {
         String username = jwtUtil.getUsername(accessToken);
         String role = jwtUtil.getRole(accessToken);
 
-        UserEntity userEntity = UserEntity.builder()
+        User user = User.builder()
                 .username(username)
                 .role(role)
                 .build();
 
-        CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
+        CustomUserDetails customUserDetails = new CustomUserDetails(user);
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
         // 유저 세션 생성

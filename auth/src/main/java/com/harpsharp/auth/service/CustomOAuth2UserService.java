@@ -1,12 +1,12 @@
 package com.harpsharp.auth.service;
 
-import com.harpsharp.auth.dto.*;
 import com.harpsharp.auth.dto.response.GoogleResponse;
 import com.harpsharp.auth.dto.response.KaKaoResponse;
 import com.harpsharp.auth.dto.response.NaverResponse;
-import com.harpsharp.auth.entity.UserEntity;
+import com.harpsharp.infra_rds.dto.UserDTO;
+import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.auth.oauth2.*;
-import com.harpsharp.auth.repository.UserRepository;
+import com.harpsharp.infra_rds.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -43,19 +43,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String email = oAuth2Response.getEmail();
 
-        UserEntity duplicated = userRepository
+        User duplicated = userRepository
                 .findByUsername(email)
                 .orElseThrow(IllegalArgumentException::new);
 
         if(duplicated == null){
-            UserEntity userEntity = UserEntity.builder()
+            User user = User.builder()
                     .username(oAuth2Response.getUsername())
                     .email(email)
                     .role("ROLE_USER")
                     .social_type(registrationId)
                     .build();
 
-            userRepository.save(userEntity);
+            userRepository.save(user);
 
             UserDTO userDTO = UserDTO.builder()
                     .username(oAuth2Response.getUsername())

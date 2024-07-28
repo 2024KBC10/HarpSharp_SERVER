@@ -1,19 +1,18 @@
 package com.harpsharp.auth.dto;
 
-import com.harpsharp.auth.entity.UserEntity;
+import com.harpsharp.infra_rds.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private final UserEntity userEntity;
+    private final User user;
 
     @Override
     public boolean isAccountNonExpired() {
@@ -42,7 +41,7 @@ public class CustomUserDetails implements UserDetails {
         collection.add(new GrantedAuthority(){
             @Override
             public String getAuthority(){
-                return userEntity.getRole();
+                return user.getRole();
             }
         });
         return collection;
@@ -50,15 +49,15 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userEntity.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userEntity.getUsername();
+        return user.getUsername();
     }
 
     public Long getUserId() {
-        return userEntity.getUser_id();
+        return user.getUser_id();
     }
 }

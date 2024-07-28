@@ -1,25 +1,25 @@
 package com.harpsharp.auth.service;
 
 import com.harpsharp.auth.dto.JoinDTO;
-import com.harpsharp.auth.dto.UserDTO;
-import com.harpsharp.auth.entity.UserEntity;
 import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
-import com.harpsharp.auth.repository.RefreshRepository;
-import com.harpsharp.auth.repository.UserRepository;
-import com.nimbusds.oauth2.sdk.token.RefreshToken;
+import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class JoinService {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public JoinService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public void registerUser(JoinDTO joinDTO, String role) {
         String username = joinDTO.getUsername();
@@ -41,7 +41,7 @@ public class JoinService {
                     .build();
         }
 
-        UserEntity user = UserEntity.builder()
+        User user = User.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .email(email)

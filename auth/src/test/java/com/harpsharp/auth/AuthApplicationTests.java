@@ -3,9 +3,9 @@ package com.harpsharp.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.dto.JoinTestDTO;
 import com.harpsharp.auth.dto.LoginDTO;
-import com.harpsharp.auth.dto.UpdateDTO;
+import com.harpsharp.auth.dto.UpdateUserDTO;
 import com.harpsharp.auth.jwt.JwtUtil;
-import com.harpsharp.auth.repository.UserRepository;
+import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -169,14 +169,14 @@ class AuthApplicationTests {
 	public void updateTest() throws Exception{
 		login();
 
-		UpdateDTO updateDto = UpdateDTO
+		UpdateUserDTO updateUserDto = UpdateUserDTO
 				.builder()
 				.username("update!")
 				.password("update11!")
 				.email("update@gmail.com")
 				.build();
 
-		String updateJson = objectMapper.writeValueAsString(updateDto);
+		String updateJson = objectMapper.writeValueAsString(updateUserDto);
 
 		this.mockMvc.perform(
 						patch("/user/update")

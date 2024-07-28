@@ -1,10 +1,10 @@
 package com.harpsharp.auth.service;
 
-import com.harpsharp.auth.dto.UserDTO;
-import com.harpsharp.auth.entity.UserEntity;
+import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.dto.UserDTO;
 import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
 import com.harpsharp.auth.jwt.JwtUtil;
-import com.harpsharp.auth.repository.UserRepository;
+import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,7 +39,7 @@ public class UserService {
                     .build();
         }
 
-        UserEntity existUser = userRepository
+        User existUser = userRepository
                 .findById(userId)
                 .orElseThrow(NullPointerException::new);
 
@@ -53,7 +53,7 @@ public class UserService {
             updatedEmail = existUser.getEmail();
         }
 
-        UserEntity updatedUser = existUser.toBuilder()
+        User updatedUser = existUser.toBuilder()
                 .username(updatedUsername)
                 .password(passwordEncoder.encode(updatedPassword))
                 .email(updatedEmail)

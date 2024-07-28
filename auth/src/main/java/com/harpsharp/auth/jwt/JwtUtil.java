@@ -1,6 +1,6 @@
 package com.harpsharp.auth.jwt;
 
-import com.harpsharp.auth.entity.RefreshEntity;
+import com.harpsharp.auth.entity.RefreshToken;
 import com.harpsharp.auth.repository.RefreshRepository;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
@@ -93,13 +93,13 @@ public class JwtUtil {
     }
 
     public void addRefreshEntity(Long userId, String refresh){
-        RefreshEntity refreshEntity = RefreshEntity
+        RefreshToken refreshToken = RefreshToken
                 .builder()
                 .userId(userId)
                 .refreshToken(refresh)
                 .build();
 
-        refreshRepository.save(refreshEntity);
+        refreshRepository.save(refreshToken);
     }
 
     public void deleteById(Long userId){
@@ -110,7 +110,7 @@ public class JwtUtil {
         return refreshRepository.existsById(userId);
     }
 
-    public Optional<RefreshEntity> findByAccess(Long userId){
+    public Optional<RefreshToken> findByAccess(Long userId){
         return refreshRepository.findById(userId);
     }
 
