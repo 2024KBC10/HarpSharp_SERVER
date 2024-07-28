@@ -7,11 +7,11 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./nginx.conf.d:/etc/nginx/nginx.conf.d
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
+      - ./conf.d:/etc/nginx/conf.d
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./content:/var/www
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
     networks:
       - harpsharp
     environment:

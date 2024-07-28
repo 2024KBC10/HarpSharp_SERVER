@@ -31,8 +31,8 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    ports:
-      - 8080:8080
+    expose:
+      - "8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/harpsharp?useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: "root"
@@ -42,15 +42,15 @@ services:
     depends_on:
       - mysql
       - redis
-
   swagger:
     image: swaggerapi/swagger-ui
+    container_name: swagger
     volumes:
-      - ./HarpSharp_API_Auth.json:/HarpSharp_API_Auth.json
+      - ./:/mnt
     expose:
       - "8000"
     environment:
-      SWAGGER_JSON: ./HarpSharp_API_Auth.json
+      - SWAGGER_JSON=mnt/HarpSharp_API_Auth.json
     networks:
       - harpsharp
 
