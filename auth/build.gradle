@@ -8,7 +8,7 @@ plugins {
 
 openapi3 {
 	servers = [
-			{ url = "http://localhost:8080" },
+			{ url = "http://swagger" },
 			{ url = "http://harpsharp.com/swagger" }
 	]
 	title = "Harp Sharp Auth API"
@@ -25,6 +25,9 @@ swaggerSources {
 }
 
 dependencies {
+	implementation 	   project(':infra_rds')
+	testImplementation project(':infra_rds')
+
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -33,11 +36,11 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 	testImplementation "org.springframework.security:spring-security-test"
 	swaggerUI 'org.webjars:swagger-ui:4.11.1'
-	implementation project(':infra_rds')
 }
 
 bootJar {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	enabled = true;
 }
 
 

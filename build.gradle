@@ -25,8 +25,6 @@ allprojects {
     }
 }
 
-bootJar.enabled = false
-
 subprojects {
     group = 'com.harpsharp'
     version = '0.0.1-SNAPSHOT'

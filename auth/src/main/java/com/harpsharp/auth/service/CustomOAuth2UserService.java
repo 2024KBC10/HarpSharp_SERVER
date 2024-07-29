@@ -3,11 +3,12 @@ package com.harpsharp.auth.service;
 import com.harpsharp.auth.dto.response.GoogleResponse;
 import com.harpsharp.auth.dto.response.KaKaoResponse;
 import com.harpsharp.auth.dto.response.NaverResponse;
+import com.harpsharp.auth.oauth2.*;
 import com.harpsharp.infra_rds.dto.UserDTO;
 import com.harpsharp.infra_rds.entity.User;
-import com.harpsharp.auth.oauth2.*;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 // 유저 정보를 획득
 @Service
 @RequiredArgsConstructor
+@ComponentScan("com.harpsharp")
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;

@@ -1,10 +1,17 @@
 package com.harpsharp.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.harpsharp.auth.config.CorsMvcConfig;
+import com.harpsharp.auth.config.RedisConfig;
+import com.harpsharp.auth.config.SecurityConfig;
 import com.harpsharp.auth.dto.JoinTestDTO;
 import com.harpsharp.auth.dto.LoginDTO;
 import com.harpsharp.auth.dto.UpdateUserDTO;
+import com.harpsharp.auth.entity.RefreshToken;
 import com.harpsharp.auth.jwt.JwtUtil;
+import com.harpsharp.auth.repository.RefreshRepository;
+import com.harpsharp.infra_rds.dto.UserDTO;
+import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
@@ -13,16 +20,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.http.MediaType;
 
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.restdocs.cookies.CookieDocumentation.*;
@@ -31,11 +45,11 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
+@DataJpaTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @RequiredArgsConstructor
-@ComponentScan("com.harpsharp.auth")
+@ComponentScan(basePackages = {"com.harpsharp"})
 class AuthApplicationTests {
 	@Autowired
 	private MockMvc mockMvc;

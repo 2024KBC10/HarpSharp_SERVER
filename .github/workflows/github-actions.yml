@@ -51,7 +51,7 @@ jobs:
         run: |
           mkdir -p auth/build/generated-snippets/
           chmod +x auth/gradlew
-          auth/gradlew build --no-build-cache --warning-mode all
+          ./gradlew auth:bootJar --no-build-cache --warning-mode all
           auth/gradlew openapi3 --no-build-cache --warning-mode all
 
         shell: bash

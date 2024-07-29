@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.Optional;
 
 @Component
-@Primary
 public class JwtUtil {
     private final SecretKey secretKey;
     private final Duration accessTokenExpireTime;
