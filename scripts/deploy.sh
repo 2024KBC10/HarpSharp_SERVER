@@ -13,47 +13,35 @@ cd /home/ubuntu/deploy/db/
 
 docker-compose up -d
 
-
 cd /home/ubuntu/deploy/auth/
 
-if [ $(docker ps -a -q -f name=auth) ]; then
-    docker stop auth && docker rm auth
-fi
-if [ $(docker images -q auth) ]; then
-    docker rmi auth
+
+auth_ids=$(docker images --format '{{.Repository}}:{{.Tag}}' | grep '_auth$' | xargs -n1 docker images --format '{{.ID}}' --filter=reference)
+
+if [ "$auth_ids" ]; then
+    docker rmi -f $auth_ids
+else
+    echo "No images ending with '_auth' found."
 fi
 
-# 'swagger-board' 컨테이너와 이미지 삭제
-if [ $(docker ps -a -q -f name=swagger-auth) ]; then
-    docker stop swagger-auth && docker rm swagger-auth
-fi
-if [ $(docker images -q swagger-auth) ]; then
-    docker rmi swagger-auth
-fi
 
 docker-compose up --build -d
 
 
 cd /home/ubuntu/deploy/board/
 
-# 'board' 컨테이너와 이미지 삭제
-if [ $(docker ps -a -q -f name=board) ]; then
-    docker stop board && docker rm board
-fi
-if [ $(docker images -q board) ]; then
-    docker rmi board
+board_ids=$(docker images --format '{{.Repository}}:{{.Tag}}' | grep '_board$' | xargs -n1 docker images --format '{{.ID}}' --filter=reference)
+
+if [ "$board_ids" ]; then
+    docker rmi -f $board_ids
+else
+    echo "No images ending with '_board$' found."
 fi
 
-# 'swagger-board' 컨테이너와 이미지 삭제
-if [ $(docker ps -a -q -f name=swagger-board) ]; then
-    docker stop swagger-board && docker rm swagger-board
-fi
-if [ $(docker images -q swagger-board) ]; then
-    docker rmi swagger-board
-fi
 
 docker-compose up --build -d
 
+docker rmi $(docker images -f "dangling=true" -q)
 
 
 
