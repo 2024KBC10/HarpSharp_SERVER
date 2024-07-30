@@ -14,9 +14,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: "wlghks24461!"
     networks:
       - harpsharp
-    depends_on:
-      - mysql
-      - redis
+
   swagger:
     image: swaggerapi/swagger-ui
     container_name: swagger/auth
