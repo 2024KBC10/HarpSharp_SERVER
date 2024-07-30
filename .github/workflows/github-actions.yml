@@ -49,14 +49,14 @@ jobs:
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > auth/src/main/resources/application-prod.yaml
       - name: Gradle 빌드 && API 명세서 업로드
         run: |
-          mkdir -p auth/build/generated-snippets/
-          mkdir -p board/build/generated-snippets/
+          mkdir -p auth/build/openapi3/
+          mkdir -p board/build/openapi3/
           chmod +x auth/gradlew
           chmod +x board/gradlew
           chmod +x gradlew
   
-          ./gradlew :auth:bootJar --no-build-cache --warning-mode all
-          ./gradlew :board:bootJar --no-build-cache --warning-mode all
+          auth/gradlew --no-build-cache --warning-mode all
+          auth/gradlew --no-build-cache --warning-mode all
           auth/gradlew openapi3 --no-build-cache --warning-mode all
           board/gradlew openapi3 --no-build-cache --warning-mode all
 
@@ -95,7 +95,7 @@ jobs:
       - name: S3 업로드(Auth)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
-          FILE_PATH=$(find . -name HarpSharp_API_Auth.json)
+          FILE_PATH=$(find . -name authAPI.json)
           mkdir -p before-deploy-auth
           cp auth/build/libs/auth-*.jar before-deploy-auth/
           cp auth/scripts/*.sh before-deploy-auth/
@@ -124,7 +124,7 @@ jobs:
       - name: S3 업로드(Board)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
-          FILE_PATH=$(find . -name HarpSharp_API_Auth.json)
+          FILE_PATH=$(find . -name boardAPI.json)
           mkdir -p before-deploy-auth
           cp board/build/libs/board-*.jar before-deploy-board/
           cp board/scripts/*.sh before-deploy-board/

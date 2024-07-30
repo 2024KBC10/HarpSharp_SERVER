@@ -15,7 +15,7 @@ openapi3 {
 	description = "Harp Sharp 아이스브레이킹 API입니다."
 	version = "1.0.0"
 	format = 'json'
-
+	outputFileNamePrefix = 'boardAPI'
 	outputDirectory = 'build/openapi3'
 }
 
