@@ -1,8 +1,8 @@
 #!/bin/bash
 
-mkdir -p /home/ubuntu/deploy/db/
+mkdir -p /home/ubuntu/deploy-db/
 
-cd /home/ubuntu/deploy/db/
+cd /home/ubuntu/deploy-db/
 
 # 네트워크가 존재하는지 확인
 if [ -z "$(docker network ls | grep harpsharp)" ]

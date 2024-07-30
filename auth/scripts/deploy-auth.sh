@@ -1,10 +1,10 @@
 #!/bin/bash
 
-mkdir -p /home/ubuntu/deploy/auth/
+mkdir -p /home/ubuntu/deploy-auth/
 
 docker rm  -f $(docker ps -a -q)
 
-cd /home/ubuntu/deploy/auth/
+cd /home/ubuntu/deploy-auth/
 
 # 네트워크가 존재하는지 확인
 if [ -z "$(docker network ls | grep harpsharp)" ]
