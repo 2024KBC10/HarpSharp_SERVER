@@ -102,6 +102,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
           FILE_PATH=$(find . -name authAPI.json)
+          cat $(find . -name auth-0.0.1-SNAPSHOT.jar)
           mkdir -p before-deploy-auth
           cp auth/build/libs/auth-*.jar before-deploy-auth/
           cp auth/scripts/*.sh before-deploy-auth/
