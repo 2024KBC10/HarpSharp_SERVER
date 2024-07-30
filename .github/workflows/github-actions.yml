@@ -50,17 +50,22 @@ jobs:
           echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > board/src/main/resources/application.yaml
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > board/src/main/resources/application-prod.yaml
 
-      - name: Gradle 빌드 && API 명세서 업로드
+      - name: 빌드 및 API 명세서 생성 (Auth)
+        working-directory: ./auth
         run: |
-          mkdir -p auth/build/openapi3/
-          mkdir -p board/build/openapi3/
-          chmod +x auth/gradlew
-          chmod +x board/gradlew
-  
-          auth/gradlew --warning-mode all
-          auth/gradlew openapi3 --warning-mode all
-          build/gradlew --warning-mode all
-          build/gradlew openapi3 --warning-mode all
+          mkdir -p build/api-spec
+          chmod +x ./gradlew
+          ./gradlew --warning-mode all
+          ./gradlew openapi3 --warning-mode all
+
+      - name: 빌드 및 API 명세서 생성 (Board)
+        working-directory: ./board
+        run: |
+          mkdir -p build/api-spec
+          chmod +x ./gradlew
+          ./gradlew --warning-mode all
+          ./gradlew openapi3 --warning-mode all
+      
 
         shell: bash
         env:

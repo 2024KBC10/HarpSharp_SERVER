@@ -16,7 +16,6 @@ openapi3 {
 	version = "1.0.0"
 	format = 'json'
 	outputFileNamePrefix = 'boardAPI'
-	outputDirectory = 'build/openapi3'
 }
 
 dependencies {
@@ -32,10 +31,6 @@ bootJar {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 	enabled = true;
 }
-
-
-
-
 
 
 
