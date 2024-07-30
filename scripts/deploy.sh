@@ -10,10 +10,8 @@ else
 fi
 
 cd /home/ubuntu/deploy
-ls -a
 
-cd /home/ubuntu/deploy/db
-ls -a
+cd /home/ubuntu/deploy/db/
 
 docker-compose up -d
 
@@ -21,7 +19,6 @@ docker stop auth | rm auth | rmi auth
 docker stop swagger-auth | rm swagger-auth | rmi swagger-auth
 
 cd /home/ubuntu/deploy/auth/
-ls -a
 
 docker-compose up --build -d
 
@@ -29,7 +26,6 @@ docker stop board | rm board | rmi board
 docker stop swagger-board | rm swagger-board | rmi swagger-board
 
 cd /home/ubuntu/deploy/board/
-ls -a
 
 docker-compose up --build -d
 

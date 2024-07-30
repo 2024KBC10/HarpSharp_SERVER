@@ -89,8 +89,7 @@ jobs:
           cp scripts/*.sh deploy-db/
           cp appspec.yml deploy-db/
           cd ../ && mkdir -p deploy/db
-          mv ./infra_rds/deploy-db deploy/db 
-          ls deploy
+          mv ./infra_rds/deploy-db/* deploy/db 
 
       - name: 배포 Dir 생성(Auth)
         working-directory: ./auth
@@ -101,8 +100,7 @@ jobs:
           cp docker-compose.yml deploy-auth/
           cp build/api-spec/authAPI.json deploy-auth/
           cd ../ && mkdir -p deploy/auth
-          mv ./auth/deploy-auth deploy/auth 
-          ls deploy
+          mv ./auth/deploy-auth/* deploy/auth
 
       - name: 배포 Dir 생성(Board)
         working-directory: ./board
@@ -113,15 +111,14 @@ jobs:
           cp docker-compose.yml deploy-board/
           cp build/api-spec/boardAPI.json deploy-board/
           cd ../ && mkdir -p deploy/board
-          mv ./board/deploy-board deploy/board 
-          ls deploy
+          mv ./board/deploy-board/* deploy/board 
 
       - name: S3 업로드 및 CD 요청
         working-directory: ./
         run: |
           cp scripts/*.sh deploy
           cp appspec.yml deploy
-          ls deploy
+          ls deploy -a
           cd deploy && zip -r deploy *
           aws s3 cp deploy.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy.zip
 
