@@ -3,7 +3,6 @@
 mkdir -p /home/ubuntu/deploy/auth/
 
 docker rm  -f $(docker ps -a -q)
-docker rmi auth/auth
 
 cd /home/ubuntu/deploy/auth/
 
