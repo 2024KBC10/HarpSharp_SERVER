@@ -73,7 +73,7 @@ jobs:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
       - name: Configure AWS credentials
-        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
@@ -82,7 +82,7 @@ jobs:
 
       - name: S3 업로드(DB)
         working-directory: ./infra_rds
-        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         run: |
           mkdir -p before-deploy-db
           cp docker-compose.yml before-deploy-db/
@@ -102,7 +102,7 @@ jobs:
 
       - name: S3 업로드(Auth)
         working-directory: ./auth
-        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         run: |
           mkdir -p before-deploy-auth
           cp build/libs/auth-*.jar before-deploy-auth/
@@ -120,7 +120,7 @@ jobs:
           --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
           --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
           --query "deployments[0]" --output text)
-          aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID || true
+          aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID 
           
           aws deploy create-deployment \
           --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
@@ -131,7 +131,7 @@ jobs:
 
       - name: S3 업로드(Board)
         working-directory: ./board
-        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         run: |
           mkdir -p before-deploy-board
           cp build/libs/board-*.jar before-deploy-board/
@@ -149,7 +149,7 @@ jobs:
           --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
           --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
           --query "deployments[0]" --output text)
-          aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID || true
+          aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID 
           
           aws deploy create-deployment \
           --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
