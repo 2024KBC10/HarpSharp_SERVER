@@ -65,7 +65,6 @@ jobs:
           chmod +x ./gradlew
           ./gradlew clean build --warning-mode all
           ./gradlew openapi3 --warning-mode all
-      
 
         shell: bash
         env:

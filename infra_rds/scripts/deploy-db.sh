@@ -13,4 +13,4 @@ else
     echo "harpsharp 네트워크가 이미 존재합니다."
 fi
 
-docker-compose up --build -d --no-recreate
+docker-compose up -d

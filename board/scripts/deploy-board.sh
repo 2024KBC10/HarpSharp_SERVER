@@ -2,7 +2,9 @@
 
 mkdir -p /home/ubuntu/deploy-board/
 
-docker rm  -f $(docker ps -a -q)
+docker rm  -f board
+docker rm  -f swagger-board
+docker rmi -f board
 
 cd /home/ubuntu/deploy-board/
 
