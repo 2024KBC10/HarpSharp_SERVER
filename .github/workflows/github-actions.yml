@@ -113,6 +113,12 @@ jobs:
           cd ../ && mkdir -p deploy/board
           mv ./board/deploy-board/* deploy/board 
 
+      - name: 배포 Dir 생성(Nginx)
+        working-directory: ./nginx
+        run : |
+          mkdir -p deploy/nginx
+          cd ../ && mv ./nginx/* deploy/nginx
+
       - name: S3 업로드 및 CD 요청
         working-directory: ./
         run: |

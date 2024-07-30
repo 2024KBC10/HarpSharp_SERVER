@@ -41,8 +41,13 @@ fi
 
 docker-compose up --build -d
 
-docker rmi $(docker images -f "dangling=true" -q)
+cd /home/ubuntu/deploy/nginx/
+docker exec -it nginx /bin/bash << EOF
+service nginx restart
+exit
+EOF
 
+docker rmi $(docker images -f "dangling=true" -q)
 
 
 
