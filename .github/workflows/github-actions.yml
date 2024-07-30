@@ -81,10 +81,10 @@ jobs:
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
           mkdir -p before-deploy-db
-          cp -r docker-compose.yml before-deploy-db/
+          cp ./docker-compose.yml before-deploy-db/
           cp infra_rds/scripts/*.sh before-deploy-db/
           cd before-deploy-db && zip -r before-deploy-db *
-          cd ../ && mkdir -p deploy-db
+          cd ../ && mkdir -p deploy/db
           mv before-deploy-db/before-deploy-db.zip deploy/db/deploy-db.zip
           aws s3 cp deploy/db/deploy-db.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-db.zip
 
