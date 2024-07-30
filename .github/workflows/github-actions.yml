@@ -117,7 +117,7 @@ jobs:
         working-directory: ./
         run : |
           mkdir -p deploy/nginx
-          cd ../ && mv ./nginx/* deploy/nginx
+          mv ./nginx/* deploy/nginx
 
       - name: S3 업로드 및 CD 요청
         working-directory: ./
