@@ -2,9 +2,8 @@
 
 mkdir -p /home/ubuntu/deploy-auth/
 
-docker rm  -f auth
-docker rm  -f swagger-auth
-docker rmi -f auth
+docker stop auth | rm auth | rmi auth
+docker stop swagger-auth | rm swagger-auth | rmi swagger-auth
 
 cd /home/ubuntu/deploy-auth/
 

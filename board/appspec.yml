@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/deploy-board/zip/
+    destination: /home/ubuntu/deploy-board/
     overwrite: yes
 
 permissions:

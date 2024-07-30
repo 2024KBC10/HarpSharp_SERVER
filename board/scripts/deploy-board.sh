@@ -2,9 +2,8 @@
 
 mkdir -p /home/ubuntu/deploy-board/
 
-docker rm  -f board
-docker rm  -f swagger-board
-docker rmi -f board
+docker stop board | rm board | rmi board
+docker stop swagger-board | rm swagger-board | rmi swagger-board
 
 cd /home/ubuntu/deploy-board/
 

@@ -116,12 +116,6 @@ jobs:
           mv before-deploy-auth/before-deploy-auth.zip deploy-auth/deploy-auth.zip
           aws s3 cp deploy-auth/deploy-auth.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-auth.zip
           
-          DEPLOYMENT_ID=$(aws deploy list-deployments \
-          --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
-          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
-          --query "deployments[0]" --output text)
-          aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID 
-          
           aws deploy create-deployment \
           --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
@@ -144,12 +138,6 @@ jobs:
           cd ../ && mkdir -p deploy-board
           mv before-deploy-board/before-deploy-board.zip deploy-board/deploy-board.zip
           aws s3 cp deploy-board/deploy-board.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-board.zip
-          
-          DEPLOYMENT_ID=$(aws deploy list-deployments \
-          --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
-          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
-          --query "deployments[0]" --output text)
-          aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID 
           
           aws deploy create-deployment \
           --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
