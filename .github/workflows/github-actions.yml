@@ -132,7 +132,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
           FILE_PATH=$(find . -name boardAPI.json)
-          mkdir -p before-deploy-auth
+          mkdir -p before-deploy-board
           cp board/build/libs/board-*.jar before-deploy-board/
           cp board/scripts/*.sh before-deploy-board/
           cp board/appspec.yml before-deploy-board/
