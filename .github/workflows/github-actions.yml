@@ -52,15 +52,16 @@ jobs:
 
       - name: Gradle 빌드 && API 명세서 업로드
         run: |
+          mkdir -p build/openapi3 | touch build/openapi3/openapi3.json
           mkdir -p auth/build/openapi3/
           mkdir -p board/build/openapi3/
           chmod +x auth/gradlew
           chmod +x board/gradlew
   
-          auth/gradlew --no-build-cache --warning-mode all
-          auth/gradlew --no-build-cache --warning-mode all
-          auth/gradlew openapi3 --no-build-cache --warning-mode all
-          board/gradlew openapi3 --no-build-cache --warning-mode all
+          auth/gradlew --warning-mode all
+          auth/gradlew --warning-mode all
+          auth/gradlew openapi3 --warning-mode all
+          board/gradlew openapi3 --warning-mode all
 
         shell: bash
         env:
