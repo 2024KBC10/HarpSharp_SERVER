@@ -114,7 +114,7 @@ jobs:
           mv ./board/deploy-board/* deploy/board 
 
       - name: 배포 Dir 생성(Nginx)
-        working-directory: ./nginx
+        working-directory: ./
         run : |
           mkdir -p deploy/nginx
           cd ../ && mv ./nginx/* deploy/nginx
