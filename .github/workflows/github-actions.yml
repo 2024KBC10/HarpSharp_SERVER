@@ -82,7 +82,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: S3 업로드(DB)
-        working-directory: ./db
+        working-directory: ./infra_rds
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
           mkdir -p before-deploy-db
