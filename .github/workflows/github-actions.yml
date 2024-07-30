@@ -30,6 +30,7 @@ jobs:
           - 6379:6379
         options: --entrypoint redis-server
 
+
     steps:
       - name: 체크아웃
         uses: actions/checkout@v2
