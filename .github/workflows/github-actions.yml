@@ -58,10 +58,13 @@ jobs:
           chmod +x auth/gradlew
           chmod +x board/gradlew
   
-          auth/gradlew --warning-mode all
-          auth/gradlew --warning-mode all
-          auth/gradlew openapi3 --warning-mode all
-          board/gradlew openapi3 --warning-mode all
+          cp auth
+          ./gradlew --warning-mode all
+          ./gradlew openapi3 --warning-mode all
+          cp ../board
+          ./gradlew --warning-mode all
+          ./gradlew openapi3 --warning-mode all
+          cp ../
 
         shell: bash
         env:
