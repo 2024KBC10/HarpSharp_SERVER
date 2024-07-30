@@ -1,5 +1,6 @@
 package com.harpsharp.auth.jwt;
 
+import com.harpsharp.auth.service.RefreshTokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,6 +17,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
     private final JwtUtil jwtUtil;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -85,7 +87,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         }
 
         //DB에 저장되어 있는지 확인
-        Boolean isExist = jwtUtil.existsById(userId);
+        Boolean isExist = refreshTokenService.existsByToken(accessToken);
 
         if (!isExist) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -94,7 +96,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         //로그아웃 진행
         //Refresh 토큰 DB에서 제거
-        jwtUtil.deleteById(userId);
+        refreshTokenService.deleteByToken(accessToken);
 
         //Refresh 토큰 Cookie 값 0
         Cookie cookie = new Cookie("refresh", null);

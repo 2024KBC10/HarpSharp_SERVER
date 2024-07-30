@@ -1,0 +1,30 @@
+version: "3"
+services:
+  mysql:
+    container_name: mysql
+    image: mysql/mysql-server:8.0
+    environment:
+      MYSQL_DATABASE: harpsharp
+      MYSQL_ROOT_PASSWORD: wlghks24461!
+      MYSQL_ROOT_HOST: '%'
+      TZ: 'Asia/Seoul'
+    command:
+      - "mysqld"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    expose:
+      - "3306"
+    networks:
+      - harpsharp
+
+  redis:
+    container_name: redis
+    image: redis
+    expose:
+      - "6379"
+    networks:
+      - harpsharp
+
+networks:
+  harpsharp:
+    external: true

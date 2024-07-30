@@ -4,9 +4,9 @@ import com.harpsharp.auth.jwt.CustomLogoutFilter;
 import com.harpsharp.auth.jwt.JwtFilter;
 import com.harpsharp.auth.jwt.LoginFilter;
 import com.harpsharp.auth.oauth2.CustomSuccessHandler;
-import com.harpsharp.auth.repository.RefreshRepository;
 import com.harpsharp.auth.service.CustomOAuth2UserService;
 import com.harpsharp.auth.jwt.JwtUtil;
+import com.harpsharp.auth.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
@@ -34,10 +34,9 @@ import java.util.Collections;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    //private final CustomSuccessHandler customSuccessHandler;
-    private final JwtUtil jwtUtil;
     private final AuthenticationConfiguration authenticationConfiguration;
-    //private final RefreshRepository refreshRepository;
+    private final JwtUtil jwtUtil;
+    private final RefreshTokenService refreshTokenService;
 
     @Bean
     public CookieSameSiteSupplier applicationCookieSameSiteSupplier() {
@@ -89,10 +88,11 @@ public class SecurityConfig {
                         .hasRole("ADMIN")
                         .requestMatchers("/reissue")
                         .permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest()
+                        .authenticated())
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil), LogoutFilter.class)
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), refreshTokenService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenService), LogoutFilter.class)
                 .sessionManagement((session)->session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

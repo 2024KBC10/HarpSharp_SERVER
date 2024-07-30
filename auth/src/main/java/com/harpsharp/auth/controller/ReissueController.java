@@ -3,7 +3,11 @@ package com.harpsharp.auth.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.dto.RedisDTO;
 import com.harpsharp.auth.dto.response.ApiResponse;
+import com.harpsharp.auth.dto.response.ErrorResponse;
+import com.harpsharp.auth.entity.RefreshToken;
 import com.harpsharp.auth.jwt.JwtUtil;
+import com.harpsharp.auth.service.RefreshTokenService;
+import com.harpsharp.auth.utils.BaseResponse;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,8 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -20,9 +23,16 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ReissueController {
     private final JwtUtil jwtUtil;
+    private final RefreshTokenService refreshTokenService;
 
-    @PostMapping("/reissue")
+    @RequestMapping(value = "/reissue", method = {RequestMethod.POST, RequestMethod.GET, RequestMethod.PATCH})
     public ResponseEntity<ApiResponse> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        logic(request, response);
+        HttpStatus status = (request.getMethod().equals("POST")) ? HttpStatus.CREATED : HttpStatus.OK;
+        return BaseResponse.withCode("JWT_REISSUED_SUCCESSFULLY", "The JWT has been successfully reissued.", status);
+    }
+
+    private void logic(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String refreshToken = null;
         String accessToken  = request.getHeader("Authorization");
 
@@ -35,12 +45,7 @@ public class ReissueController {
         Cookie[] cookies = request.getCookies();
 
         if(cookies == null) {
-            //return new ResponseEntity<>("Your cookies are empty.", HttpStatus.BAD_REQUEST);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(com.harpsharp.auth.dto.response.ApiResponse.builder()
-                            .code("INVALID_TOKEN")
-                            .message("Your cookies are empty.")
-                            .build());
+            throw new IllegalArgumentException("Invalid cookies");
         }
 
         for(Cookie cookie: cookies){
@@ -50,45 +55,26 @@ public class ReissueController {
         }
 
         if(refreshToken == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(com.harpsharp.auth.dto.response.ApiResponse.builder()
-                            .code("INVALID_TOKEN")
-                            .message("Token is null.")
-                            .build());
+            throw new IllegalArgumentException("Invalid cookies");
         }
 
         try{
             jwtUtil.isExpired(refreshToken);
         }catch(JwtException e){
-            //return new ResponseEntity<>("Refresh token is expired", HttpStatus.BAD_REQUEST);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(com.harpsharp.auth.dto.response.ApiResponse.builder()
-                            .code("INVALID_TOKEN")
-                            .message("Token is expired.")
-                            .build());
+            throw new IllegalArgumentException("Invalid cookies");
         }
 
 
         String category = jwtUtil.getCategory(refreshToken);
 
         if(!category.equals("refresh")){
-            //return new ResponseEntity<>("Invalid token. Please ensure you are using a valid access token.", HttpStatus.BAD_REQUEST);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(com.harpsharp.auth.dto.response.ApiResponse.builder()
-                        .code("INVALID_TOKEN")
-                            .message("Invalid token. Please ensure you are using a valid access token.")
-                            .build());
+            throw new IllegalArgumentException("Invalid cookies");
         }
 
-        Boolean isExist = jwtUtil.existsById(jwtUtil.getUserId(accessToken));
+        Boolean isExist = refreshTokenService.existsByToken(accessToken);
 
         if(!isExist){
-            //return new ResponseEntity<>("Refresh token does not exist", HttpStatus.BAD_REQUEST);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(com.harpsharp.auth.dto.response.ApiResponse.builder()
-                            .code("INVALID_TOKEN")
-                            .message("Token does not exist.")
-                            .build());
+            throw new IllegalArgumentException("Invalid cookies");
         }
 
         Long   userId   = jwtUtil.getUserId(refreshToken);
@@ -99,25 +85,18 @@ public class ReissueController {
         String newRefresh = jwtUtil.createRefreshToken(userId, username, role);
 
         // DB에 존재하는 Refresh 토큰 삭제 후 재발급
-        jwtUtil.deleteById(userId);
-        jwtUtil.addRefreshEntity(userId, newRefresh);
+        refreshTokenService.deleteByToken(accessToken);
+
+        RefreshToken refreshEntity = RefreshToken
+                .builder()
+                .accessToken(newAccess)
+                .refreshToken(newRefresh)
+                .build();
+
+        refreshTokenService.save(refreshEntity);
 
         response.setHeader("Authorization", "Bearer " + newAccess);
         response.addCookie(jwtUtil.createCookie("refresh", newRefresh));
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        RedisDTO redisDTO = RedisDTO
-                .builder()
-                .key(newAccess)
-                .value(newRefresh)
-                .build();
-
-        //return new ResponseEntity<>("The JWT has been successfully reissued.", HttpStatus.CREATED);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(com.harpsharp.auth.dto.response.ApiResponse.builder()
-                        .code("JWT_REISSUED_SUCCESSFULLY")
-                        .message("The JWT has been successfully reissued.")
-                        .build());
+        response.setStatus(HttpStatus.OK.value());
     }
 }

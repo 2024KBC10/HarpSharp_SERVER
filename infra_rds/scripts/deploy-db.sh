@@ -1,11 +1,8 @@
 #!/bin/bash
 
-mkdir -p /home/ubuntu/deploy/auth/
+mkdir -p /home/ubuntu/deploy/db/
 
-docker rm  -f $(docker ps -a -q)
-docker rmi auth/auth
-
-cd /home/ubuntu/deploy/auth/
+cd /home/ubuntu/deploy/db/
 
 # 네트워크가 존재하는지 확인
 if [ -z "$(docker network ls | grep harpsharp)" ]
@@ -16,4 +13,4 @@ else
     echo "harpsharp 네트워크가 이미 존재합니다."
 fi
 
-docker-compose up --build -d
+docker-compose up --build -d --no-recreate

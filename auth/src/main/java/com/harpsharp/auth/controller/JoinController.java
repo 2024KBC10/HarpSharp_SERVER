@@ -2,8 +2,8 @@ package com.harpsharp.auth.controller;
 
 import com.harpsharp.auth.dto.JoinDTO;
 import com.harpsharp.auth.dto.response.ApiResponse;
-import com.harpsharp.auth.service.JoinService;
 
+import com.harpsharp.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequiredArgsConstructor
 public class JoinController {
 
-    private final JoinService joinService;
+    private final UserService userService;
 
     @PostMapping("/join")
     public ResponseEntity<ApiResponse> joinUser(@RequestBody JoinDTO joinDTO){
-        joinService.registerUser(joinDTO, "ROLE_USER");
+        userService.registerUser(joinDTO, "ROLE_USER");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.builder()
                         .code("USER_JOINED_SUCCESSFULLY")
@@ -31,7 +31,7 @@ public class JoinController {
 
     @PostMapping("/admin/join")
     public ResponseEntity<ApiResponse> joinAdmin(@RequestBody JoinDTO joinDTO){
-        joinService.registerUser(joinDTO, "ROLE_ADMIN");
+        userService.registerUser(joinDTO, "ROLE_ADMIN");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.builder()
                         .code("USER_JOINED_SUCCESSFULLY")

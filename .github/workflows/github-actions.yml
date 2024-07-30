@@ -50,9 +50,15 @@ jobs:
       - name: Gradle 빌드 && API 명세서 업로드
         run: |
           mkdir -p auth/build/generated-snippets/
+          mkdir -p board/build/generated-snippets/
           chmod +x auth/gradlew
+          chmod +x board/gradlew
+          chmod +x gradlew
+  
           ./gradlew auth:bootJar --no-build-cache --warning-mode all
+          ./gradlew board:bootJar --no-build-cache --warning-mode all
           auth/gradlew openapi3 --no-build-cache --warning-mode all
+          board/gradlew openapi3 --no-build-cache --warning-mode all
 
         shell: bash
         env:
@@ -68,7 +74,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: S3에 업로드(Auth)
+      - name: S3 업로드(DB)
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
+        run: |
+          mkdir -p before-deploy-db
+          cp -r docker-compose.yml before-deploy-db/
+          cp infra_rds/scripts/*.sh before-deploy-db/
+          cd before-deploy-db && zip -r before-deploy-db *
+          cd ../ && mkdir -p deploy-db
+          mv before-deploy-db/before-deploy-db.zip deploy/db/deploy-db.zip
+          aws s3 cp deploy/db/deploy-db.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-db.zip
+
+          aws deploy create-deployment \
+          --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=${{ secrets.AWS_BUCKET_NAME }},bundleType=zip,key=deploy-db.zip
+
+      - name: S3 업로드(Auth)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
           FILE_PATH=$(find . -name HarpSharp_API_Auth.json)
@@ -80,9 +104,16 @@ jobs:
           cp auth/docker-compose.yml before-deploy-auth/
           cp $FILE_PATH before-deploy-auth/
           cd before-deploy-auth && zip -r before-deploy-auth *
-          cd ../ && mkdir -p deploy-auth
-          mv before-deploy-auth/before-deploy-auth.zip deploy-auth/deploy-auth.zip
-          aws s3 cp deploy-auth/deploy-auth.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-auth.zip
+          cd ../ && mkdir -p deploy/auth
+          mv before-deploy-auth/before-deploy-auth.zip deploy/auth/deploy-auth.zip
+          aws s3 cp deploy/auth/deploy-auth.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-auth.zip
+          
+          DEPLOYMENT_ID=$(aws deploy list-deployments \
+          --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
+          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
+          --query "deployments[0]" --output text)
+          aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID
+          
           aws deploy create-deployment \
           --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
@@ -90,15 +121,21 @@ jobs:
           --file-exists-behavior OVERWRITE \
           --s3-location bucket=${{ secrets.AWS_BUCKET_NAME }},bundleType=zip,key=deploy-auth.zip
 
-      - name: S3에 업로드(nginx)
+      - name: S3 업로드(Board)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
-        run : |
-          mkdir -p before-deploy-nginx
-          cp -r ./nginx before-deploy-nginx/
-          cd before-deploy-nginx && zip -r before-deploy-nginx *
-          cd ../ && mkdir -p deploy-nginx
-          mv before-deploy-nginx/before-deploy-nginx.zip deploy-nginx/deploy-nginx.zip
-          aws s3 cp deploy-nginx/deploy-nginx.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-nginx.zip
+        run: |
+          FILE_PATH=$(find . -name HarpSharp_API_Auth.json)
+          mkdir -p before-deploy-auth
+          cp board/build/libs/board-*.jar before-deploy-board/
+          cp board/scripts/*.sh before-deploy-board/
+          cp board/appspec.yml before-deploy-board/
+          cp board/Dockerfile before-deploy-board/
+          cp board/docker-compose.yml before-deploy-board/
+          cp $FILE_PATH before-deploy-board/
+          cd before-deploy-board && zip -r before-deploy-board *
+          cd ../ && mkdir -p deploy/board
+          mv before-deploy-board/before-deploy-board.zip deploy/board/deploy-board.zip
+          aws s3 cp deploy/board/deploy-board.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-board.zip
           
           DEPLOYMENT_ID=$(aws deploy list-deployments \
           --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
@@ -111,5 +148,27 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=${{ secrets.AWS_BUCKET_NAME }},bundleType=zip,key=deploy-nginx.zip
+          --s3-location bucket=${{ secrets.AWS_BUCKET_NAME }},bundleType=zip,key=deploy-board.zip
 
+      - name: S3 업로드(Nginx)
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
+        run: |
+          mkdir -p before-deploy-nginx
+          cp -r ./nginx before-deploy-nginx/
+          cd before-deploy-nginx && zip -r before-deploy-nginx *
+          cd ../ && mkdir -p deploy/nginx
+          mv before-deploy-nginx/before-deploy-nginx.zip deploy/nginx/deploy-nginx.zip
+          aws s3 cp deploy/nginx/deploy-nginx.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-nginx.zip
+
+          DEPLOYMENT_ID=$(aws deploy list-deployments \
+          --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
+          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
+          --query "deployments[0]" --output text)
+          aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID || true
+
+          aws deploy create-deployment \
+          --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=${{ secrets.AWS_BUCKET_NAME }},bundleType=zip,key=deploy-nginx.zip

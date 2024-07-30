@@ -1,12 +1,10 @@
 package com.harpsharp.auth.jwt;
 
-import com.harpsharp.auth.entity.RefreshToken;
-import com.harpsharp.auth.repository.RefreshRepository;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -23,15 +21,12 @@ public class JwtUtil {
     private final Duration refreshTokenExpireTime;
     @Getter
     private final int refreshTokenExpireSeconds;
-    @Getter
-    private final RefreshRepository refreshRepository;
 
-    public JwtUtil(@Value("${spring.jwt.secret}") String secret, RefreshRepository refreshRepository){
+    public JwtUtil(@Value("${spring.jwt.secret}") String secret){
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
         this.accessTokenExpireTime  = Duration.ofHours(1);
         this.refreshTokenExpireTime = Duration.ofDays(365);
         this.refreshTokenExpireSeconds = 24 * 60 * 60 * 365;
-        this.refreshRepository = refreshRepository;
     }
 
     public Long getAccessTokenExpireTime() {
@@ -91,31 +86,5 @@ public class JwtUtil {
                 .maxAge(getRefreshTokenExpireSeconds())
                 .build()
                 .toCookie();
-    }
-
-    public void addRefreshEntity(Long userId, String refresh){
-        RefreshToken refreshToken = RefreshToken
-                .builder()
-                .userId(userId)
-                .refreshToken(refresh)
-                .build();
-
-        refreshRepository.save(refreshToken);
-    }
-
-    public void deleteById(Long userId){
-        refreshRepository.deleteById(userId);
-    }
-
-    public Boolean existsById(Long userId){
-        return refreshRepository.existsById(userId);
-    }
-
-    public Optional<RefreshToken> findByAccess(Long userId){
-        return refreshRepository.findById(userId);
-    }
-
-    public void clearRefreshRepository(){
-        refreshRepository.deleteAll();
     }
 }

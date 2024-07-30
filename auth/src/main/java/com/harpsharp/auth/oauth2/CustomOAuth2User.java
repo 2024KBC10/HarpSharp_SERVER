@@ -11,10 +11,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-@Component
-@RequiredArgsConstructor
 public class CustomOAuth2User implements OAuth2User {
     private final UserDTO userDTO;
+
+    public CustomOAuth2User(UserDTO userDTO) {
+        this.userDTO = userDTO;
+    }
 
     @Override
     public Map<String, Object> getAttributes() {

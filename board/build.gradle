@@ -6,39 +6,29 @@ plugins {
 	id 'org.hidetake.swagger.generator' version '2.18.2'
 }
 
-
-group = 'com.harpsharp'
-version = '0.0.1-SNAPSHOT'
-
-
 openapi3 {
 	servers = [
-			{ url = "http://localhost:8080" },
-			{ url = "http://harpsharp.com/swagger" }
+			{ url = "http://swagger-board" },
+			{ url = "http://harpsharp.com/swagger/board" }
 	]
 	title = "Harp Sharp Board API"
-	description = "Harp Sharp 게시글 관련된 API입니다."
+	description = "Harp Sharp 아이스브레이킹 API입니다."
 	version = "1.0.0"
 	format = 'json'
 }
 
-
-swaggerSources {
-	sample {
-		setInputFile(file("${project.buildDir}/api-spec/board.json"))
-	}
-}
-
 dependencies {
-	implementation project(':infra_rds')
+	implementation 	   project(':infra_rds')
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 	swaggerUI 'org.webjars:swagger-ui:4.11.1'
 }
 
 bootJar {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	enabled = true;
 }
-
-
 
 
 

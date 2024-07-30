@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.dto.CustomUserDetails;
 import com.harpsharp.auth.dto.LoginDTO;
 import com.harpsharp.auth.dto.response.ApiResponse;
+import com.harpsharp.auth.entity.RefreshToken;
+import com.harpsharp.auth.service.RefreshTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,10 +27,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
 
+
 @Slf4j
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final RefreshTokenService refreshTokenService;
     private final JwtUtil jwtUtil;
 
     @Override
@@ -74,11 +78,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String accessToken   = jwtUtil.createAccessToken(userId, username, role);
         String refreshToken  = jwtUtil.createRefreshToken(userId, username, role);
 
-        jwtUtil.addRefreshEntity(userId, refreshToken);
+        RefreshToken refreshEntity = RefreshToken
+                .builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+
+        refreshTokenService.save(refreshEntity);
 
 
         ApiResponse responseDTO = ApiResponse.builder()
-                .code("USER_LOGGED_IN")
+                .code("TOKEN_PUBLISHED_SUCCESSFULLY")
                 .message(username + " logged in successfully")
                 .build();
 

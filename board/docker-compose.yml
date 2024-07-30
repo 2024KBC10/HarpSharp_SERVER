@@ -1,7 +1,7 @@
 version: "3"
 services:
-  auth:
-    container_name: auth
+  board:
+    container_name: board
     restart: on-failure
     build:
       context: ./
@@ -19,7 +19,7 @@ services:
       - redis
   swagger:
     image: swaggerapi/swagger-ui
-    container_name: swagger/auth
+    container_name: swagger/board
     volumes:
       - ./:/mnt
     expose:

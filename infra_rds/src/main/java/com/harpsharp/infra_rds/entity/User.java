@@ -32,7 +32,6 @@ public class User {
     private String username;
 
     @Column(name = "password")
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*\\W).{8,20}$", message = "비밀번호는 영문과 특수문자를 포함하며 8자 이상, 20자 이하이어야 합니다.")
     private String password;
 
     //@NotNull

@@ -1,17 +1,14 @@
 package com.harpsharp.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.harpsharp.auth.config.CorsMvcConfig;
-import com.harpsharp.auth.config.RedisConfig;
-import com.harpsharp.auth.config.SecurityConfig;
+import com.harpsharp.auth.dto.DeleteDTO;
 import com.harpsharp.auth.dto.JoinTestDTO;
 import com.harpsharp.auth.dto.LoginDTO;
 import com.harpsharp.auth.dto.UpdateUserDTO;
-import com.harpsharp.auth.entity.RefreshToken;
 import com.harpsharp.auth.jwt.JwtUtil;
-import com.harpsharp.auth.repository.RefreshRepository;
-import com.harpsharp.infra_rds.dto.UserDTO;
-import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.auth.service.RefreshTokenService;
+import com.harpsharp.auth.service.UserService;
+import com.harpsharp.infra_rds.InfraApplication;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
@@ -20,23 +17,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.http.MediaType;
 
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.restdocs.cookies.CookieDocumentation.*;
@@ -45,31 +39,33 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@DataJpaTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
+@SpringBootTest
+@ComponentScan(basePackages = {"com.harpsharp.auth", "com.harpsharp.infra_rds"})
 @RequiredArgsConstructor
-@ComponentScan(basePackages = {"com.harpsharp"})
 class AuthApplicationTests {
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
 	private ObjectMapper objectMapper;
 	@Autowired
-	private UserRepository userRepository;
+	private RefreshTokenService refreshTokenService;
 	@Autowired
-	private JwtUtil jwtUtil;
+	private UserService userService;
 
 	private final String username = "admin";
-	private final String password = "heisadmin45!";
+	private final String password = "HeisPassWord!15";
 	private final String email    = "admin@gmail.com";
 	private String accessToken    = "EMPTY";
 	private Cookie refreshToken   = null;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 	@BeforeEach
 	public void setUp() {
-		userRepository.deleteAll();
-		jwtUtil.clearRefreshRepository();
+		userService.clear();
+		refreshTokenService.clear();
 	}
 
 	public void init() throws Exception{
@@ -108,8 +104,6 @@ class AuthApplicationTests {
 
 		accessToken  = result.getResponse().getHeader("Authorization").split(" ")[1];
 		refreshToken = result.getResponse().getCookie("refresh");
-		System.out.println("accessToken = " + accessToken);
-		System.out.println("refreshToken = " + refreshToken);
 	}
 
 	@DisplayName("회원가입 테스트")
@@ -188,7 +182,7 @@ class AuthApplicationTests {
 		UpdateUserDTO updateUserDto = UpdateUserDTO
 				.builder()
 				.username("update!")
-				.password("update11!")
+				.password("updatePassWord!5")
 				.email("update@gmail.com")
 				.build();
 
@@ -200,7 +194,7 @@ class AuthApplicationTests {
 								.cookie(refreshToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(updateJson))
-				.andExpect(status().isOk())
+				.andExpect(status().is3xxRedirection())
 				.andDo(document("Update", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("새 닉네임 (if null: 변경 X)"),
@@ -209,12 +203,6 @@ class AuthApplicationTests {
 						),
 						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						requestCookies(cookieWithName("refresh").description("유효한 refresh token")),
-						responseFields(
-								fieldWithPath("code").type(JsonFieldType.STRING)
-										.description("업데이트 상태"),
-								fieldWithPath("message").type(JsonFieldType.STRING)
-										.description("상세 메시지")
-						),
 						responseHeaders(headerWithName("Authorization").description("재발급된 access token"))
 				));
 	}
@@ -224,15 +212,27 @@ class AuthApplicationTests {
 	@Transactional
 	public void deleteTest() throws Exception{
 		login();
+
+		DeleteDTO deleteDTO = DeleteDTO
+				.builder()
+				.password(password)
+				.build();
+
+		String deleteJson = objectMapper.writeValueAsString(deleteDTO);
+
 		this.mockMvc.perform(
 				delete("/user/delete")
 						.header("Authorization", "Bearer " + accessToken)
 						.cookie(refreshToken)
-						.contentType(MediaType.APPLICATION_JSON))
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(deleteJson))
 				.andExpect(status().isOk())
 				.andDo(document("Delete", // 문서화할 때 사용할 경로와 이름
 						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						requestCookies(cookieWithName("refresh").description("유효한 refresh token")),
+						requestFields( // 요청 파라미터 문서화
+								fieldWithPath("password").description("입력한 비밀번호")
+						),
 						responseFields(
 								fieldWithPath("code").type(JsonFieldType.STRING)
 										.description("회원 탈퇴 성공 여부"),

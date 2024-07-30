@@ -1,73 +1,81 @@
 package com.harpsharp.auth.controller;
 
 
+import com.harpsharp.auth.dto.DeleteDTO;
 import com.harpsharp.auth.dto.response.ApiResponse;
 import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.UserService;
+import com.harpsharp.auth.utils.BaseResponse;
+import com.harpsharp.auth.utils.RedirectURI;
 import com.harpsharp.infra_rds.dto.UserDTO;
+import com.harpsharp.infra_rds.entity.User;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
     private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @PatchMapping("/user/update")
-    public ResponseEntity<ApiResponse> updateUser(@RequestHeader("Authorization")String accessToken,
+    public ResponseEntity<ApiResponse> updateUser(HttpServletRequest request,
                                                   @RequestBody UserDTO updatedDTO,
                                                   HttpServletResponse response) throws IOException {
-        // 수정 로직
-        if(accessToken == null || updatedDTO == null || !accessToken.startsWith("Bearer ")) {
+        String accessToken = request.getHeader("Authorization");
+
+        if (accessToken == null || updatedDTO == null || !accessToken.startsWith("Bearer ")) {
             throw new IllegalArgumentException("Invalid access token");
         }
 
         accessToken = accessToken.substring("Bearer ".length());
 
         Long userId = jwtUtil.getUserId(accessToken);
-        String updatedUsername = updatedDTO.getUsername();
-        String role = jwtUtil.getRole(accessToken);
-
         userService.updateUser(userId, updatedDTO);
 
-        String newAccess  = jwtUtil.createAccessToken (userId, updatedUsername, role);
-        String newRefresh = jwtUtil.createRefreshToken(userId, updatedUsername, role);
+        Cookie[] cookies = request.getCookies();
 
-        // DB에 존재하는 Refresh 토큰 삭제 후 재발급
-        jwtUtil.deleteById(userId);
-        jwtUtil.addRefreshEntity(userId, newRefresh);
+        if (cookies == null) throw new IllegalArgumentException("Invalid cookies");
 
-        response.setHeader("Authorization", "Bearer " + newAccess);
-        response.addCookie(jwtUtil.createCookie("refresh", newRefresh));
+        for(Cookie cookie: cookies){
+            response.addCookie(cookie);
+        }
 
-        //return ResponseEntity.status(HttpStatus.OK).body("The user information has been successfully updated.");
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.builder()
-                        .code("UPDATE_USER_SUCCESSFULLY")
-                        .message("The user information has been successfully updated.")
-                        .build());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(RedirectURI.REISSUE.getUri()));
+        headers.add("Authorization", "Bearer " + accessToken);
+
+        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
     }
 
     @DeleteMapping("/user/delete")
-    public ResponseEntity<ApiResponse> updateUser(@RequestHeader("Authorization")String accessToken) throws IOException {
-        if(accessToken == null || !accessToken.startsWith("Bearer ")) {
-            throw new IllegalArgumentException("Invalid access token");
+    public ResponseEntity<ApiResponse> deleteUser(@RequestHeader("Authorization") String accessToken) throws IOException {
+
+        if (accessToken == null || !accessToken.startsWith("Bearer ")) {
+            System.out.println("invalid access");
+            throw new IllegalArgumentException("Invalid access");
         }
 
-        Long userId = jwtUtil.getUserId(accessToken.split(" ")[1]);
-        userService.deleteById(userId);
-        jwtUtil.deleteById(userId);
+        accessToken = accessToken.substring("Bearer ".length());
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.builder()
-                        .code("DELETE_USER_SUCCESSFULLY")
-                        .message("The user information has been successfully deleted.")
-                        .build());
+        Long userId = jwtUtil.getUserId(accessToken);
+        String username = jwtUtil.getUsername(accessToken);
+        userService.deleteById(userId, accessToken);
+
+        return BaseResponse.withCode("DELETED_SUCCESSFULLY",
+                username + " successfully deleted.",
+                HttpStatus.OK);
     }
+
 }
