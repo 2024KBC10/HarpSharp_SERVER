@@ -104,14 +104,13 @@ jobs:
         working-directory: ./auth
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
-          FILE_PATH=$(find . -name authAPI.json)
           mkdir -p before-deploy-auth
           cp build/libs/auth-*.jar before-deploy-auth/
           cp scripts/*.sh before-deploy-auth/
           cp appspec.yml before-deploy-auth/
           cp Dockerfile before-deploy-auth/
           cp docker-compose.yml before-deploy-auth/
-          cp $FILE_PATH before-deploy-auth/
+          cp build/api-spec/authAPI.json before-deploy-auth/
           cd before-deploy-auth && zip -r before-deploy-auth *
           cd ../ && mkdir -p deploy-auth
           mv before-deploy-auth/before-deploy-auth.zip deploy-auth/deploy-auth.zip
@@ -134,14 +133,13 @@ jobs:
         working-directory: ./board
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
-          FILE_PATH=$(find . -name boardAPI.json)
           mkdir -p before-deploy-board
           cp build/libs/board-*.jar before-deploy-board/
           cp scripts/*.sh before-deploy-board/
           cp appspec.yml before-deploy-board/
           cp Dockerfile before-deploy-board/
           cp docker-compose.yml before-deploy-board/
-          cp $FILE_PATH before-deploy-board/
+          cp build/api-spec/boardAPI.json before-deploy-board/
           cd before-deploy-board && zip -r before-deploy-board *
           cd ../ && mkdir -p deploy-board
           mv before-deploy-board/before-deploy-board.zip deploy-board/deploy-board.zip
@@ -159,27 +157,3 @@ jobs:
           --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
           --file-exists-behavior OVERWRITE \
           --s3-location bucket=${{ secrets.AWS_BUCKET_NAME }},bundleType=zip,key=deploy-board.zip
-
-      - name: S3 업로드(Nginx)
-        working-directory: ./
-        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
-        run: |
-          mkdir -p before-deploy-nginx
-          cp -r ./nginx before-deploy-nginx/
-          cd before-deploy-nginx && zip -r before-deploy-nginx *
-          cd ../ && mkdir -p deploy-nginx
-          mv before-deploy-nginx/before-deploy-nginx.zip deploy-nginx/deploy-nginx.zip
-          aws s3 cp deploy-nginx/deploy-nginx.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-nginx.zip
-
-          DEPLOYMENT_ID=$(aws deploy list-deployments \
-          --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
-          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
-          --query "deployments[0]" --output text)
-          aws deploy wait deployment-successful --deployment-id $DEPLOYMENT_ID || true
-
-          aws deploy create-deployment \
-          --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
-          --file-exists-behavior OVERWRITE \
-          --s3-location bucket=${{ secrets.AWS_BUCKET_NAME }},bundleType=zip,key=deploy-nginx.zip

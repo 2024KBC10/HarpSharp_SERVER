@@ -1,4 +1,3 @@
-version: "3"
 services:
   auth:
     container_name: auth
