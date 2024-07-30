@@ -16,7 +16,7 @@ docker-compose up -d
 docker stop auth | rm auth | rmi auth
 docker stop swagger-auth | rm swagger-auth | rmi swagger-auth
 
-cd /home/ubuntu/deploy-auth/
+cd /home/ubuntu/deploy/auth/
 
 docker-compose up --build -d
 
