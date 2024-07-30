@@ -86,7 +86,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
           mkdir -p before-deploy-db
-          cp ./docker-compose.yml before-deploy-db/
+          cp docker-compose.yml before-deploy-db/
           cp scripts/*.sh before-deploy-db/
           cp appspec.yml before-deploy-db/
           cd before-deploy-db && zip -r before-deploy-db *
@@ -162,6 +162,7 @@ jobs:
           --s3-location bucket=${{ secrets.AWS_BUCKET_NAME }},bundleType=zip,key=deploy-board.zip
 
       - name: S3 업로드(Nginx)
+        working-directory: ./
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/auth'}}
         run: |
           mkdir -p before-deploy-nginx

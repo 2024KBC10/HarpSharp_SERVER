@@ -1,8 +1,8 @@
 #!/bin/bash
 
-mkdir -p /home/ubuntu/deploy/nginx-zip/
+mkdir -p /home/ubuntu/deploy-nginx/
 
-cd /home/ubuntu/deploy/nginx-zip/
+cd /home/ubuntu/deploy-nginx
 
 # 네트워크가 존재하는지 확인
 if [ -z "$(docker network ls | grep harpsharp)" ]
