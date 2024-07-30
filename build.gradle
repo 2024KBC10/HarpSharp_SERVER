@@ -56,8 +56,6 @@ subprojects {
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
         testImplementation 'org.projectlombok:lombok:1.18.20'
-        testImplementation "com.epages:restdocs-api-spec-mockmvc:${restdocsApiSpecVersion}"
-        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     }

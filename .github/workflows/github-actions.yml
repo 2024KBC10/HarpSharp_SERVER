@@ -47,13 +47,15 @@ jobs:
           mkdir -p auth/src/main/resources
           echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > auth/src/main/resources/application.yaml
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > auth/src/main/resources/application-prod.yaml
+          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > board/src/main/resources/application.yaml
+          echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > board/src/main/resources/application-prod.yaml
+
       - name: Gradle 빌드 && API 명세서 업로드
         run: |
           mkdir -p auth/build/openapi3/
           mkdir -p board/build/openapi3/
           chmod +x auth/gradlew
           chmod +x board/gradlew
-          chmod +x gradlew
   
           auth/gradlew --no-build-cache --warning-mode all
           auth/gradlew --no-build-cache --warning-mode all
