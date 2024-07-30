@@ -55,8 +55,8 @@ jobs:
           chmod +x board/gradlew
           chmod +x gradlew
   
-          ./gradlew auth:bootJar --no-build-cache --warning-mode all
-          ./gradlew board:bootJar --no-build-cache --warning-mode all
+          ./gradlew :auth:bootJar --no-build-cache --warning-mode all
+          ./gradlew :board:bootJar --no-build-cache --warning-mode all
           auth/gradlew openapi3 --no-build-cache --warning-mode all
           board/gradlew openapi3 --no-build-cache --warning-mode all
 
