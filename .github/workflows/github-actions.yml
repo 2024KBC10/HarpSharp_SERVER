@@ -81,68 +81,50 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: S3 업로드(DB)
+      - name: 배포 Dir 생성(DB)
         working-directory: ./infra_rds
-        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         run: |
-          mkdir -p before-deploy-db
-          cp docker-compose.yml before-deploy-db/
-          cp scripts/*.sh before-deploy-db/
-          cp appspec.yml before-deploy-db/
-          cd before-deploy-db && zip -r before-deploy-db *
-          cd ../ && mkdir -p deploy-db
-          mv before-deploy-db/before-deploy-db.zip deploy-db/deploy-db.zip
-          aws s3 cp deploy-db/deploy-db.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-db.zip
+          mkdir -p deploy-db
+          cp docker-compose.yml deploy-db/
+          cp scripts/*.sh deploy-db/
+          cp appspec.yml deploy-db/
+          cd ../ && mkdir -p deploy/db
+          mv ./infra_rds/deploy-db deploy/db 
 
-          aws deploy create-deployment \
-          --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
-          --file-exists-behavior OVERWRITE \
-          --s3-location bucket=${{ secrets.AWS_BUCKET_NAME }},bundleType=zip,key=deploy-db.zip
-
-      - name: S3 업로드(Auth)
+      - name: 배포 Dir 생성(Auth)
         working-directory: ./auth
-        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         run: |
-          mkdir -p before-deploy-auth
-          cp build/libs/auth-*.jar before-deploy-auth/
-          cp scripts/*.sh before-deploy-auth/
-          cp appspec.yml before-deploy-auth/
-          cp Dockerfile before-deploy-auth/
-          cp docker-compose.yml before-deploy-auth/
-          cp build/api-spec/authAPI.json before-deploy-auth/
-          cd before-deploy-auth && zip -r before-deploy-auth *
-          cd ../ && mkdir -p deploy-auth
-          mv before-deploy-auth/before-deploy-auth.zip deploy-auth/deploy-auth.zip
-          aws s3 cp deploy-auth/deploy-auth.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-auth.zip
-          
-          aws deploy create-deployment \
-          --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
-          --file-exists-behavior OVERWRITE \
-          --s3-location bucket=${{ secrets.AWS_BUCKET_NAME }},bundleType=zip,key=deploy-auth.zip
+          mkdir -p deploy-auth
+          cp build/libs/auth-*.jar deploy-auth/
+          cp Dockerfile deploy-auth/
+          cp docker-compose.yml deploy-auth/
+          cp build/api-spec/authAPI.json deploy-auth/
+          cd ../ && mkdir -p deploy/auth
+          mv ./auth/deploy-auth deploy/auth 
 
-      - name: S3 업로드(Board)
+
+      - name: 배포 Dir 생성(Board)
         working-directory: ./board
-        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         run: |
-          mkdir -p before-deploy-board
-          cp build/libs/board-*.jar before-deploy-board/
-          cp scripts/*.sh before-deploy-board/
-          cp appspec.yml before-deploy-board/
-          cp Dockerfile before-deploy-board/
-          cp docker-compose.yml before-deploy-board/
-          cp build/api-spec/boardAPI.json before-deploy-board/
-          cd before-deploy-board && zip -r before-deploy-board *
-          cd ../ && mkdir -p deploy-board
-          mv before-deploy-board/before-deploy-board.zip deploy-board/deploy-board.zip
-          aws s3 cp deploy-board/deploy-board.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy-board.zip
-          
+          mkdir -p deploy-board
+          cp build/libs/board-*.jar deploy-board/
+          cp Dockerfile deploy-board/
+          cp docker-compose.yml deploy-board/
+          cp build/api-spec/boardAPI.json deploy-board/
+          cd ../ && mkdir -p deploy/board
+          mv ./board/deploy-board deploy/board 
+
+      - name: S3 업로드 및 CD 요청
+        working-directory: ./
+        run: |
+          cp scripts/*.sh deploy
+          cp appspec.yml deploy
+          cd deploy && zip -r deploy *
+          aws s3 cp deploy.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy.zip
+
           aws deploy create-deployment \
           --application-name ${{ secrets.AWS_CODEDEPLOY_APP_NAME }} \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name ${{ secrets.AWS_CODEDEPLOY_GROUP_NAME }} \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=${{ secrets.AWS_BUCKET_NAME }},bundleType=zip,key=deploy-board.zip
+          --s3-location bucket=${{ secrets.AWS_BUCKET_NAME }},bundleType=zip,key=deploy.zip
