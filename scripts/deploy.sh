@@ -24,11 +24,10 @@ else
 fi
 
 cd /home/ubuntu/deploy/db/
-
 docker-compose up -d
 
-cd /home/ubuntu/deploy/auth/
 
+cd /home/ubuntu/deploy/auth/
 
 serviceDown "auth"
 docker-compose up --build -d
@@ -39,10 +38,16 @@ cd /home/ubuntu/deploy/board/
 serviceDown "board"
 docker-compose up --build -d
 
+
+cd /home/ubuntu/deploy/todo/
+
+serviceDown "todo"
+docker-compose up --build -d
+
+
 cd /home/ubuntu/deploy/nginx/
 
-serviceDown "nginx"
-docker-compose up --build -d
+docker-compose up -d
 
 docker rmi $(docker images -f "dangling=true" -q)
 

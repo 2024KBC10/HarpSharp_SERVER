@@ -1,6 +1,6 @@
 services:
   board:
-    container_name: board
+    container_name: todo
     restart: on-failure
     build:
       context: ./
@@ -16,13 +16,13 @@ services:
 
   swagger:
     image: swaggerapi/swagger-ui
-    container_name: swagger-board
+    container_name: swagger-todo
     volumes:
       - ./:/tmp
     expose:
       - "8080"
     environment:
-      - SWAGGER_JSON=tmp/boardAPI.json
+      - SWAGGER_JSON=tmp/todoApi.json
     networks:
       - harpsharp
 

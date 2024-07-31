@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@Entity(name = "post")
+@Entity(name = "Post")
 @DynamicUpdate
 public class Post extends BasePost {
     @Id
