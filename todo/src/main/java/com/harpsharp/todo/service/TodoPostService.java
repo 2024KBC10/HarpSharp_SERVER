@@ -1,6 +1,8 @@
 package com.harpsharp.todo.service;
 
+import com.harpsharp.auth.service.UserService;
 import com.harpsharp.infra_rds.entity.TodoPost;
+import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.repository.TodoPostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +17,15 @@ import java.util.Optional;
 @Transactional
 public class TodoPostService {
     private final TodoPostRepository todoPostRepository;
+    private final UserService userService;
 
 
     public List<TodoPost> getAllTodoPosts() {
         return todoPostRepository.findAll();
     }
     public List<TodoPost> getTodoPostsByUsername(String username) {
-        return todoPostRepository.findByUsername(username);
+        User user = userService.findByUsername(username).orElseThrow(IllegalArgumentException::new);
+        return todoPostRepository.findByUser(user);
     }
 
 
