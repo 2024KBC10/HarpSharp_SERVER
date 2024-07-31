@@ -82,7 +82,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join" ,"/swagger")
+                        .requestMatchers("/login", "/", "/join" ,"/swagger/**")
                         .permitAll()
                         .requestMatchers("/admin")
                         .hasRole("ADMIN")
