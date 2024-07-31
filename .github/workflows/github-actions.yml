@@ -2,9 +2,14 @@ name: CI/CD
 on:
   push:
     branches:
-      - feature/auth
+      - feature/*
       - dev
       - main
+  pull_request:
+    branches:
+      - main
+      - dev
+      - feature/*
   workflow_dispatch:
 
 jobs:
@@ -97,8 +102,6 @@ jobs:
         run: |
           mkdir -p deploy-db
           cp docker-compose.yml deploy-db/
-          cp scripts/*.sh deploy-db/
-          cp appspec.yml deploy-db/
           cd ../ && mkdir -p deploy/db
           mv ./infra_rds/deploy-db/* deploy/db 
 
@@ -136,7 +139,7 @@ jobs:
           cp docker-compose.yml deploy-todo/
           cp build/api-spec/todoAPI.json deploy-todo/
           cd ../ && mkdir -p deploy/todo
-          mv ./board/deploy-todo/* deploy/todo 
+          mv ./todo/deploy-todo/* deploy/todo 
 
       - name: 배포 Dir 생성(Nginx)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}

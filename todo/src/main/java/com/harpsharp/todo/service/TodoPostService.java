@@ -1,9 +1,9 @@
 package com.harpsharp.todo.service;
 
-import com.harpsharp.auth.service.UserService;
 import com.harpsharp.infra_rds.entity.TodoPost;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.repository.TodoPostRepository;
+import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +16,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 public class TodoPostService {
+    private final UserRepository userRepository;
     private final TodoPostRepository todoPostRepository;
-    private final UserService userService;
 
 
     public List<TodoPost> getAllTodoPosts() {
         return todoPostRepository.findAll();
     }
     public List<TodoPost> getTodoPostsByUsername(String username) {
-        User user = userService.findByUsername(username).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findByUsername(username).orElseThrow(IllegalArgumentException::new);
         return todoPostRepository.findByUser(user);
     }
 

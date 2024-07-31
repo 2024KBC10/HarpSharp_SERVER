@@ -13,50 +13,50 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @GetMapping("/mytask")
+    @GetMapping("/board/posts")
     public String getAllPosts(Model model) {
         model.addAttribute("posts", postService.getAllPosts());
         return "posts";
     }
 
-    @GetMapping("/mytask/new")
+    @PostMapping("/board/write")
     public String createPostForm(Model model) {
         model.addAttribute("post", new Post());
         return "create_post";
     }
 
-    @PostMapping("/mytask")
+    @PostMapping("/board/posts")
     public String savePost(Post post) {
         postService.savePost(post);
         return "redirect:/mytask";
     }
 
-    @GetMapping("/mytask/{id}")
+    @GetMapping("/board/posts/{id}")
     public String getPostById(@PathVariable Long id, Model model) {
         Post post = postService.getPostById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + id));
         model.addAttribute("post", post);
         return "post_detail";
     }
 
-    @GetMapping("/mytask/{id}/edit")
+    @PutMapping("/board/posts/{id}")
     public String editPostForm(@PathVariable Long id, Model model) {
         Post post = postService.getPostById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + id));
         model.addAttribute("post", post);
         return "edit_post";
     }
 
-    @PostMapping("/mytask/{id}/edit")
+    @PostMapping("/board/posts/{id}")
     public String updatePost(@PathVariable Long id, Post updatedPost) {
         Post post = postService.getPostById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + id));
         post.setTitle(updatedPost.getTitle());
         post.setContent(updatedPost.getContent());
         postService.savePost(post);
-        return "redirect:/mytask/{id}";
+        return "redirect:/board/{id}";
     }
 
-    @PostMapping("/mytask/{id}/delete")
+    @DeleteMapping("/board/posts/{id}")
     public String deletePost(@PathVariable Long id) {
         postService.deletePost(id);
-        return "redirect:/mytask";
+        return "redirect:/board";
     }
 }
