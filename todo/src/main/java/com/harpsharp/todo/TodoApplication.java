@@ -2,8 +2,9 @@ package com.harpsharp.todo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication(scanBasePackages = {"com.harpsharp.todo", "com.harpsharp.infra"})
+@SpringBootApplication(scanBasePackages = {"com.harpsharp.auth", "com.harpsharp.infra_rds"})
 public class TodoApplication {
 
 	public static void main(String[] args) {
