@@ -50,6 +50,8 @@ jobs:
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > auth/src/main/resources/application-prod.yaml
           echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > board/src/main/resources/application.yaml
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > board/src/main/resources/application-prod.yaml
+          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > todo/src/main/resources/application.yaml
+          echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > todo/src/main/resources/application-prod.yaml
 
       - name: 빌드 및 API 명세서 생성 (Auth)
         working-directory: ./auth
@@ -61,6 +63,14 @@ jobs:
 
       - name: 빌드 및 API 명세서 생성 (Board)
         working-directory: ./board
+        run: |
+          mkdir -p build/api-spec
+          chmod +x ./gradlew
+          ./gradlew clean build --warning-mode all
+          ./gradlew openapi3 --warning-mode all
+
+      - name: 빌드 및 API 명세서 생성 (Todo)
+        working-directory: ./todo
         run: |
           mkdir -p build/api-spec
           chmod +x ./gradlew
@@ -82,6 +92,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: 배포 Dir 생성(DB)
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         working-directory: ./infra_rds
         run: |
           mkdir -p deploy-db
@@ -92,6 +103,7 @@ jobs:
           mv ./infra_rds/deploy-db/* deploy/db 
 
       - name: 배포 Dir 생성(Auth)
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         working-directory: ./auth
         run: |
           mkdir -p deploy-auth
@@ -103,6 +115,7 @@ jobs:
           mv ./auth/deploy-auth/* deploy/auth
 
       - name: 배포 Dir 생성(Board)
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         working-directory: ./board
         run: |
           mkdir -p deploy-board
@@ -113,13 +126,27 @@ jobs:
           cd ../ && mkdir -p deploy/board
           mv ./board/deploy-board/* deploy/board 
 
+      - name: 배포 Dir 생성(Todo)
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
+        working-directory: ./todo
+        run: |
+          mkdir -p deploy-todo
+          cp build/libs/todo-*.jar deploy-todo/
+          cp Dockerfile deploy-todo/
+          cp docker-compose.yml deploy-todo/
+          cp build/api-spec/todoAPI.json deploy-todo/
+          cd ../ && mkdir -p deploy/todo
+          mv ./board/deploy-todo/* deploy/todo 
+
       - name: 배포 Dir 생성(Nginx)
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         working-directory: ./
         run : |
           mkdir -p deploy/nginx
           mv ./nginx/* deploy/nginx
 
       - name: S3 업로드 및 CD 요청
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         working-directory: ./
         run: |
           cp scripts/*.sh deploy

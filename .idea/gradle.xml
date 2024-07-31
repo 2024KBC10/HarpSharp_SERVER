@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/auth" />
             <option value="$PROJECT_DIR$/board" />
             <option value="$PROJECT_DIR$/infra_rds" />
+            <option value="$PROJECT_DIR$/todo" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
