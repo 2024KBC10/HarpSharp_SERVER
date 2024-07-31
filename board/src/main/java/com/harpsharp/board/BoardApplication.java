@@ -3,7 +3,7 @@ package com.harpsharp.board;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = "com.harpsharp.infra_rds")
+@SpringBootApplication(scanBasePackages = {"com.harpsharp.board", "com.harpsharp.infra"})
 public class BoardApplication {
 
 	public static void main(String[] args) {
