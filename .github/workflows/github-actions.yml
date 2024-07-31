@@ -139,7 +139,7 @@ jobs:
           cp docker-compose.yml deploy-todo/
           cp build/api-spec/todoAPI.json deploy-todo/
           cd ../ && mkdir -p deploy/todo
-          mv ./board/deploy-todo/* deploy/todo 
+          mv ./todo/deploy-todo/* deploy/todo 
 
       - name: 배포 Dir 생성(Nginx)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
