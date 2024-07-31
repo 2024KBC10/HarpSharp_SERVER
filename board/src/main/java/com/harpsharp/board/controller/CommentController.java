@@ -21,7 +21,7 @@ public class CommentController {
     @Autowired
     private PostService postService;
 
-    @PostMapping("/mytask/{postId}/comments")
+    @PostMapping("/board/{postId}/comments")
     public String addComment(@PathVariable Long postId, @RequestParam String content, Model model) {
         Post post = postService.getPostById(postId).orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + postId));
         Comment comment = new Comment();
@@ -31,7 +31,7 @@ public class CommentController {
         return "redirect:/mytask/" + postId;
     }
 
-    @GetMapping("/mytask/{postId}/comments/{commentId}/edit")
+    @GetMapping("/board/{postId}/comments/{commentId}/edit")
     public String editCommentForm(@PathVariable Long postId, @PathVariable Long commentId, Model model) {
         Comment comment = commentService.getCommentById(commentId).orElseThrow(() -> new IllegalArgumentException("Invalid comment Id:" + commentId));
         model.addAttribute("comment", comment);
@@ -39,17 +39,17 @@ public class CommentController {
         return "edit_comment";
     }
 
-    @PostMapping("/mytask/{postId}/comments/{commentId}/edit")
+    @PostMapping("/board/{postId}/comments/{commentId}/edit")
     public String updateComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestParam String content, Model model) {
         Comment comment = commentService.getCommentById(commentId).orElseThrow(() -> new IllegalArgumentException("Invalid comment Id:" + commentId));
         comment.setContent(content);
         commentService.saveComment(comment);
-        return "redirect:/mytask/" + postId;
+        return "redirect:/board/" + postId;
     }
 
-    @PostMapping("/mytask/{postId}/comments/{commentId}/delete")
+    @PostMapping("/board/{postId}/comments/{commentId}/delete")
     public String deleteComment(@PathVariable Long postId, @PathVariable Long commentId, Model model) {
         commentService.deleteComment(commentId);
-        return "redirect:/mytask/" + postId;
+        return "redirect:/board/" + postId;
     }
 }
