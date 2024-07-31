@@ -105,6 +105,7 @@ public class UserService {
     }
 
     public Optional<User> findById(Long userId){ return userRepository.findById(userId); }
+    public Optional<User> findByUsername(String username){ return userRepository.findByUsername(username); }
 
     public void deleteById(Long userId, String accessToken){
         if(!userRepository.existsById(userId)){ throw new IllegalArgumentException("존재하지 않는 유저입니다."); }
