@@ -46,6 +46,8 @@ serviceDown(){
 }
 
 serviceUp(){
+  ls $SERVICE_NAME
+  ls /home/ubuntu/deploy/$SERVICE_NAME
   cd /home/ubuntu/deploy/$SERVICE_NAME
   serviceDown $SERVICE_NAME
   docker-compose up --build -d
