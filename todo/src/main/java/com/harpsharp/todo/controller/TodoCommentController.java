@@ -19,23 +19,23 @@ public class TodoCommentController {
         return todoCommentService.getAllComments();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/todo/{id}")
     public TodoComment getCommentById(@PathVariable Long id) {
         return todoCommentService.getCommentById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid comment Id:" + id));
     }
 
-    @PostMapping
+    @PostMapping("/todo")
     public TodoComment createComment(@RequestBody TodoComment comment) {
         return todoCommentService.createComment(comment);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/todo/{id}")
     public TodoComment updateComment(@PathVariable Long id, @RequestBody TodoComment commentDetails) {
         return todoCommentService.updateComment(id, commentDetails);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/todo/{id}")
     public void deleteComment(@PathVariable Long id) {
         todoCommentService.deleteComment(id);
     }
