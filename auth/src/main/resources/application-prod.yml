@@ -1,4 +1,7 @@
 spring:
+  config:
+    activate:
+      on-profile: prod
   jwt:
     secret: ed46b9093e4683f177ff14b160339832b2424f7722840e6321d609b2e30ae3ce496bf51e292b940cbd7869ee071f8c539c9e2b0e2f82200deb11c671e15ab2e3
   mvc:
