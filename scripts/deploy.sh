@@ -45,14 +45,6 @@ serviceDown(){
   fi
 }
 
-serviceUp(){
-  ls $SERVICE_NAME
-  ls /home/ubuntu/deploy/$SERVICE_NAME
-  cd /home/ubuntu/deploy/$SERVICE_NAME
-  serviceDown $SERVICE_NAME
-  docker-compose up --build -d
-}
-
 restartNginx(){
   docker exec nginx nginx -s reload
 }
@@ -65,9 +57,17 @@ cleanUpImages(){
 runNetwork
 runDB
 
-serviceUp auth
-serviceUp board
-serviceUp todo
+cd /home/ubuntu/deploy/auth
+serviceDown auth
+docker-compose up --build -d
+
+cd /home/ubuntu/deploy/board
+serviceDown board
+docker-compose up --build -d
+
+cd /home/ubuntu/deploy/todo
+serviceDown todo
+docker-compose up --build -d
 
 restartNginx
 cleanUpImages
