@@ -13,6 +13,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +25,13 @@ import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
     private final JwtUtil jwtUtil;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    @PatchMapping("/user/update")
+    @PatchMapping("/user")
     public ResponseEntity<ApiResponse> updateUser(HttpServletRequest request,
                                                   @RequestBody UserDTO updatedDTO,
                                                   HttpServletResponse response) throws IOException {
@@ -59,7 +61,7 @@ public class UserController {
         return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
     }
 
-    @DeleteMapping("/user/delete")
+    @DeleteMapping("/user")
     public ResponseEntity<ApiResponse> deleteUser(@RequestHeader("Authorization") String accessToken) throws IOException {
 
         if (accessToken == null || !accessToken.startsWith("Bearer ")) {
