@@ -8,10 +8,6 @@ plugins {
 
 openapi3 {
 	servers = [
-			{ url = "http://localhost:8080"},
-			{ url = "http://harpsharp.com/docs/auth" },
-			{ url = "https://harpsharp.com/docs/auth"},
-			{ url = "http://harpsharp.com"},
 			{ url = "https://harpsharp.com"}
 	]
 	title = "Harp Sharp Auth API"
