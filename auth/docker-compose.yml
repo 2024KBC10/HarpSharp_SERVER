@@ -11,6 +11,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/harpsharp?useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: "root"
       SPRING_DATASOURCE_PASSWORD: "wlghks24461!"
+      SPRING_PROFILES_ACTIVE: prod
     networks:
       - harpsharp
 
