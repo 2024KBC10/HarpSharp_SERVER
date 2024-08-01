@@ -63,9 +63,9 @@ cleanUpImages(){
 runNetwork
 runDB
 
-serviceUp "auth"
-serviceUp "board"
-serviceUp "todo"
+serviceUp auth
+serviceUp board
+serviceUp todo
 
 restartNginx
 cleanUpImages
