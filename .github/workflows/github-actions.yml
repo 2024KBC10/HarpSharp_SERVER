@@ -51,11 +51,16 @@ jobs:
       - name: YML 파일 생성
         run: |
           mkdir -p auth/src/main/resources
-          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > auth/src/main/resources/application.yaml
+          echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > auth/src/main/resources/application.yaml
+          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > auth/src/main/resources/application-local.yaml
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > auth/src/main/resources/application-prod.yaml
-          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > board/src/main/resources/application.yaml
+          
+          echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > board/src/main/resources/application.yaml
+          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > board/src/main/resources/application-local.yaml
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > board/src/main/resources/application-prod.yaml
-          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > todo/src/main/resources/application.yaml
+          
+          echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > todo/src/main/resources/application.yaml
+          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > todo/src/main/resources/application-local.yaml
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > todo/src/main/resources/application-prod.yaml
 
       - name: 빌드 및 API 명세서 생성 (Auth)
