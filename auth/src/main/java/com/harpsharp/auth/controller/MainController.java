@@ -2,6 +2,7 @@ package com.harpsharp.auth.controller;
 
 import com.harpsharp.auth.dto.InfoDTO;
 import com.harpsharp.auth.dto.response.ApiResponse;
+import com.harpsharp.auth.utils.BaseResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -38,5 +39,10 @@ public class MainController {
                         .code("ROOT_PAGE")
                         .message("Welcome to Harpsharp!")
                         .build());
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<ApiResponse> verifyAPI(){
+        return BaseResponse.withCode("Validation_Request", "인증/인가에 성공하였습니다.", HttpStatus.OK);
     }
 }
