@@ -191,7 +191,7 @@ class AuthApplicationTests {
 		String updateJson = objectMapper.writeValueAsString(updateUserDto);
 
 		this.mockMvc.perform(
-						patch("/user/update")
+						patch("/user")
 								.header("Authorization", "Bearer " + accessToken)
 								.cookie(refreshToken)
 								.contentType(MediaType.APPLICATION_JSON)
@@ -223,7 +223,7 @@ class AuthApplicationTests {
 		String deleteJson = objectMapper.writeValueAsString(deleteDTO);
 
 		this.mockMvc.perform(
-				delete("/user/delete")
+				delete("/user")
 						.header("Authorization", "Bearer " + accessToken)
 						.cookie(refreshToken)
 						.contentType(MediaType.APPLICATION_JSON)
