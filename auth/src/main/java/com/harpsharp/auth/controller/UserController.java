@@ -48,7 +48,7 @@ public class UserController {
 
         Cookie[] cookies = request.getCookies();
 
-        if (cookies == null) throw new IllegalArgumentException("Invalid cookies");
+        if (cookies == null) throw new IllegalArgumentException("Invalid request");
 
         for(Cookie cookie: cookies){
             response.addCookie(cookie);
@@ -56,6 +56,7 @@ public class UserController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(RedirectURI.REISSUE.getUri()));
+        System.out.println(URI.create(RedirectURI.REISSUE.getUri()));
         headers.add("Authorization", "Bearer " + accessToken);
 
         return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
