@@ -29,12 +29,6 @@ public class ReissueController {
 
     @RequestMapping(value = "/reissue", method = {RequestMethod.POST, RequestMethod.GET, RequestMethod.PATCH})
     public ResponseEntity<ApiResponse> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        logic(request, response);
-        HttpStatus status = (request.getMethod().equals("POST")) ? HttpStatus.CREATED : HttpStatus.OK;
-        return BaseResponse.withCode("JWT_REISSUED_SUCCESSFULLY", "The JWT has been successfully reissued.", status);
-    }
-
-    private void logic(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String refreshToken = null;
         String accessToken  = request.getHeader("Authorization");
 
@@ -100,5 +94,8 @@ public class ReissueController {
         response.setHeader("Authorization", "Bearer " + newAccess);
         response.addCookie(jwtUtil.createCookie("refresh", newRefresh));
         response.setStatus(HttpStatus.OK.value());
+
+        HttpStatus status = (request.getMethod().equals("POST")) ? HttpStatus.CREATED : HttpStatus.OK;
+        return BaseResponse.withCode("JWT_REISSUED_SUCCESSFULLY", "The JWT has been successfully reissued.", status);
     }
 }
