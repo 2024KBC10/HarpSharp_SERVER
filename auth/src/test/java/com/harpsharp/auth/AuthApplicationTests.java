@@ -43,8 +43,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @SpringBootTest
-@ActiveProfiles("local")
 @ComponentScan(basePackages = {"com.harpsharp.auth", "com.harpsharp.infra_rds"})
+@ActiveProfiles("local")
 @RequiredArgsConstructor
 class AuthApplicationTests {
 	@Autowired
