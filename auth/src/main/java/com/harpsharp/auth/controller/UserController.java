@@ -54,9 +54,13 @@ public class UserController {
             response.addCookie(cookie);
         }
 
+        String host = request.getHeader("Host");
+        String scheme = request.getHeader("X-Forwarded-Proto");
+        String redirectURI = scheme + "://" + host + "/reissue";
+
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(RedirectURI.REISSUE.getUri()));
-        System.out.println(URI.create(RedirectURI.REISSUE.getUri()));
+        headers.setLocation(URI.create(redirectURI));
+        System.out.println(URI.create(redirectURI));
         headers.add("Authorization", "Bearer " + accessToken);
 
         return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
