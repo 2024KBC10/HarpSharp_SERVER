@@ -10,9 +10,10 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.time.LocalDateTime;
 
 @Getter
-@Entity(name = "TodoPost")
+@Entity
 @Setter
 @DynamicUpdate
+@Table(name = "todo_posts")
 public class TodoPost extends BasePost{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication(scanBasePackages = "com.harpsharp.infra_rds")
+@SpringBootApplication
 public class InfraApplication {
 
     public static void main(String[] args) {

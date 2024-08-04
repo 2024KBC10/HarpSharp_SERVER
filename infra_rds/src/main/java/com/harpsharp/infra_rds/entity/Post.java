@@ -13,8 +13,9 @@ import java.util.List;
 
 @Getter
 @Setter
-@Entity(name = "Post")
+@Entity
 @DynamicUpdate
+@Table(name = "posts")
 public class Post extends BasePost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

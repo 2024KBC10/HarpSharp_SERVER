@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @DynamicUpdate
-@Entity(name = "Comment")
+@Entity
+@Table(name = "comments")
 public class Comment extends BasePost {
 
     @Id

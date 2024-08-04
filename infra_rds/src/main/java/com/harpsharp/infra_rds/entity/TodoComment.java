@@ -9,9 +9,10 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
 @Setter
-@Entity(name = "TodoComment")
+@Entity
 @DynamicUpdate
 @NoArgsConstructor
+@Table(name = "todo_comments")
 public class TodoComment extends BasePost{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
