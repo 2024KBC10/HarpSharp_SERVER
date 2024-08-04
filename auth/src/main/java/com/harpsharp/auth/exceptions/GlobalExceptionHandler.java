@@ -1,6 +1,6 @@
 package com.harpsharp.auth.exceptions;
 
-import com.harpsharp.auth.dto.response.ErrorResponse;
+import com.harpsharp.infra_rds.dto.response.ErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.extern.slf4j.Slf4j;
@@ -51,11 +51,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    private ResponseEntity<ErrorResponse> handlerIllegalArgumentException(ExpiredJwtException e) {
+    private ResponseEntity<ErrorResponse> handlerIllegalArgumentException(IllegalArgumentException e) {
         log.error(e.getMessage(), e);
         final ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("IS_NULL")
                 .message("유효하지 않은 값 입니다.")
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(IllegalAccessException.class)
+    private ResponseEntity<ErrorResponse> handlerIllegalAccessException(IllegalAccessException e) {
+        log.error(e.getMessage(), e);
+        final ErrorResponse errorResponse = ErrorResponse.builder()
+                .code("INVALID_ACCESS")
+                .message("유효하지 않은 접근입니다.")
                 .build();
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }

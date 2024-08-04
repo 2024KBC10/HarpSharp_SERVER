@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@EnableJpaAuditing
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.harpsharp.auth", "com.harpsharp.infra_rds"})
 public class AuthApplication {

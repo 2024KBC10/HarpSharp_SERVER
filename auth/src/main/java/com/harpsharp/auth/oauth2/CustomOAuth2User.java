@@ -1,6 +1,6 @@
 package com.harpsharp.auth.oauth2;
 
-import com.harpsharp.infra_rds.dto.UserDTO;
+import com.harpsharp.infra_rds.dto.user.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +30,7 @@ public class CustomOAuth2User implements OAuth2User {
         authorities.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return userDTO.getRole();
+                return userDTO.role();
             }
         });
 
@@ -39,6 +39,6 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return userDTO.getUsername();
+        return userDTO.username();
     }
 }

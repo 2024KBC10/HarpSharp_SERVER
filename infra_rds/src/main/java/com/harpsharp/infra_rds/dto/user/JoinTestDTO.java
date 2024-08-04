@@ -1,9 +1,7 @@
-package com.harpsharp.auth.dto;
+package com.harpsharp.infra_rds.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Builder

@@ -1,14 +1,15 @@
 package com.harpsharp.auth.controller;
 
 
-import com.harpsharp.auth.dto.DeleteDTO;
-import com.harpsharp.auth.dto.response.ApiResponse;
+import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
+import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
+import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.UserService;
 import com.harpsharp.auth.utils.BaseResponse;
-import com.harpsharp.auth.utils.RedirectURI;
-import com.harpsharp.infra_rds.dto.UserDTO;
+import com.harpsharp.infra_rds.entity.Post;
 import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.mapper.UserMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,10 +31,21 @@ public class UserController {
     private final JwtUtil jwtUtil;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
+    @GetMapping("/user/{id}")
+    public ResponseEntity<ResponseUserDTO> getPostById(@PathVariable Long id) {
+        User user = userService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + id));
+
+        ResponseUserDTO responseUserDTO =
+                userMapper.convertUserToResponse(user);
+
+        return new ResponseEntity<>(responseUserDTO, HttpStatus.OK);
+    }
     @PatchMapping("/user")
     public ResponseEntity<ApiResponse> updateUser(HttpServletRequest request,
-                                                  @RequestBody UserDTO updatedDTO,
+                                                  @RequestBody UpdateUserDTO updatedDTO,
                                                   HttpServletResponse response) throws IOException {
         String accessToken = request.getHeader("Authorization");
 

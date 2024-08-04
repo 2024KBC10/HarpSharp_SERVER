@@ -64,7 +64,7 @@ public class User {
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<Post> comments = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder(toBuilder = true)
     public User(String username, String password, String email, String social_type, String role){

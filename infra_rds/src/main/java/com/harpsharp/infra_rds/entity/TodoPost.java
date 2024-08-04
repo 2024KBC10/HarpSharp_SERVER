@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Entity
@@ -27,6 +28,9 @@ public class TodoPost extends BasePost{
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private TodoStatus status;
+
+    @OneToMany(mappedBy = "todoPost", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<TodoComment> todoComments;
 
     @Column(name = "start_at")
     private LocalDateTime startAt;

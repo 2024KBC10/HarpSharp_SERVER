@@ -1,17 +1,30 @@
 package com.harpsharp.board.controller;
 
+import com.harpsharp.auth.service.UserService;
+import com.harpsharp.infra_rds.dto.board.RequestPostDTO;
+import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
+import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.board.service.PostService;
 import com.harpsharp.infra_rds.entity.Post;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.mapper.PostMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.net.URI;
+
+@RestController
+@RequiredArgsConstructor
 public class PostController {
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
+    private final UserService userService;
+    private final PostMapper postMapper;
 
     @GetMapping("/board/posts")
     public String getAllPosts(Model model) {
@@ -19,44 +32,90 @@ public class PostController {
         return "posts";
     }
 
-    @PostMapping("/board/write")
-    public String createPostForm(Model model) {
-        model.addAttribute("post", new Post());
-        return "create_post";
-    }
-
     @PostMapping("/board/posts")
-    public String savePost(Post post) {
+    public ResponseEntity<ApiResponse> savePost(
+            @RequestBody RequestPostDTO createdPost,
+            HttpServletRequest request) {
+
+        User author = userService
+                .findByUsername(createdPost.username())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Username"));
+
+        Post post = Post
+                .builder()
+                .user(author)
+                .title(createdPost.title())
+                .content(createdPost.content())
+                .build();
+
         postService.savePost(post);
-        return "redirect:/mytask";
+
+        String host = request.getHeader("Host");
+        String scheme = request.getHeader("X-Forwarded-Proto");
+        String redirectURI = scheme + "://" + host + "/board";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(redirectURI));
+
+        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
     }
 
-    @GetMapping("/board/posts/{id}")
-    public String getPostById(@PathVariable Long id, Model model) {
-        Post post = postService.getPostById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + id));
-        model.addAttribute("post", post);
-        return "post_detail";
+    @GetMapping("/board/posts/{postId}")
+    public ResponseEntity<ResponsePostDTO> getPostById(@PathVariable Long postId) {
+        Post post = postService.getPostById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + postId));
+
+        ResponsePostDTO responsePostDTO
+                = postMapper.postToResponseDTO(post);
+
+        return new ResponseEntity<>(responsePostDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/board/posts/{id}")
-    public String editPostForm(@PathVariable Long id, Model model) {
-        Post post = postService.getPostById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + id));
-        model.addAttribute("post", post);
-        return "edit_post";
-    }
+    @PutMapping("/board/posts/{postId}")
+    public ResponseEntity<ApiResponse> updatePost(@PathVariable Long postId,
+                                                  @RequestBody RequestPostDTO updatedPost,
+                                                  HttpServletRequest request) {
 
-    @PostMapping("/board/posts/{id}")
-    public String updatePost(@PathVariable Long id, Post updatedPost) {
-        Post post = postService.getPostById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + id));
-        post.setTitle(updatedPost.getTitle());
-        post.setContent(updatedPost.getContent());
-        postService.savePost(post);
-        return "redirect:/board/{id}";
+        User author = userService
+                .findByUsername(updatedPost.username())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + postId));
+
+        Post existPost = postService
+                .getPostById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + postId));
+
+        existPost = existPost
+                .toBuilder()
+                .user(author)
+                .title(updatedPost.title())
+                .content(updatedPost.content())
+                .build();
+
+        postService.savePost(existPost);
+
+        String host = request.getHeader("Host");
+        String scheme = request.getHeader("X-Forwarded-Proto");
+        String redirectURI = scheme + "://" + host + "/board/" + postId;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(redirectURI));
+
+        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
     }
 
     @DeleteMapping("/board/posts/{id}")
-    public String deletePost(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> deletePost(@PathVariable Long id,
+                                                  @RequestBody RequestPostDTO deletedPost,
+                                                  HttpServletRequest request) {
         postService.deletePost(id);
-        return "redirect:/board";
+
+        String host = request.getHeader("Host");
+        String scheme = request.getHeader("X-Forwarded-Proto");
+        String redirectURI = scheme + "://" + host + "/board";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(redirectURI));
+
+        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
     }
 }

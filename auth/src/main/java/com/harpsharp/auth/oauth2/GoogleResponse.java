@@ -1,6 +1,5 @@
-package com.harpsharp.infra_rds.dto.response;
+package com.harpsharp.auth.oauth2;
 
-import com.harpsharp.auth.oauth2.OAuth2Response;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;

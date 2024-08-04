@@ -1,7 +1,7 @@
 package com.harpsharp.auth.controller;
 
-import com.harpsharp.auth.dto.JoinDTO;
-import com.harpsharp.auth.dto.response.ApiResponse;
+import com.harpsharp.infra_rds.dto.user.JoinDTO;
+import com.harpsharp.infra_rds.dto.response.ApiResponse;
 
 import com.harpsharp.auth.service.UserService;
 import lombok.RequiredArgsConstructor;

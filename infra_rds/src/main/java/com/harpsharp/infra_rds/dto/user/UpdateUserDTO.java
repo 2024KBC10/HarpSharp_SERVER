@@ -1,4 +1,4 @@
-package com.harpsharp.auth.dto;
+package com.harpsharp.infra_rds.dto.user;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

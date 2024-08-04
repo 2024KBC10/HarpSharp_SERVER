@@ -1,14 +1,4 @@
-package com.harpsharp.board.dto;
+package com.harpsharp.infra_rds.dto.board;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-
-@Data
-@Getter
-@Builder
-@AllArgsConstructor
-public class RequestCommentDTO {
-    String content;
+public record RequestCommentDTO(String username, String content) {
 }

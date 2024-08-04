@@ -19,6 +19,7 @@ openapi3 {
 }
 
 dependencies {
+	implementation	   project(':auth')
 	implementation 	   project(':infra_rds')
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'

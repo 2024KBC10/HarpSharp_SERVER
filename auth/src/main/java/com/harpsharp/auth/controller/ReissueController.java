@@ -1,9 +1,6 @@
 package com.harpsharp.auth.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.harpsharp.auth.dto.RedisDTO;
-import com.harpsharp.auth.dto.response.ApiResponse;
-import com.harpsharp.auth.dto.response.ErrorResponse;
+import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.auth.entity.RefreshToken;
 import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.RefreshTokenService;

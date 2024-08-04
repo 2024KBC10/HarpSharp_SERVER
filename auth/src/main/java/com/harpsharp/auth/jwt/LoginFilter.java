@@ -1,9 +1,9 @@
 package com.harpsharp.auth.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.harpsharp.auth.dto.CustomUserDetails;
-import com.harpsharp.auth.dto.LoginDTO;
-import com.harpsharp.auth.dto.response.ApiResponse;
+import com.harpsharp.auth.utils.CustomUserDetails;
+import com.harpsharp.infra_rds.dto.user.LoginDTO;
+import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.auth.entity.RefreshToken;
 import com.harpsharp.auth.service.RefreshTokenService;
 import jakarta.servlet.FilterChain;

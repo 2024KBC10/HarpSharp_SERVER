@@ -1,11 +1,12 @@
 package com.harpsharp.auth.service;
 
-import com.harpsharp.auth.dto.response.GoogleResponse;
-import com.harpsharp.auth.dto.response.KaKaoResponse;
-import com.harpsharp.auth.dto.response.NaverResponse;
+import com.harpsharp.auth.oauth2.GoogleResponse;
+import com.harpsharp.auth.oauth2.KaKaoResponse;
+import com.harpsharp.auth.oauth2.NaverResponse;
 import com.harpsharp.auth.oauth2.*;
-import com.harpsharp.infra_rds.dto.UserDTO;
+import com.harpsharp.infra_rds.dto.user.UserDTO;
 import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.mapper.UserMapper;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,10 +19,9 @@ import org.springframework.stereotype.Service;
 // 유저 정보를 획득
 @Service
 @RequiredArgsConstructor
-@ComponentScan("com.harpsharp")
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
-
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -59,12 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
             userRepository.save(user);
 
-            UserDTO userDTO = UserDTO.builder()
-                    .username(oAuth2Response.getUsername())
-                    .email(email)
-                    .role("ROLE_USER")
-                    .social_type(registrationId)
-                    .build();
+            UserDTO userDTO = userMapper.convertUserToDTO(user);
 
             return new CustomOAuth2User(userDTO);
         }
