@@ -1,22 +1,23 @@
-package com.harpsharp.auth.dto.response;
+package com.harpsharp.infra_rds.dto.response;
 
 import com.harpsharp.auth.oauth2.OAuth2Response;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
-@RequiredArgsConstructor
-public class GoogleResponse implements OAuth2Response {
+public class KaKaoResponse implements OAuth2Response {
     private final Map<String, Object> attribute;
 
+    public KaKaoResponse(Map<String, Object> attribute){
+        this.attribute = (Map<String, Object>) attribute.get("response");
+    }
     @Override
     public String getProvider() {
-        return "google";
+        return "kakao";
     }
 
     @Override
     public String getProviderId() {
-        return attribute.get("sub").toString();
+        return attribute.get("id").toString();
     }
 
     @Override
