@@ -31,7 +31,7 @@ public class TodoCommentService {
 
     public TodoComment updateComment(Long id, TodoComment commentDetails) {
         TodoComment comment = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid comment Id:" + id));
-        comment.setContent(commentDetails.getContent());
+        //comment.setContent(commentDetails.getContent());
         return commentRepository.save(comment);
     }
 

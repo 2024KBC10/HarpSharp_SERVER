@@ -40,7 +40,7 @@ public class TodoPostService {
     public TodoPost updateTodoPost(Long id, TodoPost todoPostDetails) {
         TodoPost todoPost = todoPostRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid TodoPost Id:" + id));
         todoPost.setTitle(todoPostDetails.getTitle());
-        todoPost.setContent(todoPostDetails.getContent());
+        //todoPost.setContent(todoPostDetails.getContent());
         todoPost.setStatus(todoPostDetails.getStatus());
         todoPost.setStartAt(todoPostDetails.getStartAt());
         todoPost.setEndAt(todoPostDetails.getEndAt());

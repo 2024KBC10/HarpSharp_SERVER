@@ -111,11 +111,11 @@ public class PostController {
 
         String host = request.getHeader("Host");
         String scheme = request.getHeader("X-Forwarded-Proto");
-        String redirectURI = scheme + "://" + host + "/board";
+        String redirectURI = scheme + "://" + host + "/board/posts";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
 
-        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 }

@@ -40,9 +40,4 @@ public class MainController {
                         .message("Welcome to Harpsharp!")
                         .build());
     }
-
-    @GetMapping("/verify")
-    public ResponseEntity<ApiResponse> verifyAPI(){
-        return BaseResponse.withCode("Validation_Request", "인증/인가에 성공하였습니다.", HttpStatus.OK);
-    }
 }
