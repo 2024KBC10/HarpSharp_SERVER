@@ -21,14 +21,7 @@ public class SwaggerController {
     @RequestMapping(value = "/docs/auth", method = RequestMethod.GET)
     public ResponseEntity<ApiResponse> docsAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpHeaders headers = new HttpHeaders();
-        String accessToken = request.getHeader("Authorization");
-
-        if (accessToken == null || !accessToken.startsWith("Bearer ")) {
-            throw new IllegalArgumentException("Invalid access token");
-        }
         headers.setLocation(URI.create(RedirectURI.DOCS_AUTH.getUri()));
-        headers.add("Authorization", "Bearer " + accessToken);
-
         return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
     }
 }
