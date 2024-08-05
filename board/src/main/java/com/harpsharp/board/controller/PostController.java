@@ -57,7 +57,7 @@ public class PostController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
 
-        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     @GetMapping("/board/posts/{postId}")
@@ -100,7 +100,7 @@ public class PostController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
 
-        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     @DeleteMapping("/board/posts/{id}")
