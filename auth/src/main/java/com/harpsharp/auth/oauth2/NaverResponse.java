@@ -1,6 +1,4 @@
-package com.harpsharp.auth.dto.response;
-
-import com.harpsharp.auth.oauth2.OAuth2Response;
+package com.harpsharp.auth.oauth2;
 
 import java.util.Map;
 

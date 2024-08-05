@@ -1,4 +1,4 @@
-package com.harpsharp.auth.dto.response;
+package com.harpsharp.infra_rds.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

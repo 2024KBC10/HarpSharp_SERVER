@@ -1,55 +1,105 @@
 package com.harpsharp.board.controller;
-
+import com.harpsharp.auth.jwt.JwtUtil;
+import com.harpsharp.auth.service.UserService;
+import com.harpsharp.infra_rds.dto.board.RequestCommentDTO;
 import com.harpsharp.board.service.CommentService;
 import com.harpsharp.board.service.PostService;
+import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.infra_rds.entity.Comment;
 import com.harpsharp.infra_rds.entity.Post;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.harpsharp.infra_rds.entity.User;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @Controller
+@RequiredArgsConstructor
 public class CommentController {
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
+    private final PostService postService;
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    private PostService postService;
+    @PostMapping("/board/posts/{postId}/comments")
+    public ResponseEntity<ApiResponse> addComment(@PathVariable Long postId,
+                                                  HttpServletRequest request,
+                                                  @RequestHeader("Authorization") String accessToken,
+                                                  @RequestBody RequestCommentDTO updatedComment) throws IllegalAccessException {
+        String username = updatedComment.username();
 
-    @PostMapping("/board/{postId}/comments")
-    public String addComment(@PathVariable Long postId, @RequestParam String content, Model model) {
+        if(!username.equals(jwtUtil.getUsername(accessToken))) throw new IllegalAccessException("Invalid Access");
+
+        User user = userService.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Invalid Username:" + username));
         Post post = postService.getPostById(postId).orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + postId));
-        Comment comment = new Comment();
-        comment.setContent(content);
-        comment.setPost(post);
-        commentService.saveComment(comment);
-        return "redirect:/mytask/" + postId;
+
+        Comment comment = Comment
+                .builder()
+                .user(user)
+                .post(post)
+                .content(updatedComment.content())
+                .build();
+
+        commentService.save(comment);
+
+        String host = request.getHeader("Host");
+        String scheme = request.getHeader("X-Forwarded-Proto");
+        String redirectURI = scheme + "://" + host + "/board/" + postId;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(redirectURI));
+
+        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
     }
 
-    @GetMapping("/board/{postId}/comments/{commentId}/edit")
-    public String editCommentForm(@PathVariable Long postId, @PathVariable Long commentId, Model model) {
-        Comment comment = commentService.getCommentById(commentId).orElseThrow(() -> new IllegalArgumentException("Invalid comment Id:" + commentId));
-        model.addAttribute("comment", comment);
-        model.addAttribute("postId", postId);
-        return "edit_comment";
+    @PutMapping("/board/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<ApiResponse> updateComment(
+            @PathVariable Long postId,
+            @PathVariable Long commentId,
+            HttpServletRequest request,
+            @RequestBody RequestCommentDTO updatedComment) {
+
+        Comment existingComment = commentService.getCommentById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid comment Id:" + commentId));
+
+        existingComment = existingComment
+                .toBuilder()
+                .content(updatedComment.content())
+                .build();
+
+        commentService.save(existingComment);
+
+        String host = request.getHeader("Host");
+        String scheme = request.getHeader("X-Forwarded-Proto");
+        String redirectURI = scheme + "://" + host + "/board/" + postId;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(redirectURI));
+
+        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
     }
 
-    @PostMapping("/board/{postId}/comments/{commentId}/edit")
-    public String updateComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestParam String content, Model model) {
-        Comment comment = commentService.getCommentById(commentId).orElseThrow(() -> new IllegalArgumentException("Invalid comment Id:" + commentId));
-        comment.setContent(content);
-        commentService.saveComment(comment);
-        return "redirect:/board/" + postId;
-    }
 
-    @PostMapping("/board/{postId}/comments/{commentId}/delete")
-    public String deleteComment(@PathVariable Long postId, @PathVariable Long commentId, Model model) {
+    @DeleteMapping("/board/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<ApiResponse> deleteComment(@PathVariable Long postId,
+                                @PathVariable Long commentId,
+                                HttpServletRequest request) {
+
         commentService.deleteComment(commentId);
-        return "redirect:/board/" + postId;
+
+        String host   = request.getHeader("Host");
+        String scheme = request.getHeader("X-Forwarded-Proto");
+        String redirectURI = scheme + "://" + host + "/board/" + postId;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(redirectURI));
+
+        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
     }
 }

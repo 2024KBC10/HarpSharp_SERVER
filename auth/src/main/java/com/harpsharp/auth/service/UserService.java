@@ -1,12 +1,10 @@
 package com.harpsharp.auth.service;
 
-import com.harpsharp.auth.dto.JoinDTO;
+import com.harpsharp.infra_rds.dto.user.JoinDTO;
+import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
 import com.harpsharp.infra_rds.entity.User;
-import com.harpsharp.infra_rds.dto.UserDTO;
 import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
-import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.infra_rds.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,7 +54,7 @@ public class UserService {
         userRepository.deleteAll();
     }
 
-    public void updateUser(Long userId, UserDTO updatedDTO){
+    public void updateUser(Long userId, UpdateUserDTO updatedDTO){
         String updatedUsername = updatedDTO.getUsername();
         String updatedPassword = updatedDTO.getPassword();
         String updatedEmail = updatedDTO.getEmail();
@@ -111,6 +109,5 @@ public class UserService {
 
         userRepository.deleteById(userId);
         refreshTokenService.deleteByToken(accessToken);
-
     }
 }

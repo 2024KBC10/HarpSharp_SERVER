@@ -1,4 +1,4 @@
-package com.harpsharp.auth.dto;
+package com.harpsharp.auth.utils;
 
 import com.harpsharp.infra_rds.entity.User;
 import lombok.RequiredArgsConstructor;

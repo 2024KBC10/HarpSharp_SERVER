@@ -1,15 +1,12 @@
 package com.harpsharp.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.harpsharp.auth.dto.DeleteDTO;
-import com.harpsharp.auth.dto.JoinTestDTO;
-import com.harpsharp.auth.dto.LoginDTO;
-import com.harpsharp.auth.dto.UpdateUserDTO;
-import com.harpsharp.auth.jwt.JwtUtil;
+import com.harpsharp.infra_rds.dto.user.DeleteDTO;
+import com.harpsharp.infra_rds.dto.user.JoinTestDTO;
+import com.harpsharp.infra_rds.dto.user.LoginDTO;
+import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
 import com.harpsharp.auth.service.RefreshTokenService;
 import com.harpsharp.auth.service.UserService;
-import com.harpsharp.infra_rds.InfraApplication;
-import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,16 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 

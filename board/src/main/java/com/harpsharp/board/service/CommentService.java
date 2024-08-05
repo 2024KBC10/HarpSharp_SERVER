@@ -23,7 +23,7 @@ public class CommentService {
         return commentRepository.findById(id);
     }
 
-    public Comment saveComment(Comment comment) {
+    public Comment save(Comment comment) {
         return commentRepository.save(comment);
     }
 

@@ -8,13 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/todo/posts")
 public class TodoPostController {
 
     @Autowired
     private TodoPostService todoPostService;
 
-    @GetMapping
+    @GetMapping("/todo/posts")
     public List<TodoPost> getPosts(@RequestParam(required = false) String username) {
         if (username != null) {
             return todoPostService.getTodoPostsByUsername(username);

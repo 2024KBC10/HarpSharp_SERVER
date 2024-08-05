@@ -1,6 +1,6 @@
 package com.harpsharp.auth.utils;
 
-import com.harpsharp.auth.dto.response.ApiResponse;
+import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

@@ -1,6 +1,6 @@
 package com.harpsharp.auth.service;
 
-import com.harpsharp.auth.dto.CustomUserDetails;
+import com.harpsharp.auth.utils.CustomUserDetails;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

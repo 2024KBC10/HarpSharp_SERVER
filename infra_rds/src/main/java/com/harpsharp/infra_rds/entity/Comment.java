@@ -1,20 +1,14 @@
 package com.harpsharp.infra_rds.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @DynamicUpdate
 @Entity
 @Table(name = "comments")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BasePost {
 
     @Id
@@ -25,4 +19,15 @@ public class Comment extends BasePost {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @Builder(toBuilder = true)
+    public Comment(User user, String content, Post post){
+        this.setContent(content);
+        this.setUser(user);
+        this.post = post;
+    }
+
+    public String getUsername(){
+        return getUser().getUsername();
+    }
 }

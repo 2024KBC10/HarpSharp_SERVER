@@ -1,6 +1,6 @@
 package com.harpsharp.auth.jwt;
 
-import com.harpsharp.auth.dto.CustomUserDetails;
+import com.harpsharp.auth.utils.CustomUserDetails;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.auth.exceptions.JwtAuthenticationException;
 import io.jsonwebtoken.JwtException;
@@ -16,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 @Slf4j
 @RequiredArgsConstructor

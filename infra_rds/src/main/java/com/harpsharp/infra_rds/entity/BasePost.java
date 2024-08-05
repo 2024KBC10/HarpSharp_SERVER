@@ -2,6 +2,7 @@ package com.harpsharp.infra_rds.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,24 +11,24 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
+@Setter(AccessLevel.PROTECTED)
 @MappedSuperclass
 public abstract class BasePost {
     @NotNull
     @Column(name = "content")
-    private String content;
+    protected String content;
 
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    protected User user;
 
     @NotNull
     @CreatedDate
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    protected LocalDateTime createdAt;
 
     @NotNull
     @LastModifiedDate
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    protected LocalDateTime updatedAt;
 }

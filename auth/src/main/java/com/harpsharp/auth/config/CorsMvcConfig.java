@@ -14,6 +14,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost")
                 .allowedOrigins("http://swagger-auth")
                 .allowedOrigins("https://harpsharp.com")
+                .allowedOrigins("https://kbc-office-frontend.vercel.app/")
                 .allowedHeaders("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE");
     }

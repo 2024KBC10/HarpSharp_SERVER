@@ -1,7 +1,6 @@
 package com.harpsharp.auth.controller;
 
-import com.harpsharp.auth.dto.response.ApiResponse;
-import com.harpsharp.auth.utils.BaseResponse;
+import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.auth.utils.RedirectURI;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

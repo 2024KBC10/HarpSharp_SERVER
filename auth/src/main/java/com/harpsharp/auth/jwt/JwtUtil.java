@@ -87,4 +87,8 @@ public class JwtUtil {
                 .build()
                 .toCookie();
     }
+
+    public Boolean isAuthor(String username, String token){
+        return username.equals(getUsername(token));
+    }
 }
