@@ -46,7 +46,7 @@ serviceDown(){
 }
 
 restartNginx(){
-  docker exec -it nginx service nginx reload
+  docker exec -it nginx service nginx restart
 }
 
 cleanUpImages(){
