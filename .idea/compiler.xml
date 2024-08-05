@@ -10,7 +10,6 @@
         <module name="harpsharp-backend.board.main" />
         <module name="harpsharp-backend.auth.main" />
         <module name="harpsharp-backend.infra_rds.main" />
-        <module name="harpsharp-backend.todo.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17" />
