@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/verify")
 public class VerificationController {
     private final JwtUtil jwtUtil;
 
-    @RequestMapping(value = "/posts", method = {RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.PATCH})
+    @RequestMapping(value = "/verify/posts", method = {RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<?> verificationBoard(@RequestHeader("Authorization") String authorization,
                                                          @RequestBody RequestPostDTO requestBody) {
         // Authorization 헤더에서 JWT 추출
@@ -43,7 +42,7 @@ public class VerificationController {
     }
 
 
-    @RequestMapping(value = "/comments", method = {RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.PATCH})
+    @RequestMapping(value = "/verify/comments", method = {RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<?> verificationComment(@RequestHeader("Authorization") String authorization,
                                                 @RequestBody RequestCommentDTO requestBody) {
         // Authorization 헤더에서 JWT 추출
