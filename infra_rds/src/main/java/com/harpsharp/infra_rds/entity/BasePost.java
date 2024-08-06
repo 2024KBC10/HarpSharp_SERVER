@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter(AccessLevel.PROTECTED)
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class) // Add this line
+@EntityListeners(AuditingEntityListener.class)
 public abstract class BasePost {
     @NotNull
     @Column(name = "content")
@@ -33,4 +33,8 @@ public abstract class BasePost {
     @LastModifiedDate
     @Column(name = "updated_at")
     protected LocalDateTime updatedAt;
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
