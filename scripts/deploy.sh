@@ -19,7 +19,6 @@ runDB(){
     echo "MySQL 및 Redis 컨테이너가 이미 실행 중입니다."
   fi
 }
-
 runNetwork(){
   # 네트워크가 존재하는지 확인
   if [ -z "$(docker network ls | grep harpsharp)" ]
@@ -30,7 +29,6 @@ runNetwork(){
       echo "harpsharp 네트워크가 이미 존재합니다."
   fi
 }
-
 serviceDown(){
   if [ $(docker ps -a -q -f name=$CONTAINER_NAME) ]; then
       echo "컨테이너 $CONTAINER_NAME 종료 및 삭제 중..."
@@ -44,11 +42,9 @@ serviceDown(){
       fi
   fi
 }
-
 restartNginx(){
   docker exec -it nginx service nginx restart
 }
-
 cleanUpImages(){
   docker rmi $(docker images -f "dangling=true" -q)
 }
