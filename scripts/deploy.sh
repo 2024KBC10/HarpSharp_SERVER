@@ -29,6 +29,7 @@ runNetwork(){
       echo "harpsharp 네트워크가 이미 존재합니다."
   fi
 }
+
 serviceDown(){
   if [ $(docker ps -a -q -f name=$CONTAINER_NAME) ]; then
       echo "컨테이너 $CONTAINER_NAME 종료 및 삭제 중..."
