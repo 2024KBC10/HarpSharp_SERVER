@@ -18,12 +18,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
 
-
     public void registerUser(JoinDTO joinDTO, String role) {
         String username = joinDTO.getUsername();
         String password = joinDTO.getPassword();
         String email = joinDTO.getEmail();
-        //String profile_image = joinDTO.getProfile_image();
 
         if (userRepository.existsByEmail(email)) {
             throw UserAlreadyExistsException.builder()

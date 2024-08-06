@@ -8,5 +8,5 @@ public record ResponsePostDTO(String username,
                               String content,
                               LocalDateTime createdAt,
                               LocalDateTime updatedAt,
-                              List<ResponseCommentDTO> comments) {
-}
+                              List<ResponseCommentDTO> comments)
+{}
