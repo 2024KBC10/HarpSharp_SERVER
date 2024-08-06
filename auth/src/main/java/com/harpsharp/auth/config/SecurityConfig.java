@@ -9,6 +9,7 @@ import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -33,6 +34,7 @@ import java.util.Collections;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
@@ -54,7 +56,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer(){
-        return web -> web.ignoring().requestMatchers("/error", "/favicon.ico");
+        return web -> web.ignoring().requestMatchers("/error");
     }
 
     @Bean
@@ -83,7 +85,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join" ,"/docs/**")
+                        .requestMatchers("/login", "/", "/join" ,"/docs/**", "/board/**", "/todo/**")
                         .permitAll()
                         .requestMatchers("/admin")
                         .hasRole("ADMIN")
