@@ -42,8 +42,8 @@ serviceDown(){
       fi
   fi
 }
-restartNginx(){
-  docker exec -it nginx service nginx restart
+reloadNginx(){
+  docker exec -it nginx nginx -s reload
 }
 cleanUpImages(){
   docker rmi $(docker images -f "dangling=true" -q)
@@ -65,7 +65,7 @@ cd /home/ubuntu/deploy/todo
 serviceDown todo
 docker-compose up --build -d
 
-restartNginx
+reloadNginx
 cleanUpImages
 
 
