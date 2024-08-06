@@ -11,10 +11,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
                 .exposedHeaders("Set-Cookie")
-                .allowedOrigins("http://localhost")
-                .allowedOrigins("http://swagger-auth")
-                .allowedOrigins("https://harpsharp.com")
-                .allowedOrigins("https://kbc-office-frontend.vercel.app/")
+                .allowedOrigins("*")
                 .allowedHeaders("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE");
     }
