@@ -17,6 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,9 +29,10 @@ public class PostController {
     private final PostMapper postMapper;
 
     @GetMapping("/board/posts")
-    public String getAllPosts(Model model) {
-        model.addAttribute("posts", postService.getAllPosts());
-        return "posts";
+    public ResponseEntity<?> getAllPosts(Model model) {
+        List<Post> allPosts = postService.getAllPosts();
+        Map<Long, ResponsePostDTO> postsJson = postMapper.toMap(allPosts);
+        return new ResponseEntity<>(postsJson, HttpStatus.OK);
     }
 
     @PostMapping("/board/posts")
