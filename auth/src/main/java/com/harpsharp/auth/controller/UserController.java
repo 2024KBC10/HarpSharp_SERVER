@@ -13,7 +13,6 @@ import com.harpsharp.infra_rds.mapper.UserMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -35,7 +34,6 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping("/user/{id}")
-    @Transactional
     public ResponseEntity<ResponseWithData<ResponseUserDTO>> getPostById(@PathVariable Long id) {
         User user = userService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + id));
@@ -52,9 +50,7 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .body(responseWithData);
     }
-
     @PatchMapping("/user")
-    @Transactional
     public ResponseEntity<ApiResponse> updateUser(HttpServletRequest request,
                                                   @RequestBody UpdateUserDTO updatedDTO,
                                                   HttpServletResponse response) throws IOException {
@@ -96,7 +92,6 @@ public class UserController {
     }
 
     @DeleteMapping("/user")
-    @Transactional
     public ResponseEntity<ApiResponse> deleteUser(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody DeleteDTO deleteDTO) throws IOException {

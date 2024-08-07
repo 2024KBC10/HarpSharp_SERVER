@@ -9,7 +9,6 @@ import com.harpsharp.infra_rds.entity.Comment;
 import com.harpsharp.infra_rds.entity.Post;
 import com.harpsharp.infra_rds.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpHeaders;
@@ -30,7 +29,6 @@ public class CommentController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/board/posts/{postId}/comments")
-    @Transactional
     public ResponseEntity<ApiResponse> addComment(@PathVariable Long postId,
                                                   HttpServletRequest request,
                                                   @RequestHeader("Authorization") String accessToken,
@@ -69,7 +67,6 @@ public class CommentController {
     }
 
     @PutMapping("/board/posts/{postId}/comments/{commentId}")
-    @Transactional
     public ResponseEntity<ApiResponse> updateComment(
             @PathVariable Long postId,
             @PathVariable Long commentId,
@@ -105,7 +102,6 @@ public class CommentController {
 
 
     @DeleteMapping("/board/posts/{postId}/comments/{commentId}")
-    @Transactional
     public ResponseEntity<ApiResponse> deleteComment(@PathVariable Long postId,
                                 @PathVariable Long commentId,
                                 HttpServletRequest request) {
