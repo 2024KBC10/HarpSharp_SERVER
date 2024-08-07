@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Map;
@@ -50,8 +51,12 @@ public class PostController {
 
         postService.savePost(createdPost);
 
-        String host = request.getHeader("Host");
-        String redirectURI = "https://" + host + "/board";
+        //String host = request.getHeader("Host");
+
+        String redirectURI = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .replacePath("/board")
+                .toUriString();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
@@ -90,7 +95,10 @@ public class PostController {
         postService.updatePost(updatedPost);
 
         String host = request.getHeader("Host");
-        String redirectURI = "http://" + host + "/board/" + postId;
+        String redirectURI = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .replacePath("/board/" + postId.toString())
+                .toUriString();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
@@ -111,8 +119,9 @@ public class PostController {
                                                   HttpServletRequest request) {
         postService.deletePost(id);
 
-        String host = request.getHeader("Host");
-        String redirectURI = "http://" + host + "/board/posts";
+        String redirectURI = ServletUriComponentsBuilder.fromCurrentRequestUri()
+                .replacePath("/board/posts")
+                .toUriString();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));

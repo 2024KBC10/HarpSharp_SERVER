@@ -20,8 +20,7 @@ import java.net.URI;
 public class SwaggerController {
     @RequestMapping(value = "/docs/auth", method = RequestMethod.GET)
     public ResponseEntity<ApiResponse> docsAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String host = request.getHeader("Host");
-        String redirectURI = "http://" + host + "/swagger-auth";
+        String redirectURI = "http://swagger-auth:8080";
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
 

@@ -30,7 +30,7 @@ public class TodoPost extends BasePost{
     @Column(name = "status", nullable = false)
     private TodoStatus status;
 
-    @OneToMany(mappedBy = "todoPost", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "todoPost", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<TodoComment> todoComments;
 
     @Column(name = "start_at")

@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
@@ -74,8 +75,10 @@ public class UserController {
             response.addCookie(cookie);
         }
 
-        String host = request.getHeader("Host");
-        String redirectURI = "http://" + host + "/reissue";
+        String redirectURI = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .replacePath("/reissue")
+                .toUriString();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
