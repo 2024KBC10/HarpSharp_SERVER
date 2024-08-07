@@ -11,6 +11,7 @@ import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.mapper.PostMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class PostController {
@@ -64,11 +66,11 @@ public class PostController {
         postService.savePost(post);
 
         String host = request.getHeader("Host");
-        String scheme = request.getHeader("X-Forwarded-Proto");
         String redirectURI = "http://" + host + "/board";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
+        System.out.println("redirectURI = " + redirectURI);
 
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
