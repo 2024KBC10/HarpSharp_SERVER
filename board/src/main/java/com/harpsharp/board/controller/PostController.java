@@ -10,6 +10,7 @@ import com.harpsharp.infra_rds.entity.Post;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.mapper.PostMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +33,7 @@ public class PostController {
     private final PostMapper postMapper;
 
     @GetMapping("/board/posts")
+    @Transactional
     public ResponseEntity<?> getAllPosts() {
         List<Post> allPosts = postService.getAllPosts();
         Map<Long, ResponsePostDTO> postsJson = postMapper.toMap(allPosts);
@@ -48,6 +50,7 @@ public class PostController {
     }
 
     @PostMapping("/board/posts")
+    @Transactional
     public ResponseEntity<ApiResponse> savePost(
             @RequestBody RequestPostDTO createdPost,
             HttpServletRequest request) {
@@ -82,6 +85,7 @@ public class PostController {
     }
 
     @GetMapping("/board/posts/{postId}")
+    @Transactional
     public ResponseEntity<ResponseWithData<ResponsePostDTO>> getPostById(@PathVariable Long postId) {
         Post post = postService.getPostById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + postId));
@@ -101,6 +105,7 @@ public class PostController {
     }
 
     @PutMapping("/board/posts/{postId}")
+    @Transactional
     public ResponseEntity<ApiResponse> updatePost(@PathVariable Long postId,
                                                   @RequestBody RequestPostDTO updatedPost,
                                                   HttpServletRequest request) {
@@ -139,6 +144,7 @@ public class PostController {
     }
 
     @DeleteMapping("/board/posts/{id}")
+    @Transactional
     public ResponseEntity<ApiResponse> deletePost(@PathVariable Long id,
                                                   @RequestBody RequestPostDTO deletedPost,
                                                   HttpServletRequest request) {

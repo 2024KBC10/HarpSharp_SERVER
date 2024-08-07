@@ -22,7 +22,7 @@ public class VerificationController {
         ApiResponse apiResponse = new ApiResponse(
                 "VERIFIED_SUCCESS",
                 "회원 권한이 확인 되었습니다.");
-
+        System.out.println("apiResponse = " + apiResponse);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(apiResponse);

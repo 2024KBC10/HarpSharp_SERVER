@@ -4,6 +4,7 @@ import com.harpsharp.infra_rds.dto.user.JoinDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 
 import com.harpsharp.auth.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class JoinController {
     private final UserService userService;
 
     @PostMapping("/join")
+    @Transactional
     public ResponseEntity<ApiResponse> joinUser(@RequestBody JoinDTO joinDTO){
         userService.registerUser(joinDTO, "ROLE_USER");
 
@@ -32,6 +34,7 @@ public class JoinController {
     }
 
     @PostMapping("/admin/join")
+    @Transactional
     public ResponseEntity<ApiResponse> joinAdmin(@RequestBody JoinDTO joinDTO){
         userService.registerUser(joinDTO, "ROLE_ADMIN");
         ApiResponse apiResponse =
