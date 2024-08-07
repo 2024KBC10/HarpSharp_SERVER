@@ -129,6 +129,6 @@ public class UserService {
                 .findByUsername(username)
                 .orElseThrow(()-> new IllegalArgumentException("USER_NOT_FOUND"));
 
-        return existedUser.getUsername();
+        return existedUser.getPassword();
     }
 }

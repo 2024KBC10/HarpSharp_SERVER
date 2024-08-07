@@ -223,7 +223,7 @@ class AuthApplicationTests {
 						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						requestCookies(cookieWithName("refresh").description("유효한 refresh token")),
 						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("password").description("입력한 비밀번호")
+								fieldWithPath("password").description("유저가 입력한 비밀번호 (본인 확인용)")
 						),
 						responseFields(
 								fieldWithPath("code").type(JsonFieldType.STRING)
