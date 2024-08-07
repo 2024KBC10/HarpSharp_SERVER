@@ -65,7 +65,7 @@ public class PostController {
 
         String host = request.getHeader("Host");
         String scheme = request.getHeader("X-Forwarded-Proto");
-        String redirectURI = scheme + "://" + host + "/board";
+        String redirectURI = "http://" + host + "/board";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
@@ -116,7 +116,7 @@ public class PostController {
 
         String host = request.getHeader("Host");
         String scheme = request.getHeader("X-Forwarded-Proto");
-        String redirectURI = scheme + "://" + host + "/board/" + postId;
+        String redirectURI = "http://" + host + "/board/" + postId;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
@@ -132,7 +132,7 @@ public class PostController {
 
         String host = request.getHeader("Host");
         String scheme = request.getHeader("X-Forwarded-Proto");
-        String redirectURI = scheme + "://" + host + "/board/posts";
+        String redirectURI = "http://" + host + "/board/posts";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));

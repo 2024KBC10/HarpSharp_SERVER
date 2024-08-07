@@ -51,7 +51,7 @@ public class CommentController {
 
         String host = request.getHeader("Host");
         String scheme = request.getHeader("X-Forwarded-Proto");
-        String redirectURI = scheme + "://" + host + "/board/" + postId;
+        String redirectURI = "http://" + host + "/board/" + postId;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
@@ -85,7 +85,7 @@ public class CommentController {
 
         String host = request.getHeader("Host");
         String scheme = request.getHeader("X-Forwarded-Proto");
-        String redirectURI = scheme + "://" + host + "/board/" + postId;
+        String redirectURI = "http://" + host + "/board/" + postId;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
@@ -110,7 +110,7 @@ public class CommentController {
 
         String host   = request.getHeader("Host");
         String scheme = request.getHeader("X-Forwarded-Proto");
-        String redirectURI = scheme + "://" + host + "/board/" + postId;
+        String redirectURI = "http://" + host + "/board/" + postId;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));

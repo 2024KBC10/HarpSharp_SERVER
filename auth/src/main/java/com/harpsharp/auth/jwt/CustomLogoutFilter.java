@@ -35,8 +35,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
             return;
         }
 
-        accessToken = accessToken.substring("Bearer ".length());
-        Long userId = jwtUtil.getUserId(accessToken);
 
         if (!requestUri.matches("^\\/logout$")) {
             filterChain.doFilter(request, response);

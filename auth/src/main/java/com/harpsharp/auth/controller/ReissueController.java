@@ -4,7 +4,6 @@ import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.auth.entity.RefreshToken;
 import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.RefreshTokenService;
-import com.harpsharp.auth.utils.BaseResponse;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +23,7 @@ public class ReissueController {
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
 
-    @RequestMapping(value = "/reissue", method = {RequestMethod.POST, RequestMethod.GET, RequestMethod.PATCH})
+    @GetMapping(value = "/reissue")
     public ResponseEntity<ApiResponse> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String refreshToken = null;
         String accessToken  = request.getHeader("Authorization");

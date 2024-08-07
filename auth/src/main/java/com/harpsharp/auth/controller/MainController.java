@@ -2,7 +2,6 @@ package com.harpsharp.auth.controller;
 
 import com.harpsharp.infra_rds.dto.user.InfoDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
-import com.harpsharp.auth.utils.BaseResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

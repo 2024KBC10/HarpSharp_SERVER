@@ -35,6 +35,3 @@ spring:
       repositories:
         enabled:
           false
-logging:
-  level:
-    root: INFO

@@ -1,13 +1,12 @@
 package com.harpsharp.auth.controller;
 
 
+import com.harpsharp.infra_rds.dto.user.DeleteDTO;
 import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.UserService;
-import com.harpsharp.auth.utils.BaseResponse;
-import com.harpsharp.infra_rds.entity.Post;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.mapper.UserMapper;
 import jakarta.servlet.http.Cookie;
@@ -67,29 +66,46 @@ public class UserController {
         }
 
         String host = request.getHeader("Host");
-        String scheme = request.getHeader("X-Forwarded-Proto");
-        String redirectURI = scheme + "://" + host + "/reissue";
+        String redirectURI = "http://" + host + "/reissue";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
         System.out.println(URI.create(redirectURI));
         headers.add("Authorization", "Bearer " + accessToken);
+        System.out.println("Go To Redirect: " + redirectURI);
+        ApiResponse apiResponse = new ApiResponse(
+                "GO_TO_REISSUE",
+                "유저 정보를 수정하였습니다. 토큰을 재발급 합니다.");
 
-        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
+        return ResponseEntity
+                .status(HttpStatus.FOUND)
+                .headers(headers)
+                .body(apiResponse);
     }
 
     @DeleteMapping("/user")
-    public ResponseEntity<ApiResponse> deleteUser(@RequestHeader("Authorization") String accessToken) throws IOException {
+    public ResponseEntity<ApiResponse> deleteUser(
+            @RequestHeader("Authorization") String accessToken,
+            @RequestBody DeleteDTO deleteDTO) throws IOException {
 
         if (accessToken == null || !accessToken.startsWith("Bearer ")) {
             System.out.println("invalid access");
             throw new IllegalArgumentException("Invalid access");
         }
 
+
+
         accessToken = accessToken.substring("Bearer ".length());
 
         Long userId = jwtUtil.getUserId(accessToken);
         String username = jwtUtil.getUsername(accessToken);
+        User user = userService
+                .findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("INVALID_USER_NAME"));
+
+        if(!passwordEncoder.matches(deleteDTO.password(), user.getPassword()))
+            throw new IllegalArgumentException("INVALID_PASSWORD");
+
         userService.deleteById(userId, accessToken);
 
         ApiResponse apiResponse = new ApiResponse(

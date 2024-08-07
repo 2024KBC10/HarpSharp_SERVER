@@ -209,11 +209,7 @@ class AuthApplicationTests {
 	public void deleteTest() throws Exception{
 		login();
 
-		DeleteDTO deleteDTO = DeleteDTO
-				.builder()
-				.password(password)
-				.build();
-
+		DeleteDTO deleteDTO = new DeleteDTO(password);
 		String deleteJson = objectMapper.writeValueAsString(deleteDTO);
 
 		this.mockMvc.perform(

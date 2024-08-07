@@ -21,8 +21,7 @@ public class SwaggerController {
     @RequestMapping(value = "/docs/auth", method = RequestMethod.GET)
     public ResponseEntity<ApiResponse> docsAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String host = request.getHeader("Host");
-        String scheme = request.getHeader("X-Forwarded-Proto");
-        String redirectURI = scheme + "://" + host + "/swagger-auth";
+        String redirectURI = "http://" + host + "/swagger-auth";
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
 
