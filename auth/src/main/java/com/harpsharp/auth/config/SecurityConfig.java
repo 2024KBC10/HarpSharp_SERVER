@@ -1,11 +1,8 @@
 package com.harpsharp.auth.config;
 
-import com.harpsharp.auth.jwt.CustomLogoutFilter;
-import com.harpsharp.auth.jwt.JwtFilter;
-import com.harpsharp.auth.jwt.LoginFilter;
+import com.harpsharp.auth.jwt.*;
 import com.harpsharp.auth.oauth2.CustomSuccessHandler;
 import com.harpsharp.auth.service.CustomOAuth2UserService;
-import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +36,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public CookieSameSiteSupplier applicationCookieSameSiteSupplier() {
@@ -67,7 +65,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join" ,"/docs/**", "/board/**", "/todo/**")
+                        .requestMatchers("/login", "/", "/join", "/docs/**", "/board/**", "/todo/**")
                         .permitAll()
                         .requestMatchers("/admin")
                         .hasRole("ADMIN")
@@ -75,6 +73,8 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
+                .exceptionHandling((exceptions) -> exceptions
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), refreshTokenService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenService), LogoutFilter.class)
