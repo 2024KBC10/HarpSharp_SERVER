@@ -63,6 +63,24 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, CustomOAuth2UserService customOAuth2UserService) throws Exception {
 
         http
+                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+
+                        CorsConfiguration configuration = new CorsConfiguration();
+
+                        configuration.setAllowedOrigins(Collections.singletonList("https://harpsharp:3000"));
+                        configuration.setAllowedOrigins(Collections.singletonList("https://kbc-office-frontend.vercel.app/"));
+
+                        configuration.setAllowCredentials(true);
+                        configuration.setAllowedHeaders(Collections.singletonList("*"));
+                        configuration.setMaxAge(jwtUtil.getRefreshTokenExpireTime());
+                        configuration.setExposedHeaders(Collections.singletonList("refresh"));
+
+                        return configuration;
+                    }
+                })) //
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
