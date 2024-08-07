@@ -76,7 +76,7 @@ public class PostController {
                 "게시글이 성공적으로 작성되었습니다. 루트 페이지로 이동합니다.");
 
         return ResponseEntity
-                .status(HttpStatus.FOUND)
+                .status(HttpStatus.SEE_OTHER)
                 .headers(headers)
                 .body(apiResponse);
     }
@@ -127,8 +127,15 @@ public class PostController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
+        System.out.println("redirectURI = " + redirectURI);
+        ApiResponse apiResponse = new ApiResponse(
+                "REDIERCT_TO_ROOT",
+                "게시글이 성공적으로 수정되었습니다. 루트 페이지로 이동합니다.");
 
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return ResponseEntity
+                .status(HttpStatus.SEE_OTHER)
+                .headers(headers)
+                .body(apiResponse);
     }
 
     @DeleteMapping("/board/posts/{id}")
@@ -143,7 +150,14 @@ public class PostController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
+        System.out.println("redirectURI = " + redirectURI);
+        ApiResponse apiResponse = new ApiResponse(
+                "REDIERCT_TO_ROOT",
+                "게시글이 성공적으로 삭제되었습니다. 루트 페이지로 이동합니다.");
 
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return ResponseEntity
+                .status(HttpStatus.SEE_OTHER)
+                .headers(headers)
+                .body(apiResponse);
     }
 }
