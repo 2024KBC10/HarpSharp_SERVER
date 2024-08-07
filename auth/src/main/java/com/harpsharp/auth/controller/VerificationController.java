@@ -17,7 +17,7 @@ public class VerificationController {
     private final JwtUtil jwtUtil;
 
     @GetMapping("/verify")
-    public ResponseEntity<?> verificationBoard(@RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<?> verificationBoard() {
 
         ApiResponse apiResponse = new ApiResponse(
                 "VERIFIED_SUCCESS",
@@ -27,4 +27,9 @@ public class VerificationController {
                 .status(HttpStatus.OK)
                 .body(apiResponse);
     }
+
+    // @GetMapping(/verify/board/posts/{postId}
+    // @GetMapping(/verify/board/comments/{commentId}
+    // @GetMapping(/verify/todo/posts/{todoPostId}
+    // @GetMapping(/verify/todo/comments/{todoComentId}
 }

@@ -32,7 +32,7 @@ public class PostController {
     private final PostMapper postMapper;
 
     @GetMapping("/board/posts")
-    public ResponseEntity<?> getAllPosts(Model model) {
+    public ResponseEntity<?> getAllPosts() {
         List<Post> allPosts = postService.getAllPosts();
         Map<Long, ResponsePostDTO> postsJson = postMapper.toMap(allPosts);
 
@@ -71,8 +71,14 @@ public class PostController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
         System.out.println("redirectURI = " + redirectURI);
+        ApiResponse apiResponse = new ApiResponse(
+                "REDIERCT_TO_ROOT",
+                "게시글이 성공적으로 작성되었습니다. 루트 페이지로 이동합니다.");
 
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return ResponseEntity
+                .status(HttpStatus.FOUND)
+                .headers(headers)
+                .body(apiResponse);
     }
 
     @GetMapping("/board/posts/{postId}")
@@ -117,7 +123,6 @@ public class PostController {
         postService.savePost(existPost);
 
         String host = request.getHeader("Host");
-        String scheme = request.getHeader("X-Forwarded-Proto");
         String redirectURI = "http://" + host + "/board/" + postId;
 
         HttpHeaders headers = new HttpHeaders();
