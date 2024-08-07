@@ -20,7 +20,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         final ErrorResponse errorResponse = ErrorResponse.builder()
                 .code(e.getCode())
                 .message(e.getMessage()).build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(errorResponse);
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
@@ -29,7 +31,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         final ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("TOKEN_IS_EXPIRED")
                 .message(e.getMessage()).build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(errorResponse);
     }
 
     @ExceptionHandler(JwtAuthenticationException.class)
@@ -38,7 +43,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         final ErrorResponse errorResponse = ErrorResponse.builder()
                 .code(e.getCode())
                 .message(e.getMessage()).build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
     }
 
     @ExceptionHandler(MalformedJwtException.class)
@@ -47,17 +55,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         final ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("INVALID_TOKEN")
                 .message(e.getMessage()).build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     private ResponseEntity<ErrorResponse> handlerIllegalArgumentException(IllegalArgumentException e) {
         log.error(e.getMessage(), e);
         final ErrorResponse errorResponse = ErrorResponse.builder()
-                .code("IS_NULL")
+                .code("ILLEGAL_ARGUMENT")
                 .message("유효하지 않은 값 입니다.")
                 .build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(errorResponse);
     }
 
     @ExceptionHandler(IllegalAccessException.class)
@@ -67,6 +79,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .code("INVALID_ACCESS")
                 .message("유효하지 않은 접근입니다.")
                 .build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(errorResponse);
     }
 }

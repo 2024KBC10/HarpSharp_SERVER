@@ -1,6 +1,7 @@
 package com.harpsharp.auth.controller;
 
 
+import com.harpsharp.infra_rds.dto.response.ResponseWithData;
 import com.harpsharp.infra_rds.dto.user.DeleteDTO;
 import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
@@ -33,14 +34,21 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<ResponseUserDTO> getPostById(@PathVariable Long id) {
+    public ResponseEntity<ResponseWithData<ResponseUserDTO>> getPostById(@PathVariable Long id) {
         User user = userService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + id));
 
         ResponseUserDTO responseUserDTO =
                 userMapper.convertUserToResponse(user);
 
-        return new ResponseEntity<>(responseUserDTO, HttpStatus.OK);
+        ResponseWithData<ResponseUserDTO> responseWithData = new ResponseWithData<>(
+                "GET_USER_BY_ID_SUCCESS",
+                "요청한 유저 정보를 성공적으롤 읽어왔습니다.",
+                responseUserDTO
+        );
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(responseWithData);
     }
     @PatchMapping("/user")
     public ResponseEntity<ApiResponse> updateUser(HttpServletRequest request,
