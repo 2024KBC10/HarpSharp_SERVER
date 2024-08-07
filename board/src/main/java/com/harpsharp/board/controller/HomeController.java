@@ -1,6 +1,5 @@
 package com.harpsharp.board.controller;
 
-import com.harpsharp.auth.utils.BaseResponse;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +12,12 @@ public class HomeController {
 
     @GetMapping("/board")
     public ResponseEntity<ApiResponse> home() {
-        return BaseResponse.withCode("WELCOME_TO_BOARD", "This is Homepage Of Board!", HttpStatus.OK);
+        ApiResponse apiResponse = new ApiResponse(
+                "WELCOME_TO_BOARD",
+                "This is Homepage Of Board!");
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(apiResponse);
     }
 }

@@ -25,6 +25,12 @@ public class SwaggerController {
         String redirectURI = scheme + "://" + host + "/swagger-auth";
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
-        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
+
+        ApiResponse apiResponse = new ApiResponse("DOCS_AUTH", "Swagger Auth입니다.");
+
+        return ResponseEntity
+                .status(HttpStatus.TEMPORARY_REDIRECT)
+                .headers(headers)
+                .body(apiResponse);
     }
 }

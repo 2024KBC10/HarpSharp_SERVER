@@ -56,7 +56,14 @@ public class CommentController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
 
-        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
+        ApiResponse apiResponse = new ApiResponse(
+                "ADD_COMMNET_SUCCESSFULLY",
+                "댓글이 성공적으로 작성되었습니다.");
+        return ResponseEntity
+                .status(HttpStatus.TEMPORARY_REDIRECT)
+                .headers(headers)
+                .body(apiResponse);
+
     }
 
     @PutMapping("/board/posts/{postId}/comments/{commentId}")
@@ -83,7 +90,14 @@ public class CommentController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
 
-        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
+        ApiResponse apiResponse = new ApiResponse(
+                "UPDATE_COMMNET_SUCCESSFULLY",
+                "댓글이 성공적으로 수정되었습니다.");
+
+        return ResponseEntity
+                .status(HttpStatus.TEMPORARY_REDIRECT)
+                .headers(headers)
+                .body(apiResponse);
     }
 
 
@@ -101,6 +115,13 @@ public class CommentController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
 
-        return new ResponseEntity<>(headers, HttpStatus.TEMPORARY_REDIRECT);
+        ApiResponse apiResponse = new ApiResponse(
+                "UPDATE_COMMNET_SUCCESSFULLY",
+                "댓글이 성공적으로 삭제되었습니다.");
+
+        return ResponseEntity
+                .status(HttpStatus.TEMPORARY_REDIRECT)
+                .headers(headers)
+                .body(apiResponse);
     }
 }

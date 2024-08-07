@@ -92,9 +92,13 @@ public class UserController {
         String username = jwtUtil.getUsername(accessToken);
         userService.deleteById(userId, accessToken);
 
-        return BaseResponse.withCode("DELETED_SUCCESSFULLY",
-                username + " successfully deleted.",
-                HttpStatus.OK);
+        ApiResponse apiResponse = new ApiResponse(
+                "DELETED_SUCCESSFULLY",
+                username + " successfully deleted.");
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(apiResponse);
     }
 
 }

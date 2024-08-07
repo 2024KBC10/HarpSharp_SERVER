@@ -33,11 +33,10 @@ public class MainController {
                 .role(role)
                 .build();
 
+        ApiResponse apiResponse = new ApiResponse("ROOT_PAGE", "Welcome to Auth!");
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.builder()
-                        .code("ROOT_PAGE")
-                        .message("Welcome to Harpsharp!")
-                        .build());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(apiResponse);
     }
 }

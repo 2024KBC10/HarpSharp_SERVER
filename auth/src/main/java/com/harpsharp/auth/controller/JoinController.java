@@ -22,20 +22,23 @@ public class JoinController {
     @PostMapping("/join")
     public ResponseEntity<ApiResponse> joinUser(@RequestBody JoinDTO joinDTO){
         userService.registerUser(joinDTO, "ROLE_USER");
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.builder()
-                        .code("USER_JOINED_SUCCESSFULLY")
-                        .message(joinDTO.getUsername() + " has been successfully registered.")
-                        .build());
+
+        ApiResponse apiResponse =
+                new ApiResponse("USER_JOINED_SUCCESSFULLY",
+                joinDTO.getUsername() + " has been successfully registered.");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(apiResponse);
     }
 
     @PostMapping("/admin/join")
     public ResponseEntity<ApiResponse> joinAdmin(@RequestBody JoinDTO joinDTO){
         userService.registerUser(joinDTO, "ROLE_ADMIN");
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.builder()
-                        .code("USER_JOINED_SUCCESSFULLY")
-                        .message(joinDTO.getUsername() + " has been successfully registered.")
-                        .build());
+        ApiResponse apiResponse =
+                new ApiResponse("USER_JOINED_SUCCESSFULLY",
+                        joinDTO.getUsername() + " has been successfully registered.");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(apiResponse);
     }
 }

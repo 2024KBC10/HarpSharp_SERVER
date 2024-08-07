@@ -87,10 +87,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         refreshTokenService.save(refreshEntity);
 
 
-        ApiResponse responseDTO = ApiResponse.builder()
-                .code("TOKEN_PUBLISHED_SUCCESSFULLY")
-                .message(username + " logged in successfully")
-                .build();
+        ApiResponse responseDTO = new ApiResponse(
+                "TOKEN_PUBLISHED_SUCCESSFULLY",
+                username + " logged in successfully");
+
 
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(responseDTO);

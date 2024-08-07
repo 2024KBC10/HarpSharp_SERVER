@@ -93,6 +93,11 @@ public class ReissueController {
         response.setStatus(HttpStatus.OK.value());
 
         HttpStatus status = (request.getMethod().equals("POST")) ? HttpStatus.CREATED : HttpStatus.OK;
-        return BaseResponse.withCode("JWT_REISSUED_SUCCESSFULLY", "The JWT has been successfully reissued.", status);
+        ApiResponse apiResponse = new ApiResponse
+                ("JWT_REISSUED_SUCCESSFULLY",
+                "The JWT has been successfully reissued.");
+        return ResponseEntity
+                .status(status)
+                .body(apiResponse);
     }
 }

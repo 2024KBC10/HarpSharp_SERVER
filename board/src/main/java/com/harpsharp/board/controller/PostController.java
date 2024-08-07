@@ -5,6 +5,7 @@ import com.harpsharp.infra_rds.dto.board.RequestPostDTO;
 import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.board.service.PostService;
+import com.harpsharp.infra_rds.dto.response.ResponseWithData;
 import com.harpsharp.infra_rds.entity.Post;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.mapper.PostMapper;
@@ -32,7 +33,16 @@ public class PostController {
     public ResponseEntity<?> getAllPosts(Model model) {
         List<Post> allPosts = postService.getAllPosts();
         Map<Long, ResponsePostDTO> postsJson = postMapper.toMap(allPosts);
-        return new ResponseEntity<>(postsJson, HttpStatus.OK);
+
+        ResponseWithData<Map<Long, ResponsePostDTO>> apiResponse =
+                new ResponseWithData<>(
+                        "GET_ALL_POST_SUCCESSFULLY",
+                        "모든 게시글이 정상적으로 조회되었습니다.",
+                        postsJson);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(apiResponse);
     }
 
     @PostMapping("/board/posts")
@@ -64,14 +74,22 @@ public class PostController {
     }
 
     @GetMapping("/board/posts/{postId}")
-    public ResponseEntity<ResponsePostDTO> getPostById(@PathVariable Long postId) {
+    public ResponseEntity<ResponseWithData<ResponsePostDTO>> getPostById(@PathVariable Long postId) {
         Post post = postService.getPostById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + postId));
 
         ResponsePostDTO responsePostDTO
                 = postMapper.postToResponseDTO(post);
 
-        return new ResponseEntity<>(responsePostDTO, HttpStatus.OK);
+        ResponseWithData<ResponsePostDTO> apiResponse =
+                new ResponseWithData<>(
+                        "GET_POST_SUCCESSFULLY",
+                        "해당 게시글이 정상적으로 조회되었습니다.",
+                        responsePostDTO);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(apiResponse);
     }
 
     @PutMapping("/board/posts/{postId}")
