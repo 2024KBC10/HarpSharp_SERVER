@@ -8,6 +8,7 @@ import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.UserService;
+import com.harpsharp.infra_rds.dto.user.UserDTO;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.mapper.UserMapper;
 import jakarta.servlet.http.Cookie;
@@ -101,17 +102,12 @@ public class UserController {
             throw new IllegalArgumentException("Invalid access");
         }
 
-
-
         accessToken = accessToken.substring("Bearer ".length());
 
         Long userId = jwtUtil.getUserId(accessToken);
         String username = jwtUtil.getUsername(accessToken);
-        User user = userService
-                .findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("INVALID_USER_NAME"));
 
-        if(!passwordEncoder.matches(deleteDTO.password(), user.getPassword()))
+        if(!passwordEncoder.matches(deleteDTO.password(), userService.findPasswordByUsername(username)))
             throw new IllegalArgumentException("INVALID_PASSWORD");
 
         userService.deleteById(userId, accessToken);

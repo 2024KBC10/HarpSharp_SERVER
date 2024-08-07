@@ -1,32 +1,77 @@
 package com.harpsharp.board.service;
 
+import com.harpsharp.infra_rds.dto.board.RequestCommentDTO;
+import com.harpsharp.infra_rds.dto.board.RequestUpdateCommnetDTO;
+import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
 import com.harpsharp.infra_rds.entity.Comment;
 import com.harpsharp.infra_rds.entity.Post;
+import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.mapper.CommentMapper;
 import com.harpsharp.infra_rds.repository.CommentRepository;
+import com.harpsharp.infra_rds.repository.PostRepository;
+import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class CommentService {
 
-    @Autowired
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+    private final CommentMapper commentMapper;
 
-    public List<Comment> getCommentsByPost(Post post) {
-        return commentRepository.findByPost(post);
+    public Map<Long, ResponseCommentDTO> getCommentsByPostId(Long postId) {
+        Post rootPost = postRepository
+                .findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
+
+        return commentMapper.toMap(rootPost.getComments());
     }
 
     public Optional<Comment> getCommentById(Long id) {
+
         return commentRepository.findById(id);
     }
 
-    public Comment save(Comment comment) {
-        return commentRepository.save(comment);
+    public void save(RequestCommentDTO commentDTO) {
+        Post rootPost = postRepository
+                .findById(commentDTO.postId())
+                .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
+
+        User author = userRepository
+                .findByUsername(commentDTO.username())
+                .orElseThrow(()-> new IllegalArgumentException("USER_NOT_FOUND"));
+
+        Comment comment = Comment
+                .builder()
+                .user(author)
+                .content(commentDTO.content())
+                .post(rootPost)
+                .build();
+
+        commentRepository.save(comment);
+    }
+
+    public void updateComment(RequestUpdateCommnetDTO commentDTO) {
+        Comment existedCommnet = commentRepository
+                .findById(commentDTO.commentId())
+                .orElseThrow(() -> new IllegalArgumentException("COMMENT_NOT_FOUND"));
+
+        existedCommnet = existedCommnet
+                .toBuilder()
+                .content(commentDTO.content())
+                .build();
+
+        commentRepository.save(existedCommnet);
     }
 
     public void deleteComment(Long id) {

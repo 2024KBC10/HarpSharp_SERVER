@@ -1,20 +1,35 @@
 package com.harpsharp.infra_rds.mapper;
 
+import com.harpsharp.infra_rds.dto.board.RequestPostDTO;
 import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
 import com.harpsharp.infra_rds.entity.Post;
+import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class PostMapper {
     private final CommentMapper commentMapper;
+    private final UserRepository userRepository;
 
+    public Post requestToEntity(RequestPostDTO requestPostDTO) {
+        User user = userRepository
+                .findByUsername(requestPostDTO.username())
+                .orElseThrow(() -> new IllegalArgumentException("USER_NOT_FOUND"));
+
+        return Post
+                .builder()
+                .user(user)
+                .title(requestPostDTO.title())
+                .content(requestPostDTO.content())
+                .build();
+    }
 
     public ResponsePostDTO postToResponseDTO(Post post){
         return new ResponsePostDTO(

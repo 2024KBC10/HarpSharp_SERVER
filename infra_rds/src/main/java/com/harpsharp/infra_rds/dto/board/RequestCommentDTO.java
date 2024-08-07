@@ -1,4 +1,7 @@
 package com.harpsharp.infra_rds.dto.board;
 
-public record RequestCommentDTO(String username, String content) {
+public record RequestCommentDTO(
+        Long postId,
+        String username,
+        String content) {
 }

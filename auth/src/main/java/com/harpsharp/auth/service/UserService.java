@@ -1,9 +1,12 @@
 package com.harpsharp.auth.service;
 
 import com.harpsharp.infra_rds.dto.user.JoinDTO;
+import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
+import com.harpsharp.infra_rds.dto.user.UserDTO;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
+import com.harpsharp.infra_rds.mapper.UserMapper;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
+    private final UserMapper userMapper;
 
     public void registerUser(JoinDTO joinDTO, String role) {
         String username = joinDTO.getUsername();
@@ -104,13 +108,27 @@ public class UserService {
 
     public Optional<User> findById(Long userId){ return userRepository.findById(userId); }
 
-    @Query("SELECT p FROM Post p JOIN FETCH p.user")
-    public Optional<User> findByUsername(String username){ return userRepository.findByUsername(username); }
+    public UserDTO findByUsername(String username){
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("USER_NOT_FOUND"));
+
+        return userMapper.convertUserToDTO(user);
+    }
 
     public void deleteById(Long userId, String accessToken){
         if(!userRepository.existsById(userId)){ throw new IllegalArgumentException("존재하지 않는 유저입니다."); }
 
         userRepository.deleteById(userId);
         refreshTokenService.deleteByToken(accessToken);
+    }
+
+
+    public String findPasswordByUsername(String username){
+        User existedUser = userRepository
+                .findByUsername(username)
+                .orElseThrow(()-> new IllegalArgumentException("USER_NOT_FOUND"));
+
+        return existedUser.getUsername();
     }
 }

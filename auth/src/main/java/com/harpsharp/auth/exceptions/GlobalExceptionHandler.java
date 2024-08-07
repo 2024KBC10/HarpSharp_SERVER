@@ -1,6 +1,6 @@
 package com.harpsharp.auth.exceptions;
 
-import com.harpsharp.infra_rds.dto.response.ErrorResponse;
+import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.extern.slf4j.Slf4j;
@@ -15,72 +15,71 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    private ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
+    private ResponseEntity<ApiResponse> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
         log.error(e.getMessage(), e);
-        final ErrorResponse errorResponse = ErrorResponse.builder()
-                .code(e.getCode())
-                .message(e.getMessage()).build();
+        ApiResponse apiResponse = new ApiResponse(
+                e.getMessage(),
+                "이미 존재하는 유저입니다.");
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(errorResponse);
+                .body(apiResponse);
     }
 
     @ExceptionHandler(ExpiredJwtException.class)
-    private ResponseEntity<ErrorResponse> handlerExpiredJwtException(ExpiredJwtException e) {
+    private ResponseEntity<ApiResponse> handlerExpiredJwtException(ExpiredJwtException e) {
         log.error(e.getMessage(), e);
-        final ErrorResponse errorResponse = ErrorResponse.builder()
-                .code("TOKEN_IS_EXPIRED")
-                .message(e.getMessage()).build();
+        ApiResponse apiResponse = new ApiResponse(
+                e.getMessage(),
+                "유효하지 않은 토큰 입니다.");
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(errorResponse);
+                .body(apiResponse);
     }
 
     @ExceptionHandler(JwtAuthenticationException.class)
-    private ResponseEntity<ErrorResponse> handlerJwtAuthenticationException(JwtAuthenticationException e) {
+    private ResponseEntity<ApiResponse> handlerJwtAuthenticationException(JwtAuthenticationException e) {
         log.error(e.getMessage(), e);
-        final ErrorResponse errorResponse = ErrorResponse.builder()
-                .code(e.getCode())
-                .message(e.getMessage()).build();
+        ApiResponse apiResponse = new ApiResponse(
+                e.getMessage(),
+                "유효하지 않은 토큰 입니다.");
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(errorResponse);
+                .body(apiResponse);
     }
 
     @ExceptionHandler(MalformedJwtException.class)
-    private ResponseEntity<ErrorResponse> handlerMalformedJwtException(MalformedJwtException e) {
+    private ResponseEntity<ApiResponse> handlerMalformedJwtException(MalformedJwtException e) {
         log.error(e.getMessage(), e);
-        final ErrorResponse errorResponse = ErrorResponse.builder()
-                .code("INVALID_TOKEN")
-                .message(e.getMessage()).build();
+        ApiResponse apiResponse = new ApiResponse(
+                e.getMessage(),
+                "유효하지 않은 토큰 입니다.");
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(errorResponse);
+                .body(apiResponse);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    private ResponseEntity<ErrorResponse> handlerIllegalArgumentException(IllegalArgumentException e) {
+    private ResponseEntity<ApiResponse> handlerIllegalArgumentException(IllegalArgumentException e) {
         log.error(e.getMessage(), e);
-        final ErrorResponse errorResponse = ErrorResponse.builder()
-                .code("ILLEGAL_ARGUMENT")
-                .message("유효하지 않은 값 입니다.")
-                .build();
+        ApiResponse apiResponse = new ApiResponse(
+                e.getMessage(),
+                "유효하지 않은 값 입니다.");
+
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(errorResponse);
+                .body(apiResponse);
     }
 
     @ExceptionHandler(IllegalAccessException.class)
-    private ResponseEntity<ErrorResponse> handlerIllegalAccessException(IllegalAccessException e) {
+    private ResponseEntity<ApiResponse> handlerIllegalAccessException(IllegalAccessException e) {
         log.error(e.getMessage(), e);
-        final ErrorResponse errorResponse = ErrorResponse.builder()
-                .code("INVALID_ACCESS")
-                .message("유효하지 않은 접근입니다.")
-                .build();
+        ApiResponse apiResponse = new ApiResponse(
+                e.getMessage(),
+                "유효하지 않은 접근 입니다.");
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(errorResponse);
+                .body(apiResponse);
     }
 }
