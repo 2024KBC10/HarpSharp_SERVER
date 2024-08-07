@@ -13,7 +13,7 @@ public class HomeController {
     public ResponseEntity<ApiResponse> home() {
         ApiResponse apiResponse = new ApiResponse(
                 "WELCOME_TO_BOARD",
-                "This is Homepage Of Board!");
+                "아이스 브레이킹 루트 페이지입니다.");
 
         return ResponseEntity
                 .status(HttpStatus.OK)

@@ -1,5 +1,6 @@
 package com.harpsharp.infra_rds.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.harpsharp.infra_rds.util.TodoStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -33,9 +34,11 @@ public class TodoPost extends BasePost{
     private List<TodoComment> todoComments;
 
     @Column(name = "start_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime startAt;
 
     @Column(name = "end_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime endAt;
 
     @Column(name = "likes", nullable = false)
