@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,19 +27,25 @@ public class PostService {
         return postMapper.toMap(posts);
     }
 
-    public ResponsePostDTO getPostById(Long id) {
+    public Map<Long,ResponsePostDTO> getPostById(Long id) {
         Post post = postRepository
                 .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
+        Map<Long, ResponsePostDTO> object = new HashMap<>();
+        object.put(id, postMapper.postToResponseDTO(post));
 
-        return postMapper.postToResponseDTO(post);
+        return object;
     }
 
-    public Long savePost(RequestPostDTO requestPostDTO) {
-        return postRepository.save(postMapper.requestToEntity(requestPostDTO)).getPostId();
+    public Map<Long,ResponsePostDTO> savePost(RequestPostDTO requestPostDTO) {
+
+        Post post = postRepository.save(postMapper.requestToEntity(requestPostDTO));
+        Map<Long, ResponsePostDTO> object = new HashMap<>();
+        object.put(post.getPostId(), postMapper.postToResponseDTO(post));
+        return object;
     }
 
-    public void updatePost(RequestUpdatePostDTO updatedPostDTO) {
+    public Map<Long,ResponsePostDTO> updatePost(RequestUpdatePostDTO updatedPostDTO) {
         Long postId = updatedPostDTO.postId();
 
 
@@ -53,6 +60,9 @@ public class PostService {
                     .build();
 
         postRepository.save(existedPost);
+        Map<Long, ResponsePostDTO> object = new HashMap<>();
+        object.put(existedPost.getPostId(), postMapper.postToResponseDTO(existedPost));
+        return object;
     }
 
     public void deletePost(Long id) {

@@ -42,7 +42,7 @@ public class CommentService {
         return commentRepository.findById(id);
     }
 
-    public void save(RequestCommentDTO commentDTO) {
+    public Map<Long, ResponseCommentDTO> save(RequestCommentDTO commentDTO) {
         Post rootPost = postRepository
                 .findById(commentDTO.postId())
                 .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
@@ -58,10 +58,15 @@ public class CommentService {
                 .post(rootPost)
                 .build();
 
-        commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
+        Map<Long, ResponseCommentDTO> object = new HashMap<>();
+
+        object.put(savedComment.getCommentId(),
+                commentMapper.commentToResponseDTO(savedComment));
+        return object;
     }
 
-    public void updateComment(RequestUpdateCommnetDTO commentDTO) {
+    public Map<Long, ResponseCommentDTO> updateComment(RequestUpdateCommnetDTO commentDTO) {
         Comment existedCommnet = commentRepository
                 .findById(commentDTO.commentId())
                 .orElseThrow(() -> new IllegalArgumentException("COMMENT_NOT_FOUND"));
@@ -72,6 +77,11 @@ public class CommentService {
                 .build();
 
         commentRepository.save(existedCommnet);
+        Map<Long, ResponseCommentDTO> object = new HashMap<>();
+        object.put(existedCommnet.getCommentId(),
+                commentMapper.commentToResponseDTO(existedCommnet));
+
+        return object;
     }
 
     public void deleteComment(Long id) {

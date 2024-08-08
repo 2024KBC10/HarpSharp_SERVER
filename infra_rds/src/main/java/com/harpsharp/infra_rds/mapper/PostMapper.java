@@ -38,7 +38,7 @@ public class PostMapper {
                 post.getContent(),
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
-                commentMapper.convertCommentsToResponse(post.getComments()));
+                commentMapper.toMap(post.getComments()));
     }
 
     public List<ResponsePostDTO> convertPostsToResponse(List<Post> posts) {

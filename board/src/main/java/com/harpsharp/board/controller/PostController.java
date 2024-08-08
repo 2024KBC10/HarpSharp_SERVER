@@ -46,41 +46,35 @@ public class PostController {
     }
 
     @PostMapping("/board/posts")
-    public ResponseEntity<ApiResponse> savePost(
+    public ResponseEntity<ResponseWithData> savePost(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestPostDTO requestPostDTO) {
 
         if(!isValid(accessToken, requestPostDTO.username()))
             throw new IllegalArgumentException("INVALID_ACCESS");
 
-        Long savedId = postService.savePost(requestPostDTO);
+        Map<Long, ResponsePostDTO> savedPost = postService.savePost(requestPostDTO);
 
-        String redirectURI = ServletUriComponentsBuilder
-                .fromCurrentRequestUri()
-                .replacePath("/board/posts/"+savedId.toString())
-                .toUriString();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(redirectURI));
-        System.out.println("redirectURI = " + redirectURI);
-        ApiResponse apiResponse = new ApiResponse(
+        ResponseWithData<Map<Long, ResponsePostDTO>> apiResponse
+                = new ResponseWithData<>(
                 LocalDateTime.now(),
-                HttpStatus.SEE_OTHER.value(),
+                HttpStatus.OK.value(),
                 "REDIERCT_TO_ROOT",
-                "게시글이 성공적으로 작성되었습니다. 해당 글로 이동합니다.");
+                "게시글이 성공적으로 작성되었습니다. 해당 글로 이동합니다.",
+                savedPost);
 
         return ResponseEntity
-                .status(HttpStatus.SEE_OTHER)
-                .headers(headers)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
     }
 
     @GetMapping("/board/posts/{postId}")
-    public ResponseEntity<ResponseWithData<ResponsePostDTO>> getPostById(@PathVariable Long postId) {
-        ResponsePostDTO responsePostDTO = postService.getPostById(postId);
+    public ResponseEntity<ResponseWithData<Map<Long,ResponsePostDTO>>> getPostById(@PathVariable Long postId) {
 
-        ResponseWithData<ResponsePostDTO> apiResponse =
-                new ResponseWithData<ResponsePostDTO>(
+        Map<Long,ResponsePostDTO> responsePostDTO = postService.getPostById(postId);
+
+        ResponseWithData<Map<Long,ResponsePostDTO>> apiResponse =
+                new ResponseWithData<>(
                         LocalDateTime.now(),
                         HttpStatus.OK.value(),
                         "GET_POST_SUCCESSFULLY",
@@ -93,7 +87,7 @@ public class PostController {
     }
 
     @PatchMapping("/board/posts/{postId}")
-    public ResponseEntity<ApiResponse> updatePost(
+    public ResponseEntity<ResponseWithData<Map<Long, ResponsePostDTO>>> updatePost(
             @RequestHeader("Authorization") String accessToken,
             @PathVariable Long postId,
             @RequestBody RequestPostDTO requestPostDTO) {
@@ -108,25 +102,18 @@ public class PostController {
                         requestPostDTO.title(),
                         requestPostDTO.content());
 
-        postService.updatePost(updated);
+        Map<Long, ResponsePostDTO> object = postService.updatePost(updated);
 
-        String redirectURI = ServletUriComponentsBuilder
-                .fromCurrentRequestUri()
-                .replacePath("/board/posts/" + postId.toString())
-                .toUriString();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(redirectURI));
-        System.out.println("redirectURI = " + redirectURI);
-        ApiResponse apiResponse = new ApiResponse(
+        ResponseWithData<Map<Long,ResponsePostDTO>> apiResponse
+                = new ResponseWithData<>(
                 LocalDateTime.now(),
-                HttpStatus.SEE_OTHER.value(),
+                HttpStatus.OK.value(),
                 "REDIERCT_TO_ROOT",
-                "게시글이 성공적으로 수정되었습니다.");
+                "게시글이 성공적으로 수정되었습니다.",
+                object);
 
         return ResponseEntity
-                .status(HttpStatus.SEE_OTHER)
-                .headers(headers)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
     }
 
@@ -141,22 +128,14 @@ public class PostController {
 
         postService.deletePost(postId);
 
-        String redirectURI = ServletUriComponentsBuilder.fromCurrentRequestUri()
-                .replacePath("/board/posts")
-                .toUriString();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(redirectURI));
-        System.out.println("redirectURI = " + redirectURI);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.SEE_OTHER.value(),
+                HttpStatus.OK.value(),
                 "REDIERCT_TO_ROOT",
                 "게시글이 성공적으로 삭제되었습니다.");
 
         return ResponseEntity
-                .status(HttpStatus.SEE_OTHER)
-                .headers(headers)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
     }
 

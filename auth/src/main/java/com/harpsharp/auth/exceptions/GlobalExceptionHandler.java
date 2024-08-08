@@ -48,12 +48,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.UNAUTHORIZED.value(),
                 e.getMessage(),
                 "유효하지 않은 토큰 입니다.");
 
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(apiResponse);
     }
 
@@ -62,11 +62,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.UNAUTHORIZED.value(),
                 e.getMessage(),
                 "유효하지 않은 토큰 입니다.");
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(apiResponse);
     }
 
