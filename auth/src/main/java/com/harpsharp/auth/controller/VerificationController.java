@@ -18,44 +18,13 @@ import org.springframework.web.bind.annotation.*;
 public class VerificationController {
     private final JwtUtil jwtUtil;
 
-    @GetMapping("/verify/posts")
-    public ResponseEntity<ApiResponse> verificationBoard(
-            @RequestHeader("Authorization") String accessToken,
-            @RequestBody RequestPostDTO postDTO) {
-        return isValid(accessToken, postDTO.username());
-    }
-
-    @GetMapping("/verify/posts")
-    public ResponseEntity<ApiResponse> verificationBoard(
-            @RequestHeader("Authorization") String accessToken,
-            @RequestBody RequestUpdatePostDTO postDTO) {
-
-        return isValid(accessToken, postDTO.username());
-    }
-
-    @NotNull
-    private ResponseEntity<ApiResponse> isValid(@RequestHeader("Authorization") String accessToken, String username) {
-        if (accessToken == null || !accessToken.startsWith("Bearer ")) {
-            System.out.println("invalid access");
-            throw new IllegalArgumentException("Invalid access");
-        }
-
-        accessToken = accessToken.substring("Bearer ".length());
-
-        if(!username.equals(jwtUtil.getUsername(accessToken)))
-            throw new IllegalArgumentException("INVALID_USERNAME");
-
+    @GetMapping("/verify")
+    public ResponseEntity<ApiResponse> verificationCreatePost() {
         ApiResponse apiResponse = new ApiResponse(
                 "VERIFIED_SUCCESS",
                 "회원 권한이 확인 되었습니다.");
-        System.out.println("apiResponse = " + apiResponse);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(apiResponse);
     }
-
-    // @GetMapping(/verify/board/posts/{postId}
-    // @GetMapping(/verify/board/comments/{commentId}
-    // @GetMapping(/verify/todo/posts/{todoPostId}
-    // @GetMapping(/verify/todo/comments/{todoComentId}
 }

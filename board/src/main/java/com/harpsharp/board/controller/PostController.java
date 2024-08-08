@@ -1,14 +1,13 @@
 package com.harpsharp.board.controller;
 
-import com.harpsharp.auth.service.UserService;
+import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.infra_rds.dto.board.RequestPostDTO;
 import com.harpsharp.infra_rds.dto.board.RequestUpdatePostDTO;
 import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.board.service.PostService;
 import com.harpsharp.infra_rds.dto.response.ResponseWithData;
-import com.harpsharp.infra_rds.mapper.PostMapper;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -26,8 +25,7 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
-    private final UserService userService;
-    private final PostMapper postMapper;
+    private final JwtUtil jwtUtil;
 
     @GetMapping("/board/posts")
     public ResponseEntity<?> getAllPosts() {
@@ -45,11 +43,14 @@ public class PostController {
     }
 
     @PostMapping("/board/posts")
-    public ResponseEntity<ApiResponse> savePost(@RequestBody RequestPostDTO createdPost) {
+    public ResponseEntity<ApiResponse> savePost(
+            @RequestHeader("Authorization") String accessToken,
+            @RequestBody RequestPostDTO requestPostDTO) {
 
-        postService.savePost(createdPost);
+        if(!isValid(accessToken, requestPostDTO.username()))
+            throw new IllegalArgumentException("INVALID_ACCESS");
 
-        //String host = request.getHeader("Host");
+        postService.savePost(requestPostDTO);
 
         String redirectURI = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
@@ -84,15 +85,27 @@ public class PostController {
                 .body(apiResponse);
     }
 
-    @PutMapping("/board/posts")
-    public ResponseEntity<ApiResponse> updatePost(@RequestBody RequestUpdatePostDTO updatedPost) {
+    @PutMapping("/board/posts/{postId}")
+    public ResponseEntity<ApiResponse> updatePost(
+            @RequestHeader("Authorization") String accessToken,
+            @PathVariable Long postId,
+            @RequestBody RequestPostDTO requestPostDTO) {
 
-        Long postId = updatedPost.postId();
-        postService.updatePost(updatedPost);
+        if(!isValid(accessToken, requestPostDTO.username()))
+            throw new IllegalArgumentException("INVALID_ACCESS");
+
+        RequestUpdatePostDTO updated =
+                new RequestUpdatePostDTO(
+                        postId,
+                        requestPostDTO.username(),
+                        requestPostDTO.title(),
+                        requestPostDTO.content());
+
+        postService.updatePost(updated);
 
         String redirectURI = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
-                .replacePath("/board/" + postId.toString())
+                .replacePath("/board/posts/" + postId.toString())
                 .toUriString();
 
         HttpHeaders headers = new HttpHeaders();
@@ -108,10 +121,15 @@ public class PostController {
                 .body(apiResponse);
     }
 
-    @DeleteMapping("/board/posts")
-    public ResponseEntity<ApiResponse> deletePost(@RequestBody RequestUpdatePostDTO deletedPost,
-                                                  HttpServletRequest request) {
-        Long postId = deletedPost.postId();
+    @DeleteMapping("/board/posts/{postId}")
+    public ResponseEntity<ApiResponse> deletePost(
+            @RequestHeader("Authorization") String accessToken,
+            @PathVariable Long postId,
+            @RequestBody RequestPostDTO requestPostDTO) {
+
+        if(!isValid(accessToken, requestPostDTO.username()))
+            throw new IllegalArgumentException("INVALID_ACCESS");
+
         postService.deletePost(postId);
 
         String redirectURI = ServletUriComponentsBuilder.fromCurrentRequestUri()
@@ -129,5 +147,18 @@ public class PostController {
                 .status(HttpStatus.SEE_OTHER)
                 .headers(headers)
                 .body(apiResponse);
+    }
+
+    @NotNull
+    private Boolean isValid(String accessToken, String username) {
+        if (accessToken == null || !accessToken.startsWith("Bearer ")) {
+            System.out.println("invalid access");
+            throw new IllegalArgumentException("Invalid access");
+        }
+
+        accessToken = accessToken.substring("Bearer ".length());
+
+
+        return username.equals(jwtUtil.getUsername(accessToken));
     }
 }
