@@ -50,11 +50,11 @@ public class PostController {
         if(!isValid(accessToken, requestPostDTO.username()))
             throw new IllegalArgumentException("INVALID_ACCESS");
 
-        postService.savePost(requestPostDTO);
+        Long savedId = postService.savePost(requestPostDTO);
 
         String redirectURI = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
-                .replacePath("/board")
+                .replacePath("/board/posts/"+savedId.toString())
                 .toUriString();
 
         HttpHeaders headers = new HttpHeaders();
@@ -62,7 +62,7 @@ public class PostController {
         System.out.println("redirectURI = " + redirectURI);
         ApiResponse apiResponse = new ApiResponse(
                 "REDIERCT_TO_ROOT",
-                "게시글이 성공적으로 작성되었습니다. 루트 페이지로 이동합니다.");
+                "게시글이 성공적으로 작성되었습니다. 해당 글로 이동합니다.");
 
         return ResponseEntity
                 .status(HttpStatus.SEE_OTHER)
@@ -85,7 +85,7 @@ public class PostController {
                 .body(apiResponse);
     }
 
-    @PutMapping("/board/posts/{postId}")
+    @PatchMapping("/board/posts/{postId}")
     public ResponseEntity<ApiResponse> updatePost(
             @RequestHeader("Authorization") String accessToken,
             @PathVariable Long postId,

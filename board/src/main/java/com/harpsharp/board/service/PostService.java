@@ -34,8 +34,8 @@ public class PostService {
         return postMapper.postToResponseDTO(post);
     }
 
-    public void savePost(RequestPostDTO requestPostDTO) {
-        postRepository.save(postMapper.requestToEntity(requestPostDTO));
+    public Long savePost(RequestPostDTO requestPostDTO) {
+        return postRepository.save(postMapper.requestToEntity(requestPostDTO)).getPostId();
     }
 
     public void updatePost(RequestUpdatePostDTO updatedPostDTO) {
