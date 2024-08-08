@@ -97,7 +97,7 @@ public class ReissueController {
                 LocalDateTime.now(),
                 status.value(),
                 "JWT_REISSUED_SUCCESSFULLY",
-                "The JWT has been successfully reissued.");
+                "JWT 재발급에 성공하였습니다.");
         return ResponseEntity
                 .status(status)
                 .body(apiResponse);

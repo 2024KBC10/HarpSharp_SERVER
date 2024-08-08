@@ -53,7 +53,7 @@ public class JwtFilter extends OncePerRequestFilter {
             throw JwtAuthenticationException
                     .builder()
                     .code("IS_NOT_ACCESS_TOKEN")
-                    .message("Invalid token. Please ensure you are using a valid access token.")
+                    .message("유효하지 않은 토큰입니다.")
                     .build();
         }
 

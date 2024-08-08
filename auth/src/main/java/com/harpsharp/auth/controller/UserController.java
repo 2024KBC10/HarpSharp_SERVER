@@ -48,7 +48,7 @@ public class UserController {
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
                 "GET_USER_BY_ID_SUCCESS",
-                "요청한 유저 정보를 성공적으롤 읽어왔습니다.",
+                "요청한 유저 정보를 성공적으로 읽어왔습니다.",
                 responseUserDTO
         );
         return ResponseEntity
@@ -115,7 +115,7 @@ public class UserController {
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
                 "DELETED_SUCCESSFULLY",
-                username + " successfully deleted.");
+                username + "님이 탈퇴하셨습니다.");
 
         return ResponseEntity
                 .status(HttpStatus.OK)

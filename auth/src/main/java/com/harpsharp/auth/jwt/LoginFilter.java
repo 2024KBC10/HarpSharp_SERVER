@@ -60,7 +60,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             return authenticationManager.authenticate(authToken);
         } catch (IOException e) {
             System.out.println("e = " + e);
-            throw new AuthenticationServiceException("Failed to parse authentication request body", e);
+            throw new AuthenticationServiceException("인증에 실패했습니다.", e);
         }
     }
 
@@ -92,7 +92,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 LocalDateTime.now(),
                 HttpStatus.CREATED.value(),
                 "TOKEN_PUBLISHED_SUCCESSFULLY",
-                username + " logged in successfully");
+                username + "님이 로그인 했습니다.");
 
 
         String json = objectMapper.writeValueAsString(responseDTO);
