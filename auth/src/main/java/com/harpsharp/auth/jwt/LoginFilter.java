@@ -48,6 +48,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             // 사용자 이름과 비밀번호 추출
             String username = loginDTO.getUsername();
             String password = loginDTO.getPassword();
+
             System.out.println("username = " + username);
             System.out.println("password = " + password);
 
@@ -60,8 +61,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             System.out.println("e = " + e);
 
             throw new AuthenticationServiceException("인증에 실패했습니다.", e);
-
-            // AuthenticationException을 던지지 않도록 null 반환
         }
     }
 
@@ -109,7 +108,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, failed.getMessage());
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -120,7 +118,5 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 "INVALID_CREDENTIALS",
                 "유효하지 않은 접근입니다.");
         response.getWriter().write(objectMapper.writeValueAsString(responseDTO));
-
-
     }
 }
