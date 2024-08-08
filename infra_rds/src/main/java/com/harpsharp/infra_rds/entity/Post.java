@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +38,12 @@ public class Post extends BasePost {
     }
 
     @Builder(toBuilder = true)
-    public Post(User user, String content, String title){
+    public Post(Long postId, User user, String content, String title, LocalDateTime createdAt){
+        this.postId = postId;
         this.setUser(user);
         this.setContent(content);
         this.title = title;
+        this.createdAt = createdAt;
         this.comments = new ArrayList<>();
     }
 }
