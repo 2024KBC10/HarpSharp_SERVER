@@ -67,14 +67,6 @@ public class UserController {
         Long userId = jwtUtil.getUserId(accessToken);
         userService.updateUser(userId, updatedDTO);
 
-        Cookie[] cookies = request.getCookies();
-
-        if (cookies == null) throw new IllegalArgumentException("Invalid request");
-
-        for(Cookie cookie: cookies){
-            response.addCookie(cookie);
-        }
-
         String redirectURI = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
                 .replacePath("/reissue")
@@ -82,15 +74,13 @@ public class UserController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
-        System.out.println(URI.create(redirectURI));
         headers.add("Authorization", "Bearer " + accessToken);
-        System.out.println("Go To Redirect: " + redirectURI);
         ApiResponse apiResponse = new ApiResponse(
                 "GO_TO_REISSUE",
                 "유저 정보를 수정하였습니다. 토큰을 재발급 합니다.");
 
         return ResponseEntity
-                .status(HttpStatus.FOUND)
+                .status(HttpStatus.SEE_OTHER)
                 .headers(headers)
                 .body(apiResponse);
     }

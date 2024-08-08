@@ -21,7 +21,6 @@ public class CommentController {
 
     @PostMapping("/board/posts/{postId}/comments")
     public ResponseEntity<ApiResponse> addComment(@PathVariable Long postId,
-                                                  HttpServletRequest request,
                                                   @RequestHeader("Authorization") String accessToken,
                                                   @RequestBody RequestCommentDTO commentDTO) throws IllegalAccessException {
 

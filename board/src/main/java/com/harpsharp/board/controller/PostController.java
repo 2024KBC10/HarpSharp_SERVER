@@ -45,9 +45,7 @@ public class PostController {
     }
 
     @PostMapping("/board/posts")
-    public ResponseEntity<ApiResponse> savePost(
-            @RequestBody RequestPostDTO createdPost,
-            HttpServletRequest request) {
+    public ResponseEntity<ApiResponse> savePost(@RequestBody RequestPostDTO createdPost) {
 
         postService.savePost(createdPost);
 
@@ -86,11 +84,10 @@ public class PostController {
                 .body(apiResponse);
     }
 
-    @PutMapping("/board/posts/{postId}")
-    public ResponseEntity<ApiResponse> updatePost(@PathVariable Long postId,
-                                                  @RequestBody RequestUpdatePostDTO updatedPost,
-                                                  HttpServletRequest request) {
+    @PutMapping("/board/posts")
+    public ResponseEntity<ApiResponse> updatePost(@RequestBody RequestUpdatePostDTO updatedPost) {
 
+        Long postId = updatedPost.postId();
         postService.updatePost(updatedPost);
 
         String redirectURI = ServletUriComponentsBuilder
@@ -103,7 +100,7 @@ public class PostController {
         System.out.println("redirectURI = " + redirectURI);
         ApiResponse apiResponse = new ApiResponse(
                 "REDIERCT_TO_ROOT",
-                "게시글이 성공적으로 수정되었습니다. 루트 페이지로 이동합니다.");
+                "게시글이 성공적으로 수정되었습니다.");
 
         return ResponseEntity
                 .status(HttpStatus.SEE_OTHER)
@@ -111,11 +108,11 @@ public class PostController {
                 .body(apiResponse);
     }
 
-    @DeleteMapping("/board/posts/{id}")
-    public ResponseEntity<ApiResponse> deletePost(@PathVariable Long id,
-                                                  @RequestBody RequestPostDTO deletedPost,
+    @DeleteMapping("/board/posts")
+    public ResponseEntity<ApiResponse> deletePost(@RequestBody RequestUpdatePostDTO deletedPost,
                                                   HttpServletRequest request) {
-        postService.deletePost(id);
+        Long postId = deletedPost.postId();
+        postService.deletePost(postId);
 
         String redirectURI = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .replacePath("/board/posts")
@@ -126,7 +123,7 @@ public class PostController {
         System.out.println("redirectURI = " + redirectURI);
         ApiResponse apiResponse = new ApiResponse(
                 "REDIERCT_TO_ROOT",
-                "게시글이 성공적으로 삭제되었습니다. 루트 페이지로 이동합니다.");
+                "게시글이 성공적으로 삭제되었습니다.");
 
         return ResponseEntity
                 .status(HttpStatus.SEE_OTHER)
