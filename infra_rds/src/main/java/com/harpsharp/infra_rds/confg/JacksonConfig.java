@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 public class JacksonConfig {
 
     private final ObjectMapper objectMapper;
-
     @PostConstruct
     public void setUp() {
         objectMapper.registerModule(new JavaTimeModule());

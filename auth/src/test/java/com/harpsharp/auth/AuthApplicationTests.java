@@ -25,6 +25,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
@@ -39,20 +40,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ComponentScan(basePackages = {"com.harpsharp.auth", "com.harpsharp.infra_rds"})
 @ActiveProfiles("local")
-@RequiredArgsConstructor
 class AuthApplicationTests {
-	private final MockMvc mockMvc;
-	private final ObjectMapper objectMapper;
-	private final RefreshTokenService refreshTokenService;
-	private final UserService userService;
+	@Autowired
+	private  MockMvc mockMvc;
+	@Autowired
+	private  ObjectMapper objectMapper;
+	@Autowired
+	private  RefreshTokenService refreshTokenService;
+	@Autowired
+	private  UserService userService;
 
 	private final String username = "admin";
 	private final String password = "HeisPassWord!15";
 	private final String email    = "admin@gmail.com";
 	private String accessToken    = "EMPTY";
 	private Cookie refreshToken   = null;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@BeforeEach
 	public void setUp() {

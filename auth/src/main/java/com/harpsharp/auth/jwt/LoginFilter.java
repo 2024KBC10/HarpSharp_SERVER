@@ -108,6 +108,18 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, failed.getMessage());
+        //response.sendError(HttpServletResponse.SC_UNAUTHORIZED, failed.getMessage());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        ApiResponse responseDTO = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                "INVALID_CREDENTIALS",
+                "유효하지 않은 접근입니다.");
+        response.getWriter().write(objectMapper.writeValueAsString(responseDTO));
+
+
     }
 }
