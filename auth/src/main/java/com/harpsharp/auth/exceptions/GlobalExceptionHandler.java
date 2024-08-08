@@ -6,10 +6,12 @@ import io.jsonwebtoken.MalformedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -36,7 +38,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 LocalDateTime.now(),
                 HttpStatus.UNAUTHORIZED.value(),
                 e.getMessage(),
-                "유효하지 않은 토큰 입니다.");
+                "유효하지 않은 토큰입니다.");
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
@@ -50,7 +52,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 LocalDateTime.now(),
                 HttpStatus.UNAUTHORIZED.value(),
                 e.getMessage(),
-                "유효하지 않은 토큰 입니다.");
+                "유효하지 않은 토큰입니다.");
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
@@ -64,7 +66,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 LocalDateTime.now(),
                 HttpStatus.UNAUTHORIZED.value(),
                 e.getMessage(),
-                "유효하지 않은 토큰 입니다.");
+                "유효하지 않은 토큰입니다.");
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(apiResponse);
@@ -77,7 +79,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 LocalDateTime.now(),
                 HttpStatus.UNAUTHORIZED.value(),
                 e.getMessage(),
-                "유효하지 않은 값 입니다.");
+                "유효하지 않은 값입니다.");
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
@@ -91,7 +93,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 LocalDateTime.now(),
                 HttpStatus.UNAUTHORIZED.value(),
                 e.getMessage(),
-                "유효하지 않은 접근 입니다.");
+                "유효하지 않은 접근입니다.");
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(apiResponse);
+    }
+
+    @ExceptionHandler(AuthenticationServiceException.class)
+    private ResponseEntity<ApiResponse> handlerAuthenticationServiceException(AuthenticationServiceException e) {
+        ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                e.getMessage(),
+                "유효하지 않은 접근입니다.");
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(apiResponse);

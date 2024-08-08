@@ -41,14 +41,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("local")
 @RequiredArgsConstructor
 class AuthApplicationTests {
-	@Autowired
-	private MockMvc mockMvc;
-	@Autowired
-	private ObjectMapper objectMapper;
-	@Autowired
-	private RefreshTokenService refreshTokenService;
-	@Autowired
-	private UserService userService;
+	private final MockMvc mockMvc;
+	private final ObjectMapper objectMapper;
+	private final RefreshTokenService refreshTokenService;
+	private final UserService userService;
 
 	private final String username = "admin";
 	private final String password = "HeisPassWord!15";
