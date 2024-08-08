@@ -91,10 +91,8 @@ public class PostController {
                                                   @RequestBody RequestUpdatePostDTO updatedPost,
                                                   HttpServletRequest request) {
 
-
         postService.updatePost(updatedPost);
 
-        String host = request.getHeader("Host");
         String redirectURI = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
                 .replacePath("/board/" + postId.toString())
