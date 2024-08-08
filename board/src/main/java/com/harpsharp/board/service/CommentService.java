@@ -33,13 +33,15 @@ public class CommentService {
         Post rootPost = postRepository
                 .findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
-
+        System.out.println("rootPost.getComments() = " + rootPost.getComments());
         return commentMapper.toMap(rootPost.getComments());
     }
 
-    public Optional<Comment> getCommentById(Long id) {
-
-        return commentRepository.findById(id);
+    public Map<Long, ResponseCommentDTO> getCommentById(Long id) {
+        Comment comment = commentRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("COMMENT_NOT_FOUND"));
+        return commentMapper.toMap(comment);
     }
 
     public Map<Long, ResponseCommentDTO> findCommentsByPostId(Long postId) {
@@ -57,19 +59,16 @@ public class CommentService {
     }
 
     public Map<Long, ResponseCommentDTO> save(RequestCommentDTO commentDTO) {
-        Post rootPost = postRepository
-                .findById(commentDTO.postId())
-                .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
-
-        User author = userRepository
-                .findByUsername(commentDTO.username())
-                .orElseThrow(()-> new IllegalArgumentException("USER_NOT_FOUND"));
 
         Comment comment = Comment
                 .builder()
-                .user(author)
+                .user(userRepository
+                        .findByUsername(commentDTO.username())
+                        .orElseThrow(()-> new IllegalArgumentException("USER_NOT_FOUND")))
                 .content(commentDTO.content())
-                .post(rootPost)
+                .post(postRepository
+                        .findById(commentDTO.postId())
+                        .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND")))
                 .build();
 
         Comment savedComment = commentRepository.save(comment);
@@ -99,7 +98,17 @@ public class CommentService {
     }
 
     public void deleteComment(Long id) {
-        commentRepository.deleteById(id);
+        Comment comment = commentRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("COMMENT_NOT_FOUND"));
+
+        Post post = comment.getPost();
+        if (post != null) {
+            post.getComments().remove(comment);
+            comment.clearPost();
+        }
+
+        commentRepository.delete(comment);
     }
 
     public void clear(){

@@ -37,6 +37,10 @@ public class Post extends BasePost {
         return getUser().getUser_id();
     }
 
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
+
     @Builder(toBuilder = true)
     public Post(Long postId, User user, String content, String title, LocalDateTime createdAt){
         this.postId = postId;

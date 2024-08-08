@@ -28,13 +28,36 @@ public class CommentController {
     private final JwtUtil jwtUtil;
 
     @GetMapping("/board/posts/{postId}/comments")
-    public Map<Long, ResponseCommentDTO> getCommentsByPostId(@PathVariable Long postId) {
-        return commentService.findCommentsByPostId(postId);
+    public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> getCommentsByPostId(@PathVariable Long postId) {
+
+        Map<Long, ResponseCommentDTO> comments = commentService.getCommentsByPostId(postId);
+        ResponseWithData<Map<Long, ResponseCommentDTO>> apiResponse
+                = new ResponseWithData<>(
+                LocalDateTime.now(),
+                HttpStatus.OK.value(),
+                "COMMETS_BY_POST_ID",
+                "postId: "+postId.toString() + " 게시글에 속한 댓글들입니다.",
+                comments);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(apiResponse);
     }
 
     @GetMapping("/board/posts/{postId}/comments/{commentId}")
-    public Map<Long, ResponseCommentDTO> getCommentByCommentId(@PathVariable Long commentId) {
-        return commentService.findCommentByCommentId(commentId);
+    public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> getCommentByCommentId(@PathVariable Long commentId) {
+        Map<Long, ResponseCommentDTO> comment = commentService.getCommentById(commentId);
+        ResponseWithData<Map<Long, ResponseCommentDTO>> apiResponse
+                = new ResponseWithData<>(
+                LocalDateTime.now(),
+                HttpStatus.OK.value(),
+                "COMMETS_BY_POST_ID",
+                "요청한 댓글이 성공적으로 조회되었습니다.",
+                comment);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(apiResponse);
     }
 
     @PostMapping("/board/posts/{postId}/comments")

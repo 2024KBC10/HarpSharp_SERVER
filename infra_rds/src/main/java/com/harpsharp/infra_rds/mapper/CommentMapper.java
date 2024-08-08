@@ -6,6 +6,7 @@ import com.harpsharp.infra_rds.entity.Comment;
 import com.harpsharp.infra_rds.entity.Post;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,5 +30,11 @@ public class CommentMapper {
     public Map<Long, ResponseCommentDTO> toMap(List<Comment> comments) {
         return comments.stream().collect(
                 Collectors.toMap(Comment::getCommentId, this::commentToResponseDTO));
+    }
+
+    public Map<Long, ResponseCommentDTO> toMap(Comment comments) {
+        Map<Long, ResponseCommentDTO> object = new HashMap<>();
+        object.put(comments.getCommentId(), commentToResponseDTO(comments));
+        return object;
     }
 }

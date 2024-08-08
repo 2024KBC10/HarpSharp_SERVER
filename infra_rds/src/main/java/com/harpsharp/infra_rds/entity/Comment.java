@@ -25,9 +25,14 @@ public class Comment extends BasePost {
         this.setContent(content);
         this.setUser(user);
         this.post = post;
+        post.addComment(this);
     }
 
     public String getUsername(){
         return getUser().getUsername();
+    }
+
+    public void clearPost(){
+        post = null;
     }
 }

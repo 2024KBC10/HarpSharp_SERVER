@@ -58,13 +58,13 @@ public class PostController {
         ResponseWithData<Map<Long, ResponsePostDTO>> apiResponse
                 = new ResponseWithData<>(
                 LocalDateTime.now(),
-                HttpStatus.OK.value(),
+                HttpStatus.CREATED.value(),
                 "REDIERCT_TO_ROOT",
                 "게시글이 성공적으로 작성되었습니다. 해당 글로 이동합니다.",
                 savedPost);
 
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.CREATED)
                 .body(apiResponse);
     }
 

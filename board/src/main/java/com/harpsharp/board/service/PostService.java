@@ -5,6 +5,7 @@ import com.harpsharp.infra_rds.dto.board.RequestUpdatePostDTO;
 import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
 import com.harpsharp.infra_rds.entity.Post;
 import com.harpsharp.infra_rds.mapper.PostMapper;
+import com.harpsharp.infra_rds.repository.CommentRepository;
 import com.harpsharp.infra_rds.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final PostMapper postMapper;
+    private final CommentRepository commentRepository;
 
     public Map<Long, ResponsePostDTO> getAllPosts() {
         List<Post> posts = postRepository.findAll();
@@ -66,6 +68,10 @@ public class PostService {
     }
 
     public void deletePost(Long id) {
+        Post post = postRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
+        commentRepository.deleteByPost(post);
         postRepository.deleteById(id);
     }
 

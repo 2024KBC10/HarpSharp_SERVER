@@ -7,6 +7,7 @@ import com.harpsharp.infra_rds.dto.user.UserDTO;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
 import com.harpsharp.infra_rds.mapper.UserMapper;
+import com.harpsharp.infra_rds.repository.PostRepository;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
     private final UserMapper userMapper;
+    private final PostRepository postRepository;
 
     public void registerUser(JoinDTO joinDTO, String role) {
         String username = joinDTO.getUsername();
@@ -118,11 +120,10 @@ public class UserService {
 
     public void deleteById(Long userId, String accessToken){
         if(!userRepository.existsById(userId)){ throw new IllegalArgumentException("존재하지 않는 유저입니다."); }
-
+        postRepository.deleteByUser(userRepository.findById(userId).orElseThrow(NullPointerException::new));
         userRepository.deleteById(userId);
         refreshTokenService.deleteByToken(accessToken);
     }
-
 
     public String findPasswordByUsername(String username){
         User existedUser = userRepository

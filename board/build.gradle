@@ -8,8 +8,7 @@ plugins {
 
 openapi3 {
 	servers = [
-			{ url = "http://swagger-board" },
-			{ url = "http://harpsharp.com/swagger/board" }
+			{ url = "http://harpsharp.com" }
 	]
 	title = "Harp Sharp Board API"
 	description = "Harp Sharp 아이스브레이킹 API입니다."
