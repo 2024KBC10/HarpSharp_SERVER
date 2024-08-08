@@ -14,4 +14,16 @@ class BoardApplicationTests {
 	void contextLoads() {
 	}
 
+	// GET board/posts
+	// POST board/posts
+	// GET board/posts/{postId}
+	// PATCH board/posts/{postId}
+	// DELETE board/posts/{postId}
+
+	// GET    board/posts/{postId}/comments
+	// POST   board/posts/{postId}/comments
+	// GET 	  board/posts/{postId}/comments/{commentId}
+	// PATCH  board/posts/{postId}/comments/{commentId}
+	// DELETE board/posts/{postId}/comments/{commentId}
+
 }

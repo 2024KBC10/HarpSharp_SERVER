@@ -46,7 +46,7 @@ public class PostController {
     }
 
     @PostMapping("/board/posts")
-    public ResponseEntity<ResponseWithData> savePost(
+    public ResponseEntity<ResponseWithData<?>> savePost(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestPostDTO requestPostDTO) {
 

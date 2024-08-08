@@ -27,6 +27,16 @@ public class CommentController {
     private final CommentService commentService;
     private final JwtUtil jwtUtil;
 
+    @GetMapping("/board/posts/{postId}/comments")
+    public Map<Long, ResponseCommentDTO> getCommentsByPostId(@PathVariable Long postId) {
+        return commentService.findCommentsByPostId(postId);
+    }
+
+    @GetMapping("/board/posts/{postId}/comments/{commentId}")
+    public Map<Long, ResponseCommentDTO> getCommentByCommentId(@PathVariable Long commentId) {
+        return commentService.findCommentByCommentId(commentId);
+    }
+
     @PostMapping("/board/posts/{postId}/comments")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> addComment(
             @RequestHeader("Authorization") String accessToken,
@@ -43,8 +53,7 @@ public class CommentController {
                 HttpStatus.CREATED.value(),
                 "ADD_COMMNET_SUCCESSFULLY",
                 "댓글이 성공적으로 작성되었습니다.",
-                object
-                );
+                object);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -52,7 +61,7 @@ public class CommentController {
 
     }
 
-    @PutMapping("/board/posts/{postId}/comments/{commentId}")
+    @PatchMapping("/board/posts/{postId}/comments/{commentId}")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> updateComment(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdateCommnetDTO updatedComment) throws IllegalAccessException {

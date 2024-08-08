@@ -53,15 +53,15 @@ public class PostService {
                 .findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
 
-        existedPost = existedPost
+        Post updatedPost = existedPost
                     .toBuilder()
                     .title(updatedPostDTO.title())
                     .content(updatedPostDTO.content())
                     .build();
 
-        postRepository.save(existedPost);
+        postRepository.save(updatedPost);
         Map<Long, ResponsePostDTO> object = new HashMap<>();
-        object.put(existedPost.getPostId(), postMapper.postToResponseDTO(existedPost));
+        object.put(existedPost.getPostId(), postMapper.postToResponseDTO(updatedPost));
         return object;
     }
 
