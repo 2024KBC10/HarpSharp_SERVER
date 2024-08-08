@@ -42,10 +42,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         try {
             // JSON 문자열 읽기
             String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
-            System.out.println("messageBody = " + messageBody);
             // JSON 파싱
             LoginDTO loginDTO = objectMapper.readValue(messageBody, LoginDTO.class);
-            System.out.println("loginDTO = " + loginDTO);
 
             // 사용자 이름과 비밀번호 추출
             String username = loginDTO.getUsername();
@@ -56,31 +54,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             // 인증 토큰 생성
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
 
-            System.out.println("in Try");
             // 인증 시도
             return authenticationManager.authenticate(authToken);
         } catch (IOException e) {
             System.out.println("e = " + e);
 
-            //throw new AuthenticationServiceException("인증에 실패했습니다.", e);
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-
-            ApiResponse errorResponse = new ApiResponse(
-                    LocalDateTime.now(),
-                    HttpStatus.BAD_REQUEST.value(),
-                    "INVALID_REQUEST",
-                    "요청을 처리하는 중 오류가 발생했습니다.");
-
-            try {
-                response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            throw new AuthenticationServiceException("인증에 실패했습니다.", e);
 
             // AuthenticationException을 던지지 않도록 null 반환
-            return null;
         }
     }
 
