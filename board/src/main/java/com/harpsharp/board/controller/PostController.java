@@ -163,8 +163,7 @@ public class PostController {
     @NotNull
     private Boolean isValid(String accessToken, String username) {
         if (accessToken == null || !accessToken.startsWith("Bearer ")) {
-            System.out.println("invalid access");
-            throw new IllegalArgumentException("Invalid access");
+            return false;
         }
 
         accessToken = accessToken.substring("Bearer ".length());
