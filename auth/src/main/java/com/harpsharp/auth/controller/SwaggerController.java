@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +25,11 @@ public class SwaggerController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectURI));
 
-        ApiResponse apiResponse = new ApiResponse("DOCS_AUTH", "Swagger Auth입니다.");
+        ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.OK,
+                "DOCS_AUTH",
+                "Swagger Auth입니다.");
 
         return ResponseEntity
                 .status(HttpStatus.TEMPORARY_REDIRECT)

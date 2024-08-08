@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Slf4j
@@ -33,6 +34,8 @@ public class PostController {
 
         ResponseWithData<Map<Long, ResponsePostDTO>> apiResponse =
                 new ResponseWithData<>(
+                        LocalDateTime.now(),
+                        HttpStatus.OK,
                         "GET_ALL_POST_SUCCESSFULLY",
                         "모든 게시글이 정상적으로 조회되었습니다.",
                         allPosts);
@@ -61,6 +64,8 @@ public class PostController {
         headers.setLocation(URI.create(redirectURI));
         System.out.println("redirectURI = " + redirectURI);
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.SEE_OTHER,
                 "REDIERCT_TO_ROOT",
                 "게시글이 성공적으로 작성되었습니다. 해당 글로 이동합니다.");
 
@@ -76,6 +81,8 @@ public class PostController {
 
         ResponseWithData<ResponsePostDTO> apiResponse =
                 new ResponseWithData<>(
+                        LocalDateTime.now(),
+                        HttpStatus.OK,
                         "GET_POST_SUCCESSFULLY",
                         "해당 게시글이 정상적으로 조회되었습니다.",
                         responsePostDTO);
@@ -112,6 +119,8 @@ public class PostController {
         headers.setLocation(URI.create(redirectURI));
         System.out.println("redirectURI = " + redirectURI);
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.SEE_OTHER,
                 "REDIERCT_TO_ROOT",
                 "게시글이 성공적으로 수정되었습니다.");
 
@@ -140,6 +149,8 @@ public class PostController {
         headers.setLocation(URI.create(redirectURI));
         System.out.println("redirectURI = " + redirectURI);
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.SEE_OTHER,
                 "REDIERCT_TO_ROOT",
                 "게시글이 성공적으로 삭제되었습니다.");
 

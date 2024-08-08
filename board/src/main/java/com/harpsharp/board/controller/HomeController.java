@@ -6,12 +6,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @RestController
 public class HomeController {
 
     @RequestMapping ("/board")
     public ResponseEntity<ApiResponse> home() {
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.OK,
                 "WELCOME_TO_BOARD",
                 "아이스 브레이킹 루트 페이지입니다.");
 

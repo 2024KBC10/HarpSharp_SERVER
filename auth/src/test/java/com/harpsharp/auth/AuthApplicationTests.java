@@ -127,10 +127,18 @@ class AuthApplicationTests {
 								fieldWithPath("email").description("이메일 주소")
 						),
 						responseFields(
-								fieldWithPath("code").type(JsonFieldType.STRING)
-										.description("회원가입 성공 여부"),
-								fieldWithPath("message").type(JsonFieldType.STRING)
-										.description("상세 메시지")
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.STRING)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("회원가입 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지")
 						)
 				));
 	}
@@ -160,10 +168,18 @@ class AuthApplicationTests {
 								fieldWithPath("password").description("비밀번호")
 						),
 						responseFields(
-								fieldWithPath("code").type(JsonFieldType.STRING)
-										.description("로그인 상태"),
-								fieldWithPath("message").type(JsonFieldType.STRING)
-										.description("상세 메시지")
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.STRING)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("로그인 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지")
 						),
 						responseHeaders(headerWithName("Authorization").description("발급된 access token"))
 				));
@@ -199,7 +215,21 @@ class AuthApplicationTests {
 						),
 						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						requestCookies(cookieWithName("refresh").description("유효한 refresh token")),
-						responseHeaders(headerWithName("Authorization").description("재발급된 access token"))
+						responseHeaders(headerWithName("Authorization").description("재발급된 access token")),
+						responseFields(
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.STRING)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("업데이트 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지")
+						)
 				));
 	}
 
@@ -226,10 +256,18 @@ class AuthApplicationTests {
 								fieldWithPath("password").description("유저가 입력한 비밀번호 (본인 확인용)")
 						),
 						responseFields(
-								fieldWithPath("code").type(JsonFieldType.STRING)
-										.description("회원 탈퇴 성공 여부"),
-								fieldWithPath("message").type(JsonFieldType.STRING)
-										.description("상세 메시지")
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.STRING)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("회원 탈퇴 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지")
 						)
 				));
 	}

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -32,7 +33,11 @@ public class MainController {
                 .role(role)
                 .build();
 
-        ApiResponse apiResponse = new ApiResponse("ROOT_PAGE", "Welcome to Auth!");
+        ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.OK,
+                "ROOT_PAGE",
+                "Welcome to Auth!");
 
         return ResponseEntity
                 .status(HttpStatus.OK)

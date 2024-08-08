@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -92,8 +93,10 @@ public class ReissueController {
         response.setStatus(HttpStatus.OK.value());
 
         HttpStatus status = (request.getMethod().equals("POST")) ? HttpStatus.CREATED : HttpStatus.OK;
-        ApiResponse apiResponse = new ApiResponse
-                ("JWT_REISSUED_SUCCESSFULLY",
+        ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                status,
+                "JWT_REISSUED_SUCCESSFULLY",
                 "The JWT has been successfully reissued.");
         return ResponseEntity
                 .status(status)

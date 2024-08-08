@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDateTime;
+
 @Controller
 @ResponseBody
 @RequiredArgsConstructor
@@ -24,7 +26,9 @@ public class JoinController {
         userService.registerUser(joinDTO, "ROLE_USER");
 
         ApiResponse apiResponse =
-                new ApiResponse("USER_JOINED_SUCCESSFULLY",
+                new ApiResponse(LocalDateTime.now(),
+                        HttpStatus.CREATED,
+                        "USER_JOINED_SUCCESSFULLY",
                 joinDTO.getUsername() + " has been successfully registered.");
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -35,7 +39,10 @@ public class JoinController {
     public ResponseEntity<ApiResponse> joinAdmin(@RequestBody JoinDTO joinDTO){
         userService.registerUser(joinDTO, "ROLE_ADMIN");
         ApiResponse apiResponse =
-                new ApiResponse("USER_JOINED_SUCCESSFULLY",
+                new ApiResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.CREATED,
+                        "USER_JOINED_SUCCESSFULLY",
                         joinDTO.getUsername() + " has been successfully registered.");
         return ResponseEntity
                 .status(HttpStatus.CREATED)

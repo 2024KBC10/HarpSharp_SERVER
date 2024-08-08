@@ -25,6 +25,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,6 +45,8 @@ public class UserController {
                 userMapper.convertUserToResponse(user);
 
         ResponseWithData<ResponseUserDTO> responseWithData = new ResponseWithData<>(
+                LocalDateTime.now(),
+                HttpStatus.OK,
                 "GET_USER_BY_ID_SUCCESS",
                 "요청한 유저 정보를 성공적으롤 읽어왔습니다.",
                 responseUserDTO
@@ -54,8 +57,7 @@ public class UserController {
     }
     @PatchMapping("/user")
     public ResponseEntity<ApiResponse> updateUser(HttpServletRequest request,
-                                                  @RequestBody UpdateUserDTO updatedDTO,
-                                                  HttpServletResponse response) throws IOException {
+                                                  @RequestBody UpdateUserDTO updatedDTO) throws IOException {
         String accessToken = request.getHeader("Authorization");
 
         if (accessToken == null || updatedDTO == null || !accessToken.startsWith("Bearer ")) {
@@ -76,6 +78,8 @@ public class UserController {
         headers.setLocation(URI.create(redirectURI));
         headers.add("Authorization", "Bearer " + accessToken);
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.SEE_OTHER,
                 "GO_TO_REISSUE",
                 "유저 정보를 수정하였습니다. 토큰을 재발급 합니다.");
 
@@ -108,6 +112,8 @@ public class UserController {
         userService.deleteById(userId, accessToken);
 
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.OK,
                 "DELETED_SUCCESSFULLY",
                 username + " successfully deleted.");
 

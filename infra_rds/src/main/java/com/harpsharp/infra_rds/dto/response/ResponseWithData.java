@@ -1,15 +1,24 @@
 package com.harpsharp.infra_rds.dto.response;
 
-public record ResponseWithData<T>(String code,
-                                  String message,
-                                  T data) { }
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.http.HttpStatus;
+
+import java.time.LocalDateTime;
+
+public record ResponseWithData<T>(
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+        LocalDateTime timeStamp,
+        HttpStatus code,
+        String message,
+        String details,
+        T data) { }
 
 /*
 {
     time: 응답 시간(LocalTime),
     code: HttpStatus,
-    message: INVALID_TOKEN
-    details: 한글 상세 사안,
+    message: 압축한 안내문 (etc. INVALID_TOKEN)
+    details: 상세 설명(한글),
     data: DTO(post, comment, user...)
 }
  */

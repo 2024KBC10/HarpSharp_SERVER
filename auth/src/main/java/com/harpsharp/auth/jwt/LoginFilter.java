@@ -24,6 +24,7 @@ import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -34,6 +35,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
     private final JwtUtil jwtUtil;
+    private final ObjectMapper objectMapper;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -42,7 +44,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
             System.out.println("messageBody = " + messageBody);
             // JSON 파싱
-            ObjectMapper objectMapper = new ObjectMapper();
             LoginDTO loginDTO = objectMapper.readValue(messageBody, LoginDTO.class);
             System.out.println("loginDTO = " + loginDTO);
 
@@ -88,12 +89,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 
         ApiResponse responseDTO = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.CREATED,
                 "TOKEN_PUBLISHED_SUCCESSFULLY",
                 username + " logged in successfully");
 
 
-        ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(responseDTO);
+        String json = objectMapper.writeValueAsString(responseDTO);
 
 
         response.setHeader("Authorization", "Bearer " + accessToken);

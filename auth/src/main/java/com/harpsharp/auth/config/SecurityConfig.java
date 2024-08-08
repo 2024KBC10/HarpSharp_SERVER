@@ -1,5 +1,6 @@
 package com.harpsharp.auth.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.jwt.*;
 import com.harpsharp.auth.oauth2.CustomSuccessHandler;
 import com.harpsharp.auth.service.CustomOAuth2UserService;
@@ -37,6 +38,7 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public CookieSameSiteSupplier applicationCookieSameSiteSupplier() {
@@ -76,7 +78,7 @@ public class SecurityConfig {
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), refreshTokenService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), refreshTokenService, jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenService), LogoutFilter.class)
                 .sessionManagement((session)->session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));

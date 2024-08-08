@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -18,6 +20,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<ApiResponse> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT,
                 e.getMessage(),
                 "이미 존재하는 유저입니다.");
         return ResponseEntity
@@ -29,6 +33,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<ApiResponse> handlerExpiredJwtException(ExpiredJwtException e) {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED,
                 e.getMessage(),
                 "유효하지 않은 토큰 입니다.");
 
@@ -41,6 +47,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<ApiResponse> handlerJwtAuthenticationException(JwtAuthenticationException e) {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST,
                 e.getMessage(),
                 "유효하지 않은 토큰 입니다.");
 
@@ -53,6 +61,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<ApiResponse> handlerMalformedJwtException(MalformedJwtException e) {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST,
                 e.getMessage(),
                 "유효하지 않은 토큰 입니다.");
         return ResponseEntity
@@ -64,6 +74,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<ApiResponse> handlerIllegalArgumentException(IllegalArgumentException e) {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED,
                 e.getMessage(),
                 "유효하지 않은 값 입니다.");
 
@@ -76,6 +88,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<ApiResponse> handlerIllegalAccessException(IllegalAccessException e) {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED,
                 e.getMessage(),
                 "유효하지 않은 접근 입니다.");
         return ResponseEntity

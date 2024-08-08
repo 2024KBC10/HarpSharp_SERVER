@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -21,6 +23,8 @@ public class VerificationController {
     @GetMapping("/verify")
     public ResponseEntity<ApiResponse> verificationCreatePost() {
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.OK,
                 "VERIFIED_SUCCESS",
                 "회원 권한이 확인 되었습니다.");
         return ResponseEntity

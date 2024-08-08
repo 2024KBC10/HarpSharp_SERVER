@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,6 +35,8 @@ public class CommentController {
         headers.setLocation(URI.create(redirectURI));
 
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.TEMPORARY_REDIRECT,
                 "ADD_COMMNET_SUCCESSFULLY",
                 "댓글이 성공적으로 작성되었습니다.");
         return ResponseEntity
@@ -62,6 +65,8 @@ public class CommentController {
         headers.setLocation(URI.create(redirectURI));
 
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.TEMPORARY_REDIRECT,
                 "UPDATE_COMMNET_SUCCESSFULLY",
                 "댓글이 성공적으로 수정되었습니다.");
 
@@ -89,6 +94,8 @@ public class CommentController {
         headers.setLocation(URI.create(redirectURI));
 
         ApiResponse apiResponse = new ApiResponse(
+                LocalDateTime.now(),
+                HttpStatus.TEMPORARY_REDIRECT,
                 "UPDATE_COMMNET_SUCCESSFULLY",
                 "댓글이 성공적으로 삭제되었습니다.");
 
