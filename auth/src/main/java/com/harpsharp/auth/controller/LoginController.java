@@ -20,6 +20,7 @@ public class LoginController {
                     "VALID_USER",
                     "로그인에 성공하였습니다."
                     );
+            System.out.println("HI IM CONTROLLER");
             return ResponseEntity
                     .status(HttpStatus.OK.value())
                     .body(apiResponse);
@@ -31,10 +32,10 @@ public class LoginController {
                     "INVALID_USER",
                     "로그인에 실패하였습니다."
             );
+            System.out.println("GOTCHA");
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED.value())
                     .body(apiResponse);
         }
     }
-
 }
