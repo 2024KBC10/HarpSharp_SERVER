@@ -24,7 +24,7 @@ public class VerificationController {
     public ResponseEntity<ApiResponse> verificationCreatePost() {
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.OK,
+                HttpStatus.OK.value(),
                 "VERIFIED_SUCCESS",
                 "회원 권한이 확인 되었습니다.");
         return ResponseEntity

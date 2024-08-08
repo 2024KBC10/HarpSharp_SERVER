@@ -27,7 +27,7 @@ public class JoinController {
 
         ApiResponse apiResponse =
                 new ApiResponse(LocalDateTime.now(),
-                        HttpStatus.CREATED,
+                        HttpStatus.CREATED.value(),
                         "USER_JOINED_SUCCESSFULLY",
                 joinDTO.getUsername() + " has been successfully registered.");
         return ResponseEntity
@@ -41,7 +41,7 @@ public class JoinController {
         ApiResponse apiResponse =
                 new ApiResponse(
                         LocalDateTime.now(),
-                        HttpStatus.CREATED,
+                        HttpStatus.CREATED.value(),
                         "USER_JOINED_SUCCESSFULLY",
                         joinDTO.getUsername() + " has been successfully registered.");
         return ResponseEntity

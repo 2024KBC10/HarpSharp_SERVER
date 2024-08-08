@@ -90,7 +90,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         ApiResponse responseDTO = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.CREATED,
+                HttpStatus.CREATED.value(),
                 "TOKEN_PUBLISHED_SUCCESSFULLY",
                 username + " logged in successfully");
 

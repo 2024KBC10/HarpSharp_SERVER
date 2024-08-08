@@ -27,7 +27,7 @@ public class SwaggerController {
 
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.OK,
+                HttpStatus.OK.value(),
                 "DOCS_AUTH",
                 "Swagger Auth입니다.");
 

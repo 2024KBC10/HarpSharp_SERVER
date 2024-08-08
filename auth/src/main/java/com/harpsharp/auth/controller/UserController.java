@@ -46,7 +46,7 @@ public class UserController {
 
         ResponseWithData<ResponseUserDTO> responseWithData = new ResponseWithData<>(
                 LocalDateTime.now(),
-                HttpStatus.OK,
+                HttpStatus.OK.value(),
                 "GET_USER_BY_ID_SUCCESS",
                 "요청한 유저 정보를 성공적으롤 읽어왔습니다.",
                 responseUserDTO
@@ -79,7 +79,7 @@ public class UserController {
         headers.add("Authorization", "Bearer " + accessToken);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.SEE_OTHER,
+                HttpStatus.SEE_OTHER.value(),
                 "GO_TO_REISSUE",
                 "유저 정보를 수정하였습니다. 토큰을 재발급 합니다.");
 
@@ -113,7 +113,7 @@ public class UserController {
 
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.OK,
+                HttpStatus.OK.value(),
                 "DELETED_SUCCESSFULLY",
                 username + " successfully deleted.");
 

@@ -36,7 +36,7 @@ public class CommentController {
 
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.TEMPORARY_REDIRECT,
+                HttpStatus.TEMPORARY_REDIRECT.value(),
                 "ADD_COMMNET_SUCCESSFULLY",
                 "댓글이 성공적으로 작성되었습니다.");
         return ResponseEntity
@@ -66,7 +66,7 @@ public class CommentController {
 
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.TEMPORARY_REDIRECT,
+                HttpStatus.TEMPORARY_REDIRECT.value(),
                 "UPDATE_COMMNET_SUCCESSFULLY",
                 "댓글이 성공적으로 수정되었습니다.");
 
@@ -95,7 +95,7 @@ public class CommentController {
 
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.TEMPORARY_REDIRECT,
+                HttpStatus.TEMPORARY_REDIRECT.value(),
                 "UPDATE_COMMNET_SUCCESSFULLY",
                 "댓글이 성공적으로 삭제되었습니다.");
 

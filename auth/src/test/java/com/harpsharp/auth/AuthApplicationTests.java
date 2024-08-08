@@ -131,7 +131,7 @@ class AuthApplicationTests {
 										.type(JsonFieldType.STRING)
 										.description("응답 시간"),
 								fieldWithPath("code")
-										.type(JsonFieldType.STRING)
+										.type(JsonFieldType.VARIES)
 										.description("상태 코드"),
 								fieldWithPath("message")
 										.type(JsonFieldType.STRING)
@@ -172,7 +172,7 @@ class AuthApplicationTests {
 										.type(JsonFieldType.STRING)
 										.description("응답 시간"),
 								fieldWithPath("code")
-										.type(JsonFieldType.STRING)
+										.type(JsonFieldType.VARIES)
 										.description("상태 코드"),
 								fieldWithPath("message")
 										.type(JsonFieldType.STRING)
@@ -221,7 +221,7 @@ class AuthApplicationTests {
 										.type(JsonFieldType.STRING)
 										.description("응답 시간"),
 								fieldWithPath("code")
-										.type(JsonFieldType.STRING)
+										.type(JsonFieldType.VARIES)
 										.description("상태 코드"),
 								fieldWithPath("message")
 										.type(JsonFieldType.STRING)
@@ -260,7 +260,7 @@ class AuthApplicationTests {
 										.type(JsonFieldType.STRING)
 										.description("응답 시간"),
 								fieldWithPath("code")
-										.type(JsonFieldType.STRING)
+										.type(JsonFieldType.VARIES)
 										.description("상태 코드"),
 								fieldWithPath("message")
 										.type(JsonFieldType.STRING)

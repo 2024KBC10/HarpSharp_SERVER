@@ -21,7 +21,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.CONFLICT,
+                HttpStatus.CONFLICT.value(),
                 e.getMessage(),
                 "이미 존재하는 유저입니다.");
         return ResponseEntity
@@ -34,7 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.UNAUTHORIZED,
+                HttpStatus.UNAUTHORIZED.value(),
                 e.getMessage(),
                 "유효하지 않은 토큰 입니다.");
 
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.BAD_REQUEST.value(),
                 e.getMessage(),
                 "유효하지 않은 토큰 입니다.");
 
@@ -62,7 +62,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.BAD_REQUEST.value(),
                 e.getMessage(),
                 "유효하지 않은 토큰 입니다.");
         return ResponseEntity
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.UNAUTHORIZED,
+                HttpStatus.UNAUTHORIZED.value(),
                 e.getMessage(),
                 "유효하지 않은 값 입니다.");
 
@@ -89,7 +89,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.UNAUTHORIZED,
+                HttpStatus.UNAUTHORIZED.value(),
                 e.getMessage(),
                 "유효하지 않은 접근 입니다.");
         return ResponseEntity

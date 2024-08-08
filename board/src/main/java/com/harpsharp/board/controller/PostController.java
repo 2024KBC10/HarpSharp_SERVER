@@ -35,7 +35,7 @@ public class PostController {
         ResponseWithData<Map<Long, ResponsePostDTO>> apiResponse =
                 new ResponseWithData<>(
                         LocalDateTime.now(),
-                        HttpStatus.OK,
+                        HttpStatus.OK.value(),
                         "GET_ALL_POST_SUCCESSFULLY",
                         "모든 게시글이 정상적으로 조회되었습니다.",
                         allPosts);
@@ -65,7 +65,7 @@ public class PostController {
         System.out.println("redirectURI = " + redirectURI);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.SEE_OTHER,
+                HttpStatus.SEE_OTHER.value(),
                 "REDIERCT_TO_ROOT",
                 "게시글이 성공적으로 작성되었습니다. 해당 글로 이동합니다.");
 
@@ -80,9 +80,9 @@ public class PostController {
         ResponsePostDTO responsePostDTO = postService.getPostById(postId);
 
         ResponseWithData<ResponsePostDTO> apiResponse =
-                new ResponseWithData<>(
+                new ResponseWithData<ResponsePostDTO>(
                         LocalDateTime.now(),
-                        HttpStatus.OK,
+                        HttpStatus.OK.value(),
                         "GET_POST_SUCCESSFULLY",
                         "해당 게시글이 정상적으로 조회되었습니다.",
                         responsePostDTO);
@@ -120,7 +120,7 @@ public class PostController {
         System.out.println("redirectURI = " + redirectURI);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.SEE_OTHER,
+                HttpStatus.SEE_OTHER.value(),
                 "REDIERCT_TO_ROOT",
                 "게시글이 성공적으로 수정되었습니다.");
 
@@ -150,7 +150,7 @@ public class PostController {
         System.out.println("redirectURI = " + redirectURI);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.SEE_OTHER,
+                HttpStatus.SEE_OTHER.value(),
                 "REDIERCT_TO_ROOT",
                 "게시글이 성공적으로 삭제되었습니다.");
 

@@ -15,7 +15,7 @@ public class HomeController {
     public ResponseEntity<ApiResponse> home() {
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.OK,
+                HttpStatus.OK.value(),
                 "WELCOME_TO_BOARD",
                 "아이스 브레이킹 루트 페이지입니다.");
 

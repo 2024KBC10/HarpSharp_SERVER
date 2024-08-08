@@ -35,7 +35,7 @@ public class MainController {
 
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.OK,
+                HttpStatus.OK.value(),
                 "ROOT_PAGE",
                 "Welcome to Auth!");
 
