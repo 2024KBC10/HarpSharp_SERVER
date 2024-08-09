@@ -1,6 +1,7 @@
 package com.harpsharp.todo.controller;
 
-import com.harpsharp.infra_rds.entity.TodoComment;
+import com.harpsharp.infra_rds.dto.todo.RequestTodoCommentDTO;
+import com.harpsharp.infra_rds.dto.todo.ResponseTodoCommentDTO;
 import com.harpsharp.todo.service.TodoCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,24 +16,24 @@ public class TodoCommentController {
     private TodoCommentService todoCommentService;
 
     @GetMapping
-    public List<TodoComment> getAllComments() {
+    public List<ResponseTodoCommentDTO> getAllComments() {
         return todoCommentService.getAllComments();
     }
 
     @GetMapping("/{id}")
-    public TodoComment getCommentById(@PathVariable Long id) {
+    public ResponseTodoCommentDTO getCommentById(@PathVariable Long id) {
         return todoCommentService.getCommentById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid comment Id:" + id));
     }
 
     @PostMapping
-    public TodoComment createComment(@RequestBody TodoComment comment) {
-        return todoCommentService.createComment(comment);
+    public ResponseTodoCommentDTO createComment(@RequestBody RequestTodoCommentDTO commentDTO) {
+        return todoCommentService.createComment(commentDTO);
     }
 
     @PutMapping("/{id}")
-    public TodoComment updateComment(@PathVariable Long id, @RequestBody TodoComment commentDetails) {
-        return todoCommentService.updateComment(id, commentDetails);
+    public ResponseTodoCommentDTO updateComment(@PathVariable Long id, @RequestBody RequestTodoCommentDTO commentDTO) {
+        return todoCommentService.updateComment(id, commentDTO);
     }
 
     @DeleteMapping("/{id}")

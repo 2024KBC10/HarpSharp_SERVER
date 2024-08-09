@@ -1,6 +1,8 @@
 package com.harpsharp.todo.controller;
 
-import com.harpsharp.infra_rds.entity.TodoPost;
+import com.harpsharp.infra_rds.dto.todo.RequestTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.RequestUpdateTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
 import com.harpsharp.todo.service.TodoPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +17,7 @@ public class TodoPostController {
     private TodoPostService todoPostService;
 
     @GetMapping
-    public List<TodoPost> getPosts(@RequestParam(required = false) String username) {
+    public List<ResponseTodoPostDTO> getPosts(@RequestParam(required = false) String username) {
         if (username != null) {
             return todoPostService.getTodoPostsByUsername(username);
         } else {
@@ -24,19 +26,19 @@ public class TodoPostController {
     }
 
     @GetMapping("/{id}")
-    public TodoPost getPostById(@PathVariable Long id) {
+    public ResponseTodoPostDTO getPostById(@PathVariable Long id) {
         return todoPostService.getTodoPostById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid post Id:" + id));
     }
 
     @PostMapping
-    public TodoPost createPost(@RequestBody TodoPost post) {
-        return todoPostService.createTodoPost(post);
+    public ResponseTodoPostDTO createPost(@RequestBody RequestTodoPostDTO postDTO) {
+        return todoPostService.createTodoPost(postDTO);
     }
 
     @PutMapping("/{id}")
-    public TodoPost updatePost(@PathVariable Long id, @RequestBody TodoPost postDetails) {
-        return todoPostService.updateTodoPost(id, postDetails);
+    public ResponseTodoPostDTO updatePost(@PathVariable Long id, @RequestBody RequestUpdateTodoPostDTO postDTO) {
+        return todoPostService.updateTodoPost(id, postDTO);
     }
 
     @DeleteMapping("/{id}")

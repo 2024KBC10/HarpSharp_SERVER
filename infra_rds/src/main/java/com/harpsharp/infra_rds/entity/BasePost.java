@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BasePost {
+
     @NotNull
     @Column(name = "content")
     protected String content;
@@ -36,6 +37,10 @@ public abstract class BasePost {
     @Column(name = "updated_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     protected LocalDateTime updatedAt;
+
+    public String getContent() {
+        return this.content;
+    }
 
     public void setContent(String content) {
         this.content = content;

@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.harpsharp.infra_rds.util.TodoStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -12,11 +14,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Entity
 @Setter
+@NoArgsConstructor
+@Entity
 @DynamicUpdate
 @Table(name = "todo_posts")
-public class TodoPost extends BasePost{
+public class TodoPost extends BasePost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "todo_id")
@@ -24,7 +27,7 @@ public class TodoPost extends BasePost{
 
     @NotNull
     @Column(name = "title")
-    String title;
+    private String title;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -42,5 +45,16 @@ public class TodoPost extends BasePost{
     private LocalDateTime endAt;
 
     @Column(name = "likes", nullable = false)
-    private Long likes = 0L;
+    private Long likes;
+
+    @Builder
+    public TodoPost(String title, String content, TodoStatus status, LocalDateTime startAt, LocalDateTime endAt, User user) {
+        this.title = title;
+        this.content = content;
+        this.status = status;
+        this.startAt = startAt;
+        this.endAt = endAt;
+        this.user = user;
+        this.likes = 0L;
+    }
 }

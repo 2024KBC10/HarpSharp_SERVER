@@ -1,7 +1,10 @@
 package com.harpsharp.todo.service;
 
+import com.harpsharp.infra_rds.dto.todo.RequestTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.RequestUpdateTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.entity.TodoPost;
-import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.mapper.TodoPostMapper;
 import com.harpsharp.infra_rds.repository.TodoPostRepository;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,34 +21,37 @@ import java.util.Optional;
 public class TodoPostService {
     private final UserRepository userRepository;
     private final TodoPostRepository todoPostRepository;
+    private final TodoPostMapper todoPostMapper;
 
-    public List<TodoPost> getAllTodoPosts() {
-        return todoPostRepository.findAll();
+    public List<ResponseTodoPostDTO> getAllTodoPosts() {
+        return todoPostRepository.findAll().stream()
+                .map(todoPostMapper::entityToResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<TodoPost> getTodoPostsByUsername(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(IllegalArgumentException::new);
-        return todoPostRepository.findByUser(user);
+    public List<ResponseTodoPostDTO> getTodoPostsByUsername(String username) {
+        return todoPostRepository.findByUser(
+                        userRepository.findByUsername(username)
+                                .orElseThrow(() -> new IllegalArgumentException("User not found"))
+                ).stream().map(todoPostMapper::entityToResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    public Optional<TodoPost> getTodoPostById(Long id) {
-        return todoPostRepository.findById(id);
+    public Optional<ResponseTodoPostDTO> getTodoPostById(Long id) {
+        return todoPostRepository.findById(id)
+                .map(todoPostMapper::entityToResponseDTO);
     }
 
-    public TodoPost createTodoPost(TodoPost todoPost) {
-        return todoPostRepository.save(todoPost);
+    public ResponseTodoPostDTO createTodoPost(RequestTodoPostDTO requestTodoPostDTO) {
+        TodoPost todoPost = todoPostMapper.requestToEntity(requestTodoPostDTO);
+        return todoPostMapper.entityToResponseDTO(todoPostRepository.save(todoPost));
     }
 
-    public TodoPost updateTodoPost(Long id, TodoPost todoPostDetails) {
+    public ResponseTodoPostDTO updateTodoPost(Long id, RequestUpdateTodoPostDTO requestUpdateTodoPostDTO) {
         TodoPost todoPost = todoPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid TodoPost Id:" + id));
-        todoPost.setTitle(todoPostDetails.getTitle());
-        todoPost.setContent(todoPostDetails.getContent());
-        todoPost.setStatus(todoPostDetails.getStatus());
-        todoPost.setStartAt(todoPostDetails.getStartAt());
-        todoPost.setEndAt(todoPostDetails.getEndAt());
-        todoPost.setLikes(todoPostDetails.getLikes());
-        return todoPostRepository.save(todoPost);
+        todoPost = todoPostMapper.updateRequestToEntity(todoPost, requestUpdateTodoPostDTO);
+        return todoPostMapper.entityToResponseDTO(todoPostRepository.save(todoPost));
     }
 
     public void deletePost(Long id) {
