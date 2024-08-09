@@ -188,7 +188,7 @@ class BoardApplicationTests {
 	public void rootPage() throws Exception {
 		Long postId = writePost();
 		RequestUpdatePostDTO requestUpdatePostDTO = new RequestUpdatePostDTO(postId, username, title, content);
-		this.mockMvc.perform(delete("/board"))
+		this.mockMvc.perform(get("/board"))
 				.andExpect(status().isOk())
 				.andDo(document("아이스 브레이킹 루트 페이지", // 문서화할 때 사용할 경로와 이름
 						responseFields(

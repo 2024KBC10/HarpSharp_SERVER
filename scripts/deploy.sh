@@ -43,6 +43,12 @@ serviceDown(){
       fi
   fi
 }
+
+swaggerDown(){
+  if [ $(docker ps -a -q -f name=$CONTAINER_NAME) ]; then
+      echo "컨테이너 $CONTAINER_NAME 종료 및 삭제 중..."
+  fi
+}
 reloadNginx(){
   docker exec -it nginx nginx -s reload
 }
@@ -56,14 +62,17 @@ runDB
 
 cd /home/ubuntu/deploy/auth
 serviceDown auth
+swaggerDown swagger-auth
 docker-compose up --build -d
 
 cd /home/ubuntu/deploy/board
 serviceDown board
+swaggerDown swagger-board
 docker-compose up --build -d
 
 cd /home/ubuntu/deploy/todo
 serviceDown todo
+swaggerDown swagger-todo
 docker-compose up --build -d
 
 reloadNginx
