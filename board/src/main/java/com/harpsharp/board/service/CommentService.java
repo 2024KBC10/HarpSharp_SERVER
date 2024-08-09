@@ -33,7 +33,6 @@ public class CommentService {
         Post rootPost = postRepository
                 .findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
-        System.out.println("rootPost.getComments() = " + rootPost.getComments());
         return commentMapper.toMap(rootPost.getComments());
     }
 

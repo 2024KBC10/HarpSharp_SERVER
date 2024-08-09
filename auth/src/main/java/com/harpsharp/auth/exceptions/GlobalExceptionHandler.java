@@ -88,7 +88,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IllegalAccessException.class)
     private ResponseEntity<ApiResponse> handlerIllegalAccessException(IllegalAccessException e) {
-        log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
                 HttpStatus.UNAUTHORIZED.value(),
