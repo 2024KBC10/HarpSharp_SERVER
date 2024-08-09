@@ -1,5 +1,5 @@
 services:
-  board:
+  todo:
     container_name: todo
     restart: on-failure
     build:
