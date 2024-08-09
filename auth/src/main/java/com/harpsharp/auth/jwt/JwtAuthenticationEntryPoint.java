@@ -20,11 +20,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         // SignatureException이 원인인 경우 처리
         Throwable cause = authException.getCause();
         if (cause instanceof SignatureException) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드 반환
+            response.setStatus(HttpServletResponse.SC_OK); // 401 상태 코드 반환
             response.setContentType("application/json");
             response.getWriter().write("{\"error\": \"Invalid JWT signature\"}");
         } else {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 일반적인 인증 오류
+            response.setStatus(HttpServletResponse.SC_OK); // 일반적인 인증 오류
             response.setContentType("application/json");
             response.getWriter().write("{\"error\": \"Unauthorized\"}");
         }

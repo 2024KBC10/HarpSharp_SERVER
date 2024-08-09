@@ -34,7 +34,7 @@ public class LoginController {
             );
             System.out.println("GOTCHA");
             return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED.value())
+                    .status(HttpStatus.OK.value())
                     .body(apiResponse);
         }
     }

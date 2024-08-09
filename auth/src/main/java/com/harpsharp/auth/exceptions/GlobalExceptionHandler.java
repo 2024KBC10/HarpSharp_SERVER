@@ -27,7 +27,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 e.getMessage(),
                 "이미 존재하는 유저입니다.");
         return ResponseEntity
-                .status(HttpStatus.CONFLICT)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
     }
 
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "유효하지 않은 토큰입니다.");
 
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
     }
 
@@ -55,7 +55,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "유효하지 않은 토큰입니다.");
 
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
     }
 
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 e.getMessage(),
                 "유효하지 않은 토큰입니다.");
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
     }
 
@@ -82,7 +82,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "유효하지 않은 값입니다.");
 
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
     }
 
@@ -95,7 +95,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 e.getMessage(),
                 "유효하지 않은 접근입니다.");
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
     }
 
@@ -107,7 +107,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 e.getMessage(),
                 "유효하지 않은 접근입니다.");
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
     }
 }

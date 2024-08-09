@@ -27,7 +27,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
                     "INVALID_ACCESS",
                     "유효하지 않은 접근입니다."
                     );
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json");
             response.getWriter().write(apiResponse.toString());
         } catch(JwtException e) {
@@ -38,7 +38,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
                             "INVALID_TOKEN",
                             "유효하지 않은 토큰입니다."
                     );
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json");
             response.getWriter().write(apiResponse.toString());
         }

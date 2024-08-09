@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
         try{
             jwtUtil.isExpired(accessToken);
         }catch(JwtException e){
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+            response.sendError(HttpServletResponse.SC_OK, e.getMessage());
             return;
         }
 
