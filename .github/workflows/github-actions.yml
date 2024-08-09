@@ -39,6 +39,9 @@ jobs:
     steps:
       - name: 체크아웃
         uses: actions/checkout@v2
+        with:
+          python-version: "3.12.4"
+
       - name: Verify MySQL connection from host
         run: mysql -h 127.0.0.1 --port=3306 -u root -pwlghks24461! -e "SHOW DATABASES"
 
@@ -48,7 +51,7 @@ jobs:
           java-version: "17"
           distribution: "corretto"
 
-      - name: YML 파일 생성
+      - name: 환경 변수 파일 생성
         run: |
           mkdir -p auth/src/main/resources
           echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > auth/src/main/resources/application.yaml
@@ -62,6 +65,8 @@ jobs:
           echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > todo/src/main/resources/application.yaml
           echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > todo/src/main/resources/application-local.yaml
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > todo/src/main/resources/application-prod.yaml
+          
+#          echo "${{ secrets.ENV }}" | base64 --decode >> ./deploy-ai/env
 
       - name: 빌드 및 API 명세서 생성 (Auth)
         working-directory: ./auth
@@ -78,20 +83,6 @@ jobs:
           chmod +x ./gradlew
           ./gradlew clean build --warning-mode all
           ./gradlew openapi3 --warning-mode all
-
-      - name: 빌드 및 API 명세서 생성 (Todo)
-        working-directory: ./todo
-        run: |
-          mkdir -p build/api-spec
-          chmod +x ./gradlew
-          ./gradlew clean build --warning-mode all
-          ./gradlew openapi3 --warning-mode all
-
-        shell: bash
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
@@ -144,7 +135,20 @@ jobs:
           cp docker-compose.yml deploy-todo/
           cp build/api-spec/todoAPI.json deploy-todo/
           cd ../ && mkdir -p deploy/todo
-          mv ./todo/deploy-todo/* deploy/todo 
+          mv ./todo/deploy-todo/* deploy/todo
+
+#      - name: 배포 Dir 생성(AI)
+#        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
+#        working-directory: ./ai
+#        run: |
+#          mkdir -p deploy-ai
+#          cp ./app.py ./deploy-ai
+#          cp ./docker-compose.yml ./deploy-ai
+#          cp ./Dockerfile ./deploy-ai
+#          cp ./openai_api.py ./deploy-ai
+#          cp ./requirements.txt ./deploy-ai
+#          cd ../ && mkdir -p deploy/ai
+#          mv ./ai/deploy-ai/* deploy/ai
 
       - name: 배포 Dir 생성(Nginx)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
