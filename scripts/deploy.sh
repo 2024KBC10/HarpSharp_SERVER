@@ -47,6 +47,8 @@ serviceDown(){
 swaggerDown(){
   if [ $(docker ps -a -q -f name=$CONTAINER_NAME) ]; then
       echo "컨테이너 $CONTAINER_NAME 종료 및 삭제 중..."
+      docker stop $CONTAINER_NAME
+      docker rm $CONTAINER_NAME
   fi
 }
 reloadNginx(){
