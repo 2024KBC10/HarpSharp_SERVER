@@ -23,7 +23,7 @@ services:
     ports:
       - "9001:8080"
     environment:
-      - SWAGGER_JSON=tmp/boardAPI.json
+      - SWAGGER_JSON=/tmp/boardAPI.json
     networks:
       - harpsharp
 
