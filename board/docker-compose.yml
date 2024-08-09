@@ -20,7 +20,7 @@ services:
     container_name: swagger-board
     volumes:
       - ./:/tmp
-    expose:
+    ports:
       - "9001:8080"
     environment:
       - SWAGGER_JSON=tmp/boardAPI.json
