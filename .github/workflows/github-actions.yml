@@ -84,6 +84,14 @@ jobs:
           ./gradlew clean build --warning-mode all
           ./gradlew openapi3 --warning-mode all
 
+      - name: 빌드 및 API 명세서 생성 (TODO)
+        working-directory: ./todo
+        run: |
+          mkdir -p build/api-spec
+          chmod +x ./gradlew
+          ./gradlew clean build --warning-mode all
+          ./gradlew openapi3 --warning-mode all
+
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         uses: aws-actions/configure-aws-credentials@v1
