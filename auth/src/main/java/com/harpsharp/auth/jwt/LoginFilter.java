@@ -115,7 +115,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         ApiResponse responseDTO = new ApiResponse(
                 LocalDateTime.now(),
                 HttpStatus.UNAUTHORIZED.value(),
-                "INVALID_CREDENTIALS",
+                "INVALID_AUTHENTICATION",
                 "유효하지 않은 접근입니다.");
         response.getWriter().write(objectMapper.writeValueAsString(responseDTO));
     }

@@ -1,5 +1,6 @@
 package com.harpsharp.auth.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.utils.CustomUserDetails;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.infra_rds.entity.User;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -46,12 +48,13 @@ public class JwtFilter extends OncePerRequestFilter {
                     new ApiResponse(
                             LocalDateTime.now(),
                             HttpStatus.UNAUTHORIZED.value(),
-                            "INVALID_TOKEN",
-                            "유효하지 않은 토큰입니다."
+                            "INVALID_ACCESS",
+                            "유효하지 않은 접근입니다."
                     );
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json");
-            response.getWriter().write(apiResponse.toString());
+            String json = objectMapper.writeValueAsString(apiResponse);
+            response.getWriter().write(json);
             return;
         }
 

@@ -75,10 +75,10 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .addFilterBefore(new ExceptionHandlerFilter(), LoginFilter.class)
-                .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
+                .addFilterBefore(new ExceptionHandlerFilter(objectMapper), LoginFilter.class)
+                .addFilterBefore(new JwtFilter(jwtUtil,objectMapper), LoginFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), refreshTokenService, jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenService), LogoutFilter.class)
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenService,objectMapper), LogoutFilter.class)
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement((session)->session

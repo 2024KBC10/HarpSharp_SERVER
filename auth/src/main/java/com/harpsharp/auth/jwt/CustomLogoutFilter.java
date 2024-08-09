@@ -1,5 +1,6 @@
 package com.harpsharp.auth.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.service.RefreshTokenService;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 public class CustomLogoutFilter extends GenericFilterBean {
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -33,16 +35,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
         String requestUri = request.getRequestURI();
 
         if(accessToken == null || !accessToken.startsWith("Bearer ")){
-            ApiResponse apiResponse =
-                    new ApiResponse(
-                            LocalDateTime.now(),
-                            HttpStatus.UNAUTHORIZED.value(),
-                            "INVALID_TOKEN",
-                            "유효하지 않은 토큰입니다."
-                    );
-            response.setStatus(HttpStatus.OK.value());
-            response.setContentType("application/json");
-            response.getWriter().write(apiResponse.toString());
             filterChain.doFilter(request, response);
             return;
         }
@@ -77,12 +69,13 @@ public class CustomLogoutFilter extends GenericFilterBean {
                     new ApiResponse(
                             LocalDateTime.now(),
                             HttpStatus.UNAUTHORIZED.value(),
-                            "INVALID_TOKEN",
-                            "유효하지 않은 토큰입니다."
+                            "INVALID_ACCESS",
+                            "유효하지 않은 접근입니다."
                     );
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json");
-            response.getWriter().write(apiResponse.toString());
+            String json = objectMapper.writeValueAsString(apiResponse);
+            response.getWriter().write(json);
             return;
         }
 
@@ -96,12 +89,13 @@ public class CustomLogoutFilter extends GenericFilterBean {
                     new ApiResponse(
                             LocalDateTime.now(),
                             HttpStatus.UNAUTHORIZED.value(),
-                            "INVALID_TOKEN",
-                            "유효하지 않은 토큰입니다."
+                            "INVALID_ACCESS",
+                            "유효하지 않은 접근입니다."
                     );
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json");
-            response.getWriter().write(apiResponse.toString());
+            String json = objectMapper.writeValueAsString(apiResponse);
+            response.getWriter().write(json);
             return;
         }
 
@@ -114,12 +108,13 @@ public class CustomLogoutFilter extends GenericFilterBean {
                     new ApiResponse(
                             LocalDateTime.now(),
                             HttpStatus.UNAUTHORIZED.value(),
-                            "INVALID_TOKEN",
-                            "유효하지 않은 토큰입니다."
+                            "INVALID_ACCESS",
+                            "유효하지 않은 접근입니다."
                     );
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json");
-            response.getWriter().write(apiResponse.toString());
+            String json = objectMapper.writeValueAsString(apiResponse);
+            response.getWriter().write(json);
             return;
         }
 
@@ -131,12 +126,13 @@ public class CustomLogoutFilter extends GenericFilterBean {
                     new ApiResponse(
                             LocalDateTime.now(),
                             HttpStatus.UNAUTHORIZED.value(),
-                            "INVALID_TOKEN",
-                            "유효하지 않은 토큰입니다."
+                            "INVALID_ACCESS",
+                            "유효하지 않은 접근입니다."
                     );
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json");
-            response.getWriter().write(apiResponse.toString());
+            String json = objectMapper.writeValueAsString(apiResponse);
+            response.getWriter().write(json);
             return;
         }
 
@@ -149,7 +145,19 @@ public class CustomLogoutFilter extends GenericFilterBean {
         cookie.setMaxAge(0);
         cookie.setPath("/");
 
+        ApiResponse apiResponse =
+                new ApiResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.CREATED.value(),
+                        "LOGOUT_SUCCESS",
+                        "정상적으로 로그아웃 되었습니다."
+                );
+        response.setStatus(HttpStatus.CREATED.value());
+        response.setContentType("application/json");
         response.addCookie(cookie);
-        response.setStatus(HttpServletResponse.SC_CREATED);
+
+        String json = objectMapper.writeValueAsString(apiResponse);
+        response.getWriter().write(json);
+
     }
 }

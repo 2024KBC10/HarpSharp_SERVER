@@ -1,10 +1,12 @@
 package com.harpsharp.auth.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -14,7 +16,10 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public void commence(HttpServletRequest request,
@@ -33,7 +38,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                     );
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json");
-            response.getWriter().write(apiResponse.toString());
+            String json = objectMapper.writeValueAsString(apiResponse);
+            response.getWriter().write(json);
         } else {
             ApiResponse apiResponse =
                     new ApiResponse(
