@@ -1,13 +1,17 @@
 package com.harpsharp.auth.jwt;
 
+import com.harpsharp.infra_rds.dto.response.ApiResponse;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -20,13 +24,27 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         // SignatureException이 원인인 경우 처리
         Throwable cause = authException.getCause();
         if (cause instanceof SignatureException) {
-            response.setStatus(HttpServletResponse.SC_OK); // 401 상태 코드 반환
+            ApiResponse apiResponse =
+                    new ApiResponse(
+                            LocalDateTime.now(),
+                            HttpStatus.UNAUTHORIZED.value(),
+                            "INVALID_ACCESS",
+                            "유효하지 않은 접근입니다."
+                    );
+            response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"Invalid JWT signature\"}");
+            response.getWriter().write(apiResponse.toString());
         } else {
-            response.setStatus(HttpServletResponse.SC_OK); // 일반적인 인증 오류
+            ApiResponse apiResponse =
+                    new ApiResponse(
+                            LocalDateTime.now(),
+                            HttpStatus.UNAUTHORIZED.value(),
+                            "INVALID_TOKEN",
+                            "유효하지 않은 토큰입니다."
+                    );
+            response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"Unauthorized\"}");
+            response.getWriter().write(apiResponse.toString());
         }
     }
 }

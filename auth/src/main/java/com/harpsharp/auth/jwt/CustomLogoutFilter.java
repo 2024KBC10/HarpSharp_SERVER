@@ -1,6 +1,7 @@
 package com.harpsharp.auth.jwt;
 
 import com.harpsharp.auth.service.RefreshTokenService;
+import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,9 +11,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
@@ -30,7 +33,16 @@ public class CustomLogoutFilter extends GenericFilterBean {
         String requestUri = request.getRequestURI();
 
         if(accessToken == null || !accessToken.startsWith("Bearer ")){
-            response.setStatus(HttpServletResponse.SC_OK);
+            ApiResponse apiResponse =
+                    new ApiResponse(
+                            LocalDateTime.now(),
+                            HttpStatus.UNAUTHORIZED.value(),
+                            "INVALID_TOKEN",
+                            "유효하지 않은 토큰입니다."
+                    );
+            response.setStatus(HttpStatus.OK.value());
+            response.setContentType("application/json");
+            response.getWriter().write(apiResponse.toString());
             filterChain.doFilter(request, response);
             return;
         }
@@ -61,7 +73,16 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         //refresh null check
         if (refresh == null) {
-            response.setStatus(HttpServletResponse.SC_OK);
+            ApiResponse apiResponse =
+                    new ApiResponse(
+                            LocalDateTime.now(),
+                            HttpStatus.UNAUTHORIZED.value(),
+                            "INVALID_TOKEN",
+                            "유효하지 않은 토큰입니다."
+                    );
+            response.setStatus(HttpStatus.OK.value());
+            response.setContentType("application/json");
+            response.getWriter().write(apiResponse.toString());
             return;
         }
 
@@ -71,7 +92,16 @@ public class CustomLogoutFilter extends GenericFilterBean {
         } catch (ExpiredJwtException e) {
 
             //response status code
-            response.setStatus(HttpServletResponse.SC_OK);
+            ApiResponse apiResponse =
+                    new ApiResponse(
+                            LocalDateTime.now(),
+                            HttpStatus.UNAUTHORIZED.value(),
+                            "INVALID_TOKEN",
+                            "유효하지 않은 토큰입니다."
+                    );
+            response.setStatus(HttpStatus.OK.value());
+            response.setContentType("application/json");
+            response.getWriter().write(apiResponse.toString());
             return;
         }
 
@@ -80,7 +110,16 @@ public class CustomLogoutFilter extends GenericFilterBean {
         if (!category.equals("refresh")) {
 
             //response status code
-            response.setStatus(HttpServletResponse.SC_OK);
+            ApiResponse apiResponse =
+                    new ApiResponse(
+                            LocalDateTime.now(),
+                            HttpStatus.UNAUTHORIZED.value(),
+                            "INVALID_TOKEN",
+                            "유효하지 않은 토큰입니다."
+                    );
+            response.setStatus(HttpStatus.OK.value());
+            response.setContentType("application/json");
+            response.getWriter().write(apiResponse.toString());
             return;
         }
 
@@ -88,7 +127,16 @@ public class CustomLogoutFilter extends GenericFilterBean {
         Boolean isExist = refreshTokenService.existsByToken(accessToken);
 
         if (!isExist) {
-            response.setStatus(HttpServletResponse.SC_OK);
+            ApiResponse apiResponse =
+                    new ApiResponse(
+                            LocalDateTime.now(),
+                            HttpStatus.UNAUTHORIZED.value(),
+                            "INVALID_TOKEN",
+                            "유효하지 않은 토큰입니다."
+                    );
+            response.setStatus(HttpStatus.OK.value());
+            response.setContentType("application/json");
+            response.getWriter().write(apiResponse.toString());
             return;
         }
 

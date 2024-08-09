@@ -1,6 +1,7 @@
 package com.harpsharp.auth.jwt;
 
 import com.harpsharp.auth.utils.CustomUserDetails;
+import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.auth.exceptions.JwtAuthenticationException;
 import io.jsonwebtoken.JwtException;
@@ -10,12 +11,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,7 +42,16 @@ public class JwtFilter extends OncePerRequestFilter {
         try{
             jwtUtil.isExpired(accessToken);
         }catch(JwtException e){
-            response.sendError(HttpServletResponse.SC_OK, e.getMessage());
+            ApiResponse apiResponse =
+                    new ApiResponse(
+                            LocalDateTime.now(),
+                            HttpStatus.UNAUTHORIZED.value(),
+                            "INVALID_TOKEN",
+                            "유효하지 않은 토큰입니다."
+                    );
+            response.setStatus(HttpStatus.OK.value());
+            response.setContentType("application/json");
+            response.getWriter().write(apiResponse.toString());
             return;
         }
 
