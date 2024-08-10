@@ -11,7 +11,8 @@ runDB(){
   REDIS_RUNNING=$(docker ps | grep -q $REDIS_CONTAINER; echo $?)
 
   # MySQL 또는 Redis 컨테이너가 실행 중이지 않으면 docker-compose up 실행
-  if [ $MYSQL_RUNNING -ne 0 ] || [ $REDIS_RUNNING -ne 0 ]; then
+  if [ $MYSQL_RUNNING -ne 0 ] || [ $REDIS_RUNNING -ne 0 ]
+  then
     echo "MySQL 또는 Redis 컨테이너가 실행 중이지 않습니다. docker-compose up을 실행합니다."
     cd /home/ubuntu/deploy/db/
     docker-compose up -d
@@ -31,7 +32,8 @@ runNetwork(){
 }
 
 serviceDown(){
-  if [ $(docker ps -a -q -f name=$CONTAINER_NAME) ]; then
+  if [ $(docker ps -a -q -f name=$CONTAINER_NAME) ]
+  then
       echo "컨테이너 $CONTAINER_NAME 종료 및 삭제 중..."
 
       IMAGE_ID=$(docker images -q $CONTAINER_NAME)
@@ -45,7 +47,8 @@ serviceDown(){
 }
 
 swaggerDown(){
-  if [ $(docker ps -a -q -f name=$CONTAINER_NAME) ]; then
+  if [ $(docker ps -a -q -f name=$CONTAINER_NAME) ]
+  then
       echo "컨테이너 $CONTAINER_NAME 종료 및 삭제 중..."
       docker stop $CONTAINER_NAME
       docker rm $CONTAINER_NAME
