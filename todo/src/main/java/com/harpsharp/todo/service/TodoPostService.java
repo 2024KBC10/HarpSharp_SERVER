@@ -1,7 +1,11 @@
 package com.harpsharp.todo.service;
 
+import com.harpsharp.infra_rds.dto.todo.RequestTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.entity.TodoPost;
 import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.mapper.TodoPostMapper;
+import com.harpsharp.infra_rds.repository.TodoCommentRepository;
 import com.harpsharp.infra_rds.repository.TodoPostRepository;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -9,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -17,37 +21,62 @@ import java.util.Optional;
 public class TodoPostService {
     private final UserRepository userRepository;
     private final TodoPostRepository todoPostRepository;
+    private final TodoPostMapper todoPostMapper;
+    private final TodoCommentRepository todoCommentRepository;
 
-    public List<TodoPost> getAllTodoPosts() {
-        return todoPostRepository.findAll();
+    public Map<Long, ResponseTodoPostDTO> getAllTodoPosts() {
+        List<TodoPost> posts = todoPostRepository.findAll();
+        return todoPostMapper.toMap(posts);
     }
 
-    public List<TodoPost> getTodoPostsByUsername(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(IllegalArgumentException::new);
-        return todoPostRepository.findByUser(user);
+    public Map<Long,ResponseTodoPostDTO> getTodoPostById(Long id) {
+        TodoPost post = todoPostRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("TodoPost_NOT_FOUND"));
+
+        return todoPostMapper.toMap(post);
     }
 
-    public Optional<TodoPost> getTodoPostById(Long id) {
-        return todoPostRepository.findById(id);
+    public Map<Long, ResponseTodoPostDTO> getTodoPostByUsername(String username){
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(()->new IllegalArgumentException("USER_NOT_FOUND"));
+        List<TodoPost> postByUsername = todoPostRepository.findByUser(user);
+
+        return todoPostMapper.toMap(postByUsername);
     }
 
-    public TodoPost createTodoPost(TodoPost todoPost) {
-        return todoPostRepository.save(todoPost);
+    public Map<Long,ResponseTodoPostDTO> saveTodoPost(RequestTodoPostDTO requestTodoPostDTO) {
+        TodoPost todoPost = todoPostRepository.save(todoPostMapper.requestToEntity(requestTodoPostDTO));
+        return todoPostMapper.toMap(todoPost);
     }
 
-    public TodoPost updateTodoPost(Long id, TodoPost todoPostDetails) {
-        TodoPost todoPost = todoPostRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid TodoPost Id:" + id));
-        todoPost.setTitle(todoPostDetails.getTitle());
-        todoPost.setContent(todoPostDetails.getContent());
-        todoPost.setStatus(todoPostDetails.getStatus());
-        todoPost.setStartAt(todoPostDetails.getStartAt());
-        todoPost.setEndAt(todoPostDetails.getEndAt());
-        todoPost.setLikes(todoPostDetails.getLikes());
-        return todoPostRepository.save(todoPost);
+    public Map<Long,ResponseTodoPostDTO> updateTodoPost(Long postId, RequestTodoPostDTO updatedPostDTO) {
+
+        TodoPost existedPost = todoPostRepository
+                .findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
+
+        TodoPost updatedPost = existedPost
+                .toBuilder()
+                .title(updatedPostDTO.title())
+                .content(updatedPostDTO.content())
+                .status(updatedPostDTO.status())
+                .build();
+
+        return todoPostMapper.toMap(todoPostRepository.save(updatedPost));
     }
 
-    public void deletePost(Long id) {
+    public void deleteTodoPost(Long id) {
+        TodoPost post = todoPostRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
+        todoCommentRepository.deleteByTodoPost(post);
         todoPostRepository.deleteById(id);
     }
+
+    public void clear(){
+        todoPostRepository.deleteAll();
+    }
+
 }

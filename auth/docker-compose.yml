@@ -15,18 +15,6 @@ services:
     networks:
       - harpsharp
 
-  swagger:
-    image: swaggerapi/swagger-ui
-    container_name: swagger-auth
-    volumes:
-      - ./:/tmp
-    ports:
-      - "9000:8080"
-    environment:
-      - SWAGGER_JSON=/tmp/authAPI.json
-    networks:
-      - harpsharp
-
 networks:
   harpsharp:
     external: true

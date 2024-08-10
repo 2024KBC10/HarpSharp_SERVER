@@ -8,6 +8,7 @@ import com.harpsharp.infra_rds.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,5 +51,12 @@ public class PostMapper {
     public Map<Long, ResponsePostDTO> toMap(List<Post> posts) {
         return posts.stream().collect(
                 Collectors.toMap(Post::getPostId, this::postToResponseDTO));
+    }
+
+    public Map<Long, ResponsePostDTO> toMap(Post post){
+        Long postId = post.getPostId();
+        Map<Long, ResponsePostDTO> object = new HashMap<>();
+        object.put(postId, postToResponseDTO(post));
+        return object;
     }
 }

@@ -5,7 +5,6 @@ import com.harpsharp.infra_rds.dto.board.RequestUpdateCommnetDTO;
 import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
 import com.harpsharp.infra_rds.entity.Comment;
 import com.harpsharp.infra_rds.entity.Post;
-import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.mapper.CommentMapper;
 import com.harpsharp.infra_rds.repository.CommentRepository;
 import com.harpsharp.infra_rds.repository.PostRepository;
@@ -15,9 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -83,17 +80,13 @@ public class CommentService {
                 .findById(commentDTO.commentId())
                 .orElseThrow(() -> new IllegalArgumentException("COMMENT_NOT_FOUND"));
 
-        existedCommnet = existedCommnet
+        Comment updatedComment = existedCommnet
                 .toBuilder()
                 .content(commentDTO.content())
                 .build();
 
-        commentRepository.save(existedCommnet);
-        Map<Long, ResponseCommentDTO> object = new HashMap<>();
-        object.put(existedCommnet.getCommentId(),
-                commentMapper.commentToResponseDTO(existedCommnet));
-
-        return object;
+        commentRepository.save(updatedComment);
+        return commentMapper.toMap(updatedComment);
     }
 
     public void deleteComment(Long id) {

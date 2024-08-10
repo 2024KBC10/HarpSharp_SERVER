@@ -35,13 +35,9 @@ jobs:
           - 6379:6379
         options: --entrypoint redis-server
 
-
     steps:
       - name: 체크아웃
         uses: actions/checkout@v2
-        with:
-          python-version: "3.12.4"
-
       - name: Verify MySQL connection from host
         run: mysql -h 127.0.0.1 --port=3306 -u root -pwlghks24461! -e "SHOW DATABASES"
 
@@ -51,7 +47,7 @@ jobs:
           java-version: "17"
           distribution: "corretto"
 
-      - name: 환경 변수 파일 생성
+      - name: YML 파일 생성
         run: |
           mkdir -p auth/src/main/resources
           echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > auth/src/main/resources/application.yaml
@@ -66,7 +62,7 @@ jobs:
           echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > todo/src/main/resources/application-local.yaml
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > todo/src/main/resources/application-prod.yaml
           
-#          echo "${{ secrets.ENV }}" | base64 --decode >> ./deploy-ai/env
+          echo "${{ secrets.ENV_PY  }}" | base64 --decode > ./ai/env
 
       - name: 빌드 및 API 명세서 생성 (Auth)
         working-directory: ./auth
@@ -75,6 +71,7 @@ jobs:
           chmod +x ./gradlew
           ./gradlew clean build --warning-mode all
           ./gradlew openapi3 --warning-mode all
+          mv build/api-spec/auth.json ../swagger/
 
       - name: 빌드 및 API 명세서 생성 (Board)
         working-directory: ./board
@@ -83,14 +80,16 @@ jobs:
           chmod +x ./gradlew
           ./gradlew clean build --warning-mode all
           ./gradlew openapi3 --warning-mode all
+          mv build/api-spec/board.json ../swagger/
 
-      - name: 빌드 및 API 명세서 생성 (TODO)
+      - name: 빌드 및 API 명세서 생성 (Todo)
         working-directory: ./todo
         run: |
           mkdir -p build/api-spec
           chmod +x ./gradlew
           ./gradlew clean build --warning-mode all
           ./gradlew openapi3 --warning-mode all
+          mv build/api-spec/todo.json ../swagger/
 
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
@@ -107,7 +106,16 @@ jobs:
           mkdir -p deploy-db
           cp docker-compose.yml deploy-db/
           cd ../ && mkdir -p deploy/db
-          mv ./infra_rds/deploy-db/* deploy/db 
+          mv ./infra_rds/deploy-db/* deploy/db
+
+      - name: 배포 Dir 생성(Swagger)
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
+        working-directory: ./swagger
+        run: |
+          mkdir -p deploy-swagger
+          cp * deploy-swagger/
+          cd ../ && mkdir -p deploy/swagger
+          mv ./swagger/deploy-swagger/* deploy/swagger
 
       - name: 배포 Dir 생성(Auth)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
@@ -117,7 +125,7 @@ jobs:
           cp build/libs/auth-*.jar deploy-auth/
           cp Dockerfile deploy-auth/
           cp docker-compose.yml deploy-auth/
-          cp build/api-spec/authAPI.json deploy-auth/
+          cp build/api-spec/auth.json deploy-auth/
           cd ../ && mkdir -p deploy/auth
           mv ./auth/deploy-auth/* deploy/auth
 
@@ -129,7 +137,7 @@ jobs:
           cp build/libs/board-*.jar deploy-board/
           cp Dockerfile deploy-board/
           cp docker-compose.yml deploy-board/
-          cp build/api-spec/boardAPI.json deploy-board/
+          cp build/api-spec/board.json deploy-board/
           cd ../ && mkdir -p deploy/board
           mv ./board/deploy-board/* deploy/board 
 
@@ -141,22 +149,9 @@ jobs:
           cp build/libs/todo-*.jar deploy-todo/
           cp Dockerfile deploy-todo/
           cp docker-compose.yml deploy-todo/
-          cp build/api-spec/todoAPI.json deploy-todo/
+          cp build/api-spec/todo.json deploy-todo/
           cd ../ && mkdir -p deploy/todo
-          mv ./todo/deploy-todo/* deploy/todo
-
-#      - name: 배포 Dir 생성(AI)
-#        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
-#        working-directory: ./ai
-#        run: |
-#          mkdir -p deploy-ai
-#          cp ./app.py ./deploy-ai
-#          cp ./docker-compose.yml ./deploy-ai
-#          cp ./Dockerfile ./deploy-ai
-#          cp ./openai_api.py ./deploy-ai
-#          cp ./requirements.txt ./deploy-ai
-#          cd ../ && mkdir -p deploy/ai
-#          mv ./ai/deploy-ai/* deploy/ai
+          mv ./todo/deploy-todo/* deploy/todo 
 
       - name: 배포 Dir 생성(Nginx)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}

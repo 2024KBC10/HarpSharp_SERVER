@@ -33,18 +33,12 @@ public class PostService {
         Post post = postRepository
                 .findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
-        Map<Long, ResponsePostDTO> object = new HashMap<>();
-        object.put(id, postMapper.postToResponseDTO(post));
-
-        return object;
+        return postMapper.toMap(post);
     }
 
     public Map<Long,ResponsePostDTO> savePost(RequestPostDTO requestPostDTO) {
-
         Post post = postRepository.save(postMapper.requestToEntity(requestPostDTO));
-        Map<Long, ResponsePostDTO> object = new HashMap<>();
-        object.put(post.getPostId(), postMapper.postToResponseDTO(post));
-        return object;
+        return postMapper.toMap(post);
     }
 
     public Map<Long,ResponsePostDTO> updatePost(RequestUpdatePostDTO updatedPostDTO) {
@@ -62,9 +56,7 @@ public class PostService {
                     .build();
 
         postRepository.save(updatedPost);
-        Map<Long, ResponsePostDTO> object = new HashMap<>();
-        object.put(existedPost.getPostId(), postMapper.postToResponseDTO(updatedPost));
-        return object;
+        return postMapper.toMap(updatedPost);
     }
 
     public void deletePost(Long id) {

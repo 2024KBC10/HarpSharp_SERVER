@@ -77,10 +77,14 @@ serviceDown todo
 swaggerDown "swagger-todo"
 docker-compose up --build -d
 
-#cd /home/ubuntu/deploy/ai
-#mv env .env
-#serviceDown gpt4o
-#docker-compose up -d --build
+cd /home/ubuntu/deploy/ai
+mv env .env
+serviceDown gpt4o
+docker-compose up -d --build
+
+cd /home/ubuntu/deploy/swagger
+serviceDown swagger
+docker-compose up -d --build
 
 reloadNginx
 cleanUpImages
