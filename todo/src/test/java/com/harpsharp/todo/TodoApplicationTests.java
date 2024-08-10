@@ -86,11 +86,7 @@ class TodoApplicationTests {
     private DefaultErrorViewResolver conventionErrorViewResolver;
 
 	public void init() throws Exception{
-		JoinTestDTO joinDTO = JoinTestDTO.builder()
-				.username(username)
-				.password(password)
-				.email(email)
-				.build();
+		JoinTestDTO joinDTO = new JoinTestDTO(username, password, email);
 
 		String joinJson = objectMapper.writeValueAsString(joinDTO);
 
@@ -104,10 +100,7 @@ class TodoApplicationTests {
 	public void login() throws Exception {
 		init();
 
-		LoginDTO loginDto = LoginDTO.builder()
-				.username(username)
-				.password(password)
-				.build();
+		LoginDTO loginDto = new LoginDTO(username, password);
 
 		String loginJson = objectMapper.writeValueAsString(loginDto);
 

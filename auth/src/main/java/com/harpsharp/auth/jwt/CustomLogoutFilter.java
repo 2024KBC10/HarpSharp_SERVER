@@ -36,6 +36,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         if(accessToken == null || !accessToken.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
+            System.out.println("accessToken = " + accessToken);
             return;
         }
 
@@ -73,9 +74,11 @@ public class CustomLogoutFilter extends GenericFilterBean {
                             "유효하지 않은 접근입니다."
                     );
             response.setStatus(HttpStatus.OK.value());
-            response.setContentType("application/json");
+            response.setContentType("application/json;charset=UTF-8");
             String json = objectMapper.writeValueAsString(apiResponse);
             response.getWriter().write(json);
+            response.getWriter().flush();
+            System.out.println("refresh is null");
             return;
         }
 
@@ -93,9 +96,11 @@ public class CustomLogoutFilter extends GenericFilterBean {
                             "유효하지 않은 접근입니다."
                     );
             response.setStatus(HttpStatus.OK.value());
-            response.setContentType("application/json");
+            response.setContentType("application/json;charset=UTF-8");
             String json = objectMapper.writeValueAsString(apiResponse);
             response.getWriter().write(json);
+            response.getWriter().flush();
+            System.out.println("refresh is expired");
             return;
         }
 
@@ -112,14 +117,18 @@ public class CustomLogoutFilter extends GenericFilterBean {
                             "유효하지 않은 접근입니다."
                     );
             response.setStatus(HttpStatus.OK.value());
-            response.setContentType("application/json");
+            response.setContentType("application/json;charset=UTF-8");
             String json = objectMapper.writeValueAsString(apiResponse);
             response.getWriter().write(json);
+            response.getWriter().flush();
+            System.out.println("category = " + category);
             return;
         }
 
+        accessToken = accessToken.replace("Bearer ", "");
+
         //DB에 저장되어 있는지 확인
-        Boolean isExist = refreshTokenService.existsByToken(accessToken);
+        boolean isExist = refreshTokenService.existsByToken(accessToken);
 
         if (!isExist) {
             ApiResponse apiResponse =
@@ -130,9 +139,11 @@ public class CustomLogoutFilter extends GenericFilterBean {
                             "유효하지 않은 접근입니다."
                     );
             response.setStatus(HttpStatus.OK.value());
-            response.setContentType("application/json");
+            response.setContentType("application/json;charset=UTF-8");
             String json = objectMapper.writeValueAsString(apiResponse);
             response.getWriter().write(json);
+            response.getWriter().flush();
+            System.out.println("refresh = " + refresh + " is invalid");
             return;
         }
 
@@ -153,11 +164,12 @@ public class CustomLogoutFilter extends GenericFilterBean {
                         "정상적으로 로그아웃 되었습니다."
                 );
         response.setStatus(HttpStatus.CREATED.value());
-        response.setContentType("application/json");
+        response.setContentType("application/json;charset=UTF-8");
         response.addCookie(cookie);
 
         String json = objectMapper.writeValueAsString(apiResponse);
         response.getWriter().write(json);
+        response.getWriter().flush();
 
     }
 }

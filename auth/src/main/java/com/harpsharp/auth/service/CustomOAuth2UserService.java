@@ -4,12 +4,11 @@ import com.harpsharp.auth.oauth2.GoogleResponse;
 import com.harpsharp.auth.oauth2.KaKaoResponse;
 import com.harpsharp.auth.oauth2.NaverResponse;
 import com.harpsharp.auth.oauth2.*;
-import com.harpsharp.infra_rds.dto.user.UserDTO;
+import com.harpsharp.infra_rds.dto.user.RequestUserDTO;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.mapper.UserMapper;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -54,14 +53,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .username(oAuth2Response.getUsername())
                     .email(email)
                     .role("ROLE_USER")
-                    .social_type(registrationId)
+                    .socialType(registrationId)
                     .build();
 
             userRepository.save(user);
 
-            UserDTO userDTO = userMapper.convertUserToDTO(user);
+            RequestUserDTO requestUserDTO = userMapper.userToRequestDTO(user);
 
-            return new CustomOAuth2User(userDTO);
+            return new CustomOAuth2User(requestUserDTO);
         }
 
 

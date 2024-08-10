@@ -2,40 +2,80 @@ package com.harpsharp.infra_rds.mapper;
 
 import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
 import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
+import com.harpsharp.infra_rds.dto.todo.ResponseTodoCommentDTO;
+import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
-import com.harpsharp.infra_rds.dto.user.UserDTO;
+import com.harpsharp.infra_rds.dto.user.RequestUserDTO;
 import com.harpsharp.infra_rds.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
     private final PostMapper postMapper;
     private final CommentMapper commentMapper;
+    private final TodoPostMapper todoPostMapper;
+    private final TodoCommentMapper todoCommentMapper;
 
     public ResponseUserDTO convertUserToResponse(User user){
-        List<ResponsePostDTO> postDTOs = postMapper.convertPostsToResponse(user.getPosts());
-        List<ResponseCommentDTO> commentDTOs = commentMapper.convertCommentsToResponse(user.getComments());
+        Map<Long, ResponsePostDTO> postDTOs = postMapper.toMap(user.getPosts());
+        Map<Long, ResponseCommentDTO> commentDTOs = commentMapper.toMap(user.getComments());
+        Map<Long, ResponseTodoPostDTO> todoPostDTOs = todoPostMapper.toMap(user.getTodoPosts());
+        Map<Long, ResponseTodoCommentDTO> todoCommentDTOs = todoCommentMapper.toMap(user.getTodoComments());
 
         return new ResponseUserDTO(
                 user.getUsername(),
                 user.getEmail(),
-                user.getCreated_at(),
-                user.getUpdated_at(),
-                user.getSocial_type(),
+                user.getCreatedAt(),
+                user.getUpdatedAt(),
+                user.getSocialType(),
                 user.getRole(),
                 postDTOs,
-                commentDTOs);
+                commentDTOs,
+                todoPostDTOs,
+                todoCommentDTOs);
     }
 
-    public UserDTO convertUserToDTO(User user){
-        return new UserDTO(
+    public RequestUserDTO userToRequestDTO(User user){
+        return new RequestUserDTO(
                 user.getUsername(),
                 user.getEmail(),
                 user.getRole(),
-                user.getSocial_type());
+                user.getSocialType());
     }
+
+    public ResponseUserDTO userToResponseDTO(User user){
+        return new ResponseUserDTO(
+                user.getUsername(),
+                user.getEmail(),
+                user.getCreatedAt(),
+                user.getUpdatedAt(),
+                user.getSocialType(),
+                user.getRole(),
+                postMapper.toMap(user.getPosts()),
+                commentMapper.toMap(user.getComments()),
+                todoPostMapper.toMap(user.getTodoPosts()),
+                todoCommentMapper.toMap(user.getTodoComments())
+        );
+    }
+
+    public Map<Long, ResponseUserDTO> toMap(User user){
+        Long userId = user.getUserId();
+        Map<Long, ResponseUserDTO> object = new HashMap<>();
+        object.put(userId, convertUserToResponse(user));
+
+        return object;
+    }
+
+    public Map<Long, ResponseUserDTO> toMap(List<User> users){
+        return users.stream().collect(
+                Collectors.toMap(User::getUserId, this::userToResponseDTO));
+    }
+
 }

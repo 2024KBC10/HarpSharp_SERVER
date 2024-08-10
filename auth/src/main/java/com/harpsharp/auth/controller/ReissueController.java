@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,7 +65,7 @@ public class ReissueController {
             throw new IllegalArgumentException("Invalid cookies");
         }
 
-        Boolean isExist = refreshTokenService.existsByToken(accessToken);
+        boolean isExist = refreshTokenService.existsByToken(accessToken);
 
         if(!isExist){
             throw new IllegalArgumentException("Invalid cookies");
@@ -88,9 +89,18 @@ public class ReissueController {
 
         refreshTokenService.save(refreshEntity);
 
-        response.setHeader("Authorization", "Bearer " + newAccess);
-        response.addCookie(jwtUtil.createCookie("refresh", newRefresh));
-        response.setStatus(HttpStatus.OK.value());
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.set("Authorization", "Bearer " + newAccess);
+
+        Cookie refreshCookie = jwtUtil.createCookie("refresh", newRefresh);
+        String cookieHeader = String.format("%s=%s; Path=%s; HttpOnly; Max-Age=%d",
+                refreshCookie.getName(),
+                refreshCookie.getValue(),
+                refreshCookie.getPath(),
+                refreshCookie.getMaxAge());
+
+        headers.add(HttpHeaders.SET_COOKIE, cookieHeader);
 
         HttpStatus status = (request.getMethod().equals("POST")) ? HttpStatus.CREATED : HttpStatus.OK;
         ApiResponse apiResponse = new ApiResponse(
@@ -98,8 +108,10 @@ public class ReissueController {
                 status.value(),
                 "JWT_REISSUED_SUCCESSFULLY",
                 "JWT 재발급에 성공하였습니다.");
+
         return ResponseEntity
                 .status(status)
+                .headers(headers)
                 .body(apiResponse);
     }
 }

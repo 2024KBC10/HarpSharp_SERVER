@@ -80,7 +80,7 @@ public class CommentController {
     @PatchMapping("/board/posts/{postId}/comments/{commentId}")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> updateComment(
             @RequestHeader("Authorization") String accessToken,
-            @RequestBody RequestUpdateCommnetDTO updatedComment) throws IllegalAccessException {
+            @RequestBody RequestUpdateCommentDTO updatedComment) throws IllegalAccessException {
 
         if(!isValid(accessToken, updatedComment.username()))
             throw new IllegalAccessException("INVALID_ACCESS");

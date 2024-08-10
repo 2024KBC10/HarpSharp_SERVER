@@ -71,11 +71,7 @@ class BoardApplicationTests {
 	Map<Long, ResponseCommentDTO> comment = null;
 
 	public void init() throws Exception{
-		JoinTestDTO joinDTO = JoinTestDTO.builder()
-				.username(username)
-				.password(password)
-				.email(email)
-				.build();
+		JoinTestDTO joinDTO = new JoinTestDTO(username, password, email);
 
 		String joinJson = objectMapper.writeValueAsString(joinDTO);
 
@@ -86,13 +82,11 @@ class BoardApplicationTests {
 								.content(joinJson))
 				.andReturn();
 	}
+
 	public void login() throws Exception {
 		init();
 
-		LoginDTO loginDto = LoginDTO.builder()
-				.username(username)
-				.password(password)
-				.build();
+		LoginDTO loginDto = new LoginDTO(username, password);
 
 		String loginJson = objectMapper.writeValueAsString(loginDto);
 
@@ -186,8 +180,6 @@ class BoardApplicationTests {
 	@Test
 	@Transactional
 	public void rootPage() throws Exception {
-		Long postId = writePost();
-		RequestUpdatePostDTO requestUpdatePostDTO = new RequestUpdatePostDTO(postId, username, title, content);
 		this.mockMvc.perform(get("/board"))
 				.andExpect(status().isOk())
 				.andDo(document("Root Page", // 문서화할 때 사용할 경로와 이름
@@ -200,7 +192,7 @@ class BoardApplicationTests {
 										.description("상태 코드"),
 								fieldWithPath("message")
 										.type(JsonFieldType.STRING)
-										.description("삭제 성공 여부"),
+										.description("접속 성공 여부"),
 								fieldWithPath("details")
 										.type(JsonFieldType.STRING)
 										.description("상세 메세지")
@@ -226,7 +218,6 @@ class BoardApplicationTests {
 								fieldWithPath("title").description("제목"),
 								fieldWithPath("content").description("내용")
 						),
-						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						responseFields(
 								fieldWithPath("timeStamp")
@@ -524,7 +515,7 @@ class BoardApplicationTests {
 		List<Long> list_id = writePC();
 		Long postId    = list_id.get(0);
 		Long commentId = list_id.get(1);
-		RequestUpdateCommnetDTO commentDTO = new RequestUpdateCommnetDTO(commentId, username, "Modified!");
+		RequestUpdateCommentDTO commentDTO = new RequestUpdateCommentDTO(commentId, username, "Modified!");
 		this.mockMvc.perform(patch("/board/posts/{postId}/comments/{commentId}", postId, commentId)
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
@@ -569,7 +560,7 @@ class BoardApplicationTests {
 		List<Long> list_id = writePC();
 		Long postId    = list_id.get(0);
 		Long commentId = list_id.get(1);
-		RequestUpdateCommnetDTO commentDTO = new RequestUpdateCommnetDTO(commentId, username, "Modified!");
+		RequestUpdateCommentDTO commentDTO = new RequestUpdateCommentDTO(commentId, username, "Modified!");
 
 		this.mockMvc.perform(delete("/board/posts/{postId}/comments/{commentId}", postId, commentId)
 						.header("Authorization", "Bearer " + accessToken)

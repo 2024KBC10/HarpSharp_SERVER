@@ -14,6 +14,7 @@ public class RefreshToken {
 
     @Id
     private String access;
+
     private String refresh;
 
 

@@ -37,9 +37,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                             "유효하지 않은 접근입니다."
                     );
             response.setStatus(HttpStatus.OK.value());
-            response.setContentType("application/json");
+            response.setContentType("application/json;charset=UTF-8");
             String json = objectMapper.writeValueAsString(apiResponse);
             response.getWriter().write(json);
+            response.getWriter().flush();
         } else {
             ApiResponse apiResponse =
                     new ApiResponse(
@@ -49,8 +50,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                             "유효하지 않은 토큰입니다."
                     );
             response.setStatus(HttpStatus.OK.value());
-            response.setContentType("application/json");
+            response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write(apiResponse.toString());
+            response.getWriter().flush();
         }
     }
 }

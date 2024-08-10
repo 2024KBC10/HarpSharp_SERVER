@@ -34,7 +34,7 @@ public class Post extends BasePost {
     }
 
     public Long getUserId(){
-        return getUser().getUser_id();
+        return getUser().getUserId();
     }
 
     public void addComment(Comment comment) {

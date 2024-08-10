@@ -27,11 +27,7 @@ public class MainController {
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
-        InfoDTO infoDTO = InfoDTO
-                .builder()
-                .username(username)
-                .role(role)
-                .build();
+        InfoDTO infoDTO = new InfoDTO(username, role);
 
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),

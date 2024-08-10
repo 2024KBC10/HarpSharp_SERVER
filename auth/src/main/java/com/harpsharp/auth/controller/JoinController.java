@@ -28,7 +28,7 @@ public class JoinController {
                 new ApiResponse(LocalDateTime.now(),
                         HttpStatus.CREATED.value(),
                         "USER_JOINED_SUCCESSFULLY",
-                joinDTO.getUsername() + "님이 성공적으로 가입 되셨습니다.");
+                joinDTO.username() + "님이 성공적으로 가입 되셨습니다.");
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(apiResponse);
@@ -42,7 +42,7 @@ public class JoinController {
                         LocalDateTime.now(),
                         HttpStatus.CREATED.value(),
                         "USER_JOINED_SUCCESSFULLY",
-                        joinDTO.getUsername() + "님이 성공적으로 가입 되셨습니다.");
+                        joinDTO.username() + "님이 성공적으로 가입 되셨습니다.");
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(apiResponse);

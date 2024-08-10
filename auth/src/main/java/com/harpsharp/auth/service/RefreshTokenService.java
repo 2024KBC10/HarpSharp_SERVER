@@ -37,7 +37,8 @@ public class RefreshTokenService {
 
     @Transactional
     public void save(RefreshToken refreshToken) {
-        redisTemplate.opsForHash().put(HASH_KEY, refreshToken.getAccess(), refreshToken);
+        String accessToken = refreshToken.getAccess();
+        redisTemplate.opsForHash().put(HASH_KEY, accessToken, refreshToken);
     }
 
     public void clear(){

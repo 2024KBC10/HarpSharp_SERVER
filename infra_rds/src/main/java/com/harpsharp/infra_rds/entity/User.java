@@ -3,7 +3,6 @@ package com.harpsharp.infra_rds.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,7 +26,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long user_id;
+    private Long userId;
 
     @NotNull
     @Column(name = "username", unique = true)
@@ -46,22 +45,22 @@ public class User {
 
     //@NotNull
     @Column(name = "social_type")
-    private String social_type;
+    private String socialType;
 
     @Column(name = "profile_image")
-    private String profile_image;
+    private String profileImage;
 
     @NotNull
     @CreatedDate
     @Column(name = "created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @NotNull
     @LastModifiedDate
     @Column(name = "updated_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
@@ -76,12 +75,12 @@ public class User {
     private List<TodoComment> todoComments = new ArrayList<>();
 
     @Builder(toBuilder = true)
-    public User(String username, String password, String email, String social_type, String role){
+    public User(String username, String password, String email, String socialType, String role){
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
-        this.social_type = social_type;
+        this.socialType = socialType;
     }
 
     public User updateUser(User updatedUser){

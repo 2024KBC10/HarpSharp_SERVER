@@ -12,6 +12,7 @@ import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -67,7 +68,9 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join", "/board/**", "/todo/**")
+                        .requestMatchers("/login", "/", "/join", "/board/**", "/todo/**", "user/board/**", "user/todo/**")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/user")
                         .permitAll()
                         .requestMatchers("/admin")
                         .hasRole("ADMIN")
@@ -75,12 +78,12 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
+                .exceptionHandling((exceptions) -> exceptions
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .addFilterBefore(new ExceptionHandlerFilter(objectMapper), LoginFilter.class)
                 .addFilterBefore(new JwtFilter(jwtUtil,objectMapper), LoginFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), refreshTokenService, jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenService,objectMapper), LogoutFilter.class)
-                .exceptionHandling((exceptions) -> exceptions
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement((session)->session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

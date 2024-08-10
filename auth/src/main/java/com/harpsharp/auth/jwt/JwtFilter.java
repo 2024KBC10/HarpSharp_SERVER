@@ -52,9 +52,10 @@ public class JwtFilter extends OncePerRequestFilter {
                             "유효하지 않은 접근입니다."
                     );
             response.setStatus(HttpStatus.OK.value());
-            response.setContentType("application/json");
+            response.setContentType("application/json;charset=UTF-8");
             String json = objectMapper.writeValueAsString(apiResponse);
             response.getWriter().write(json);
+            response.getWriter().flush();
             return;
         }
 
@@ -83,8 +84,6 @@ public class JwtFilter extends OncePerRequestFilter {
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authToken);
-        // 유저 세션 생성
-        // 특정 경로에 접근 가능
 
         filterChain.doFilter(request, response);
     }

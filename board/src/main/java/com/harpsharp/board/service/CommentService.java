@@ -1,7 +1,7 @@
 package com.harpsharp.board.service;
 
 import com.harpsharp.infra_rds.dto.board.RequestCommentDTO;
-import com.harpsharp.infra_rds.dto.board.RequestUpdateCommnetDTO;
+import com.harpsharp.infra_rds.dto.board.RequestUpdateCommentDTO;
 import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
 import com.harpsharp.infra_rds.entity.Comment;
 import com.harpsharp.infra_rds.entity.Post;
@@ -75,7 +75,7 @@ public class CommentService {
         return object;
     }
 
-    public Map<Long, ResponseCommentDTO> updateComment(RequestUpdateCommnetDTO commentDTO) {
+    public Map<Long, ResponseCommentDTO> updateComment(RequestUpdateCommentDTO commentDTO) {
         Comment existedCommnet = commentRepository
                 .findById(commentDTO.commentId())
                 .orElseThrow(() -> new IllegalArgumentException("COMMENT_NOT_FOUND"));
@@ -89,9 +89,9 @@ public class CommentService {
         return commentMapper.toMap(updatedComment);
     }
 
-    public void deleteComment(Long id) {
+    public void deleteComment(Long commentId) {
         Comment comment = commentRepository
-                .findById(id)
+                .findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("COMMENT_NOT_FOUND"));
 
         Post post = comment.getPost();

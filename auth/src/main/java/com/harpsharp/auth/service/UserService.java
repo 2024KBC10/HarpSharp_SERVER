@@ -1,11 +1,16 @@
 package com.harpsharp.auth.service;
 
+import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
+import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
+import com.harpsharp.infra_rds.dto.todo.ResponseTodoCommentDTO;
+import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.dto.user.JoinDTO;
+import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
-import com.harpsharp.infra_rds.dto.user.UserDTO;
+import com.harpsharp.infra_rds.dto.user.RequestUserDTO;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
-import com.harpsharp.infra_rds.mapper.UserMapper;
+import com.harpsharp.infra_rds.mapper.*;
 import com.harpsharp.infra_rds.repository.PostRepository;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -13,34 +18,41 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.Map;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
+
     private final UserMapper userMapper;
     private final PostRepository postRepository;
 
-    public void registerUser(JoinDTO joinDTO, String role) {
-        String username = joinDTO.getUsername();
-        String password = joinDTO.getPassword();
-        String email = joinDTO.getEmail();
+    private final PostMapper postMapper;
+    private final CommentMapper commentMapper;
+    private final TodoCommentMapper todoCommentMapper;
+    private final TodoPostMapper todoPostMapper;
+
+    public Map<Long, ResponseUserDTO> registerUser(JoinDTO joinDTO, String role) {
+        String username = joinDTO.username();
+        String password = joinDTO.password();
+        String email = joinDTO.email();
 
         if (userRepository.existsByEmail(email)) {
             throw UserAlreadyExistsException.builder()
                     .code("USER_ALREADY_EXISTS")
-                    .message("User with email " + joinDTO.getEmail() + " already exists.")
+                    .message("User with email " + joinDTO.email() + " already exists.")
                     .build();
         }
 
         if(userRepository.existsByUsername(username)) {
             throw UserAlreadyExistsException.builder()
                     .code("USER_ALREADY_EXISTS")
-                    .message("User with username " + joinDTO.getUsername() + " already exists.")
+                    .message("User with username " + joinDTO.username() + " already exists.")
                     .build();
         }
 
@@ -49,10 +61,11 @@ public class UserService {
                 .password(passwordEncoder.encode(password))
                 .email(email)
                 .role(role)
-                .social_type("harp")
+                .socialType("harp")
                 .build();
 
         userRepository.save(user);
+        return userMapper.toMap(user);
     }
 
     public void clear(){
@@ -60,9 +73,9 @@ public class UserService {
     }
 
     public void updateUser(Long userId, UpdateUserDTO updatedDTO){
-        String updatedUsername = updatedDTO.getUsername();
-        String updatedPassword = updatedDTO.getPassword();
-        String updatedEmail = updatedDTO.getEmail();
+        String updatedUsername = updatedDTO.updatedUsername();
+        String updatedPassword = updatedDTO.updatedPassword();
+        String updatedEmail = updatedDTO.updatedEmail();
 
         if(userRepository.existsByUsername(updatedUsername)){
             throw UserAlreadyExistsException
@@ -82,7 +95,11 @@ public class UserService {
 
         User existUser = userRepository
                 .findById(userId)
-                .orElseThrow(NullPointerException::new);
+                .orElseThrow(() -> new IllegalArgumentException("INVALID_USER_ID"));
+
+        if(!passwordEncoder.matches(updatedDTO.password(), existUser.getPassword())){
+            throw new IllegalArgumentException("INVALID_PASSWORD");
+        }
 
         if(updatedUsername == null){
             updatedUsername = existUser.getUsername();
@@ -100,27 +117,33 @@ public class UserService {
                 .email(updatedEmail)
                 .build();
 
-        if(updatedUser == null) throw new IllegalArgumentException();
+        if(updatedUser == null) throw new IllegalArgumentException("USER_NOT_FOUND");
 
 
         userRepository.save(existUser.updateUser(updatedUser));
     }
 
-    public Optional<User> findById(Long userId){ return userRepository.findById(userId); }
-
-    public UserDTO findByUsername(String username){
-        User user = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("USER_NOT_FOUND"));
-
-        return userMapper.convertUserToDTO(user);
+    public Map<Long, ResponseUserDTO> findById(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("INVALID_USER_ID"));
+        return userMapper.toMap(user);
     }
 
-    public void deleteById(Long userId, String accessToken){
-        if(!userRepository.existsById(userId)){ throw new IllegalArgumentException("존재하지 않는 유저입니다."); }
-        postRepository.deleteByUser(userRepository.findById(userId).orElseThrow(NullPointerException::new));
+    public Map<Long, ResponseUserDTO> findByUsername(String username){
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("INVALID_USER_ID"));
+        return userMapper.toMap(user);
+    }
+
+    public Map<Long, ResponseUserDTO> deleteById(Long userId, String accessToken){
+        User deletedUser = userRepository
+                .findById(userId)
+                .orElseThrow(()->new IllegalArgumentException("INVALID_USER_ID"));
+
         userRepository.deleteById(userId);
         refreshTokenService.deleteByToken(accessToken);
+
+        return userMapper.toMap(deletedUser);
     }
 
     public String findPasswordByUsername(String username){
@@ -129,5 +152,34 @@ public class UserService {
                 .orElseThrow(()-> new IllegalArgumentException("USER_NOT_FOUND"));
 
         return existedUser.getPassword();
+    }
+
+    public Map<Long, ResponsePostDTO> findPostsByUsername(String username){
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(()-> new IllegalArgumentException("USER_NOT_FOUND"));
+
+        return postMapper.toMap(user.getPosts());
+    }
+
+    public Map<Long, ResponseCommentDTO> findCommentsByUsername(String username){
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(()-> new IllegalArgumentException("USER_NOT_FOUND"));
+        return commentMapper.toMap(user.getComments());
+    }
+
+    public Map<Long, ResponseTodoPostDTO> findTodoPostsByUsername(String username){
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(()-> new IllegalArgumentException("USER_NOT_FOUND"));
+        return todoPostMapper.toMap(user.getTodoPosts());
+    }
+
+    public Map<Long, ResponseTodoCommentDTO> findTodoCommentsByUsername(String username){
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(()-> new IllegalArgumentException("USER_NOT_FOUND"));
+        return todoCommentMapper.toMap(user.getTodoComments());
     }
 }

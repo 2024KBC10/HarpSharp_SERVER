@@ -1,10 +1,7 @@
 package com.harpsharp.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.harpsharp.infra_rds.dto.user.DeleteDTO;
-import com.harpsharp.infra_rds.dto.user.JoinTestDTO;
-import com.harpsharp.infra_rds.dto.user.LoginDTO;
-import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
+import com.harpsharp.infra_rds.dto.user.*;
 import com.harpsharp.auth.service.RefreshTokenService;
 import com.harpsharp.auth.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -48,6 +45,7 @@ class AuthApplicationTests {
 	@Autowired
 	private  UserService userService;
 
+
 	private final String username = "admin";
 	private final String password = "HeisPassWord!15";
 	private final String email    = "admin@gmail.com";
@@ -64,11 +62,7 @@ class AuthApplicationTests {
 	}
 
 	public void init() throws Exception{
-		JoinTestDTO joinDTO = JoinTestDTO.builder()
-				.username(username)
-				.password(password)
-				.email(email)
-				.build();
+		JoinTestDTO joinDTO = new JoinTestDTO(username, password, email);
 
 		String joinJson = objectMapper.writeValueAsString(joinDTO);
 
@@ -83,10 +77,7 @@ class AuthApplicationTests {
 	public void login() throws Exception {
 		init();
 
-		LoginDTO loginDto = LoginDTO.builder()
-				.username(username)
-				.password(password)
-				.build();
+		LoginDTO loginDto = new LoginDTO(username, password);
 
 		String loginJson = objectMapper.writeValueAsString(loginDto);
 
@@ -101,15 +92,34 @@ class AuthApplicationTests {
 		refreshToken = result.getResponse().getCookie("refresh");
 	}
 
+	@DisplayName("Auth 서버 루트 페이지")
+	@Test
+	@Transactional
+	public void rootPage() throws Exception {
+		this.mockMvc.perform(get("/"))
+				.andExpect(status().isOk())
+				.andDo(document("Root Page", // 문서화할 때 사용할 경로와 이름
+						responseFields(
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.VARIES)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("접속 성공 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지")
+						)));
+	}
+
 	@DisplayName("회원가입 테스트")
 	@Test
 	@Transactional
 	public void joinTest() throws Exception{
-		JoinTestDTO user = JoinTestDTO.builder()
-				.username(username)
-				.password(password)
-				.email(email)
-				.build();
+		JoinTestDTO user = new JoinTestDTO(username, password, email);
 
 		String json = objectMapper.writeValueAsString(user);
 
@@ -149,10 +159,7 @@ class AuthApplicationTests {
 	public void loginTest() throws Exception{
 		init();
 
-		LoginDTO loginDto = LoginDTO.builder()
-				.username(username)
-				.password(password)
-				.build();
+		LoginDTO loginDto = new LoginDTO(username, password);
 
 		String loginJson = objectMapper.writeValueAsString(loginDto);
 
@@ -184,18 +191,245 @@ class AuthApplicationTests {
 				));
 	}
 
+
+	@DisplayName("로그아웃 테스트")
+	@Test
+	@Transactional
+	public void logoutTest() throws Exception{
+		login();
+
+		this.mockMvc.perform(
+						post("/logout")
+								.header("Authorization", "Bearer " + accessToken)
+								.cookie(refreshToken))
+				.andExpect(status().isCreated())
+				.andDo(document("Logout", // 문서화할 때 사용할 경로와 이름
+						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
+						responseFields(
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.VARIES)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("로그아웃 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지")
+						)
+				));
+	}
+
+	@DisplayName("유저 정보 조회 테스트")
+	@Test
+	@Transactional
+	public void getUserDataTest() throws Exception{
+		login();
+		InfoDTO infoDto = new InfoDTO(username, password);
+
+		String infoJson = objectMapper.writeValueAsString(infoDto);
+
+
+		this.mockMvc.perform(
+						get("/user")
+								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+								.content(infoJson))
+				.andExpect(status().isOk())
+				.andDo(document("/user", // 문서화할 때 사용할 경로와 이름
+						requestFields( // 요청 파라미터 문서화
+								fieldWithPath("username").description("닉네임"),
+								fieldWithPath("role").description("권한")
+						),
+						responseFields(
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.VARIES)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("조회 성공 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지"),
+								fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성자 정보"),
+								fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("닉네임"),
+								fieldWithPath("data.*.email").type(JsonFieldType.STRING).description("게시글 제목"),
+								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("게시글 내용"),
+								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("게시글 내용"),
+								fieldWithPath("data.*.socialType").type(JsonFieldType.STRING).description("게시글 내용"),
+								fieldWithPath("data.*.role").type(JsonFieldType.STRING).description("작성 일자"),
+								fieldWithPath("data.*.posts").type(JsonFieldType.OBJECT).description("작성 일자"),
+								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("수정 일자"),
+								fieldWithPath("data.*.todoPosts").type(JsonFieldType.OBJECT).description("작성 일자"),
+								fieldWithPath("data.*.todoComments").type(JsonFieldType.OBJECT).description("수정 일자"))
+				));
+	}
+
+	@DisplayName("작성글 조회 테스트")
+	@Test
+	@Transactional
+	public void getPostsByUserInfo() throws Exception{
+		login();
+		InfoDTO infoDto = new InfoDTO(username, password);
+
+		String infoJson = objectMapper.writeValueAsString(infoDto);
+
+
+		this.mockMvc.perform(
+						get("/user/board/posts")
+								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+								.content(infoJson))
+				.andExpect(status().isOk())
+				.andDo(document("/user/board/posts", // 문서화할 때 사용할 경로와 이름
+						requestFields( // 요청 파라미터 문서화
+								fieldWithPath("username").description("닉네임"),
+								fieldWithPath("role").description("권한")
+						),
+						responseFields(
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.VARIES)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("조회 성공 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지"),
+								fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성글 정보(All)"))
+				));
+	}
+
+
+	@DisplayName("작성 댓글 조회 테스트")
+	@Test
+	@Transactional
+	public void getCommentsByUserInfo() throws Exception{
+		login();
+		InfoDTO infoDto = new InfoDTO(username, password);
+
+		String infoJson = objectMapper.writeValueAsString(infoDto);
+
+
+		this.mockMvc.perform(
+						get("/user/board/comments")
+								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+								.content(infoJson))
+				.andExpect(status().isOk())
+				.andDo(document("/user/board/comments", // 문서화할 때 사용할 경로와 이름
+						requestFields( // 요청 파라미터 문서화
+								fieldWithPath("username").description("닉네임"),
+								fieldWithPath("role").description("권한")
+						),
+						responseFields(
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.VARIES)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("조회 성공 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지"),
+								fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성 댓글 정보(All)"))
+				));
+	}
+
+
+	@DisplayName("작성글(TODO) 조회 테스트")
+	@Test
+	@Transactional
+	public void getTodoPostsByUserInfo() throws Exception{
+		login();
+		InfoDTO infoDto = new InfoDTO(username, password);
+
+		String infoJson = objectMapper.writeValueAsString(infoDto);
+
+
+		this.mockMvc.perform(
+						get("/user/todo/posts")
+								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+								.content(infoJson))
+				.andExpect(status().isOk())
+				.andDo(document("/user/todo/posts", // 문서화할 때 사용할 경로와 이름
+						requestFields( // 요청 파라미터 문서화
+								fieldWithPath("username").description("닉네임"),
+								fieldWithPath("role").description("권한")
+						),
+						responseFields(
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.VARIES)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("조회 성공 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지"),
+								fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성 TODO 게시글 정보(All)"))
+				));
+	}
+
+
+	@DisplayName("작성 댓글(TODO) 조회 테스트")
+	@Test
+	@Transactional
+	public void getTodoCommentsByUserInfo() throws Exception{
+		login();
+		InfoDTO infoDto = new InfoDTO(username, password);
+
+		String infoJson = objectMapper.writeValueAsString(infoDto);
+
+
+		this.mockMvc.perform(
+						get("/user/todo/comments")
+								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
+								.content(infoJson))
+				.andExpect(status().isOk())
+				.andDo(document("/user/board/comments", // 문서화할 때 사용할 경로와 이름
+						requestFields( // 요청 파라미터 문서화
+								fieldWithPath("username").description("닉네임"),
+								fieldWithPath("role").description("권한")
+						),
+						responseFields(
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.VARIES)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("조회 성공 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지"),
+								fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성 TODO 댓글 정보(All)"))
+				));
+	}
+
+
+
 	@DisplayName("유저 정보 업데이트 테스트")
 	@Test
 	@Transactional
 	public void updateTest() throws Exception{
 		login();
 
-		UpdateUserDTO updateUserDto = UpdateUserDTO
-				.builder()
-				.username("update!")
-				.password("updatePassWord!5")
-				.email("update@gmail.com")
-				.build();
+		UpdateUserDTO updateUserDto =
+				new UpdateUserDTO(password,"update!", "UpdatePassword15!", "update@gmail.com");
 
 		String updateJson = objectMapper.writeValueAsString(updateUserDto);
 
@@ -208,9 +442,10 @@ class AuthApplicationTests {
 				.andExpect(status().is3xxRedirection())
 				.andDo(document("Update", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("username").description("새 닉네임 (if null: 변경 X)"),
-								fieldWithPath("password").description("새 비밀번호 (if null: 변경 X)"),
-								fieldWithPath("email").description("새 이메일 (if null: 변경 X)")
+								fieldWithPath("password").description("기존 비밀번호"),
+								fieldWithPath("updatedUsername").description("새 닉네임 (if null: 변경 X)"),
+								fieldWithPath("updatedPassword").description("새 비밀번호 (if null: 변경 X)"),
+								fieldWithPath("updatedEmail").description("새 이메일 (if null: 변경 X)")
 						),
 						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						requestCookies(cookieWithName("refresh").description("유효한 refresh token")),
@@ -228,7 +463,7 @@ class AuthApplicationTests {
 								fieldWithPath("details")
 										.type(JsonFieldType.STRING)
 										.description("상세 메세지")
-						)
+								)
 				));
 	}
 

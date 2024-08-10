@@ -46,8 +46,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             LoginDTO loginDTO = objectMapper.readValue(messageBody, LoginDTO.class);
 
             // 사용자 이름과 비밀번호 추출
-            String username = loginDTO.getUsername();
-            String password = loginDTO.getPassword();
+            String username = loginDTO.username();
+            String password = loginDTO.password();
 
             System.out.println("username = " + username);
             System.out.println("password = " + password);
@@ -100,7 +100,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(jwtUtil.createCookie("refresh", refreshToken));
-        response.setContentType("application/json");
+        response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpStatus.CREATED.value());
         response.getWriter().write(json);
         response.getWriter().flush();
@@ -109,7 +109,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         response.setStatus(HttpStatus.OK.value());
-        response.setContentType("application/json");
+        response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
 
         ApiResponse responseDTO = new ApiResponse(
@@ -118,5 +118,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 "INVALID_AUTHENTICATION",
                 "유효하지 않은 접근입니다.");
         response.getWriter().write(objectMapper.writeValueAsString(responseDTO));
+        response.getWriter().flush();
     }
 }
