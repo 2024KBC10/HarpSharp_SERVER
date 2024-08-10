@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -47,14 +48,23 @@ public class TodoPost extends BasePost {
     @Column(name = "likes", nullable = false)
     private Long likes;
 
-    @Builder
-    public TodoPost(String title, String content, TodoStatus status, LocalDateTime startAt, LocalDateTime endAt, User user) {
+    @Column(name = "content_hint")
+    private String content_hint;
+
+    @Column(name = "content_goal")
+    private String content_goal;
+
+    @Builder(toBuilder = true)
+    public TodoPost(String title, String content, String content_hint, String content_goal, TodoStatus status, LocalDateTime startAt, LocalDateTime endAt, User user) {
         this.title = title;
         this.content = content;
+        this.content_hint = content_hint;
+        this.content_goal = content_goal;
         this.status = status;
         this.startAt = startAt;
         this.endAt = endAt;
         this.user = user;
         this.likes = 0L;
+        this.todoComments = new ArrayList<>();
     }
 }

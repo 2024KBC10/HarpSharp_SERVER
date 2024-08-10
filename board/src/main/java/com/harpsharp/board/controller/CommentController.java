@@ -1,22 +1,15 @@
 package com.harpsharp.board.controller;
 import com.harpsharp.auth.jwt.JwtUtil;
-import com.harpsharp.infra_rds.dto.board.RequestCommentDTO;
+import com.harpsharp.infra_rds.dto.board.*;
 import com.harpsharp.board.service.CommentService;
-import com.harpsharp.infra_rds.dto.board.RequestUpdateCommnetDTO;
-import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
-import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.infra_rds.dto.response.ResponseWithData;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -65,10 +58,10 @@ public class CommentController {
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestCommentDTO commentDTO) throws IllegalAccessException {
 
-        Map<Long, ResponseCommentDTO> object = commentService.save(commentDTO);
-
         if(!isValid(accessToken, commentDTO.username()))
             throw new IllegalAccessException("INVALID_ACCESS");
+
+        Map<Long, ResponseCommentDTO> object = commentService.save(commentDTO);
 
         ResponseWithData<Map<Long, ResponseCommentDTO>> apiResponse
                 = new ResponseWithData<>(
@@ -111,16 +104,20 @@ public class CommentController {
 
 
     @DeleteMapping("/board/posts/{postId}/comments/{commentId}")
-    public ResponseEntity<ApiResponse> deleteComment(@PathVariable Long postId,
-                                @PathVariable Long commentId,
-                                HttpServletRequest request) {
+    public ResponseEntity<ApiResponse> deleteComment(
+            @RequestHeader("Authorization") String accessToken,
+            @RequestBody RequestCommentDTO commentDTO,
+            @PathVariable Long commentId) throws IllegalAccessException {
+
+        if(!isValid(accessToken, commentDTO.username()))
+            throw new IllegalAccessException("INVALID_ACCESS");
 
         commentService.deleteComment(commentId);
 
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
-                "UPDATE_COMMNET_SUCCESSFULLY",
+                "DELETE_COMMNET_SUCCESSFULLY",
                 "댓글이 성공적으로 삭제되었습니다.");
 
         return ResponseEntity

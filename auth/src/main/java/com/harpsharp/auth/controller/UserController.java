@@ -8,12 +8,9 @@ import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.UserService;
-import com.harpsharp.infra_rds.dto.user.UserDTO;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.mapper.UserMapper;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -121,5 +118,4 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .body(apiResponse);
     }
-
 }

@@ -14,4 +14,5 @@ import java.util.List;
 @Transactional
 public interface TodoCommentRepository extends JpaRepository<TodoComment, Long> {
     List<TodoComment> findByTodoPost(TodoPost todoPost);
+    void deleteByTodoPost(TodoPost todoPost);
 }

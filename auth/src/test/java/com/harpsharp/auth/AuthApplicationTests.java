@@ -9,7 +9,6 @@ import com.harpsharp.auth.service.RefreshTokenService;
 import com.harpsharp.auth.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,6 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
@@ -115,7 +113,7 @@ class AuthApplicationTests {
 
 		String json = objectMapper.writeValueAsString(user);
 
-		
+
 		this.mockMvc.perform(
 				post("/join")
 				.contentType(MediaType.APPLICATION_JSON)

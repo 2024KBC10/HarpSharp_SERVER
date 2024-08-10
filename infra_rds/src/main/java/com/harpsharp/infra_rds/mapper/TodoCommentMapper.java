@@ -8,6 +8,7 @@ import com.harpsharp.infra_rds.repository.TodoPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,7 +32,7 @@ public class TodoCommentMapper {
 
     public ResponseTodoCommentDTO entityToResponseDTO(TodoComment todoComment) {
         return new ResponseTodoCommentDTO(
-                todoComment.getTodoCommentId(),
+                todoComment.getUser().getUsername(),
                 todoComment.getContent(),
                 todoComment.getCreatedAt(),
                 todoComment.getUpdatedAt()
@@ -48,4 +49,11 @@ public class TodoCommentMapper {
         return todoComments.stream().collect(
                 Collectors.toMap(TodoComment::getTodoCommentId, this::entityToResponseDTO));
     }
+
+    public Map<Long,ResponseTodoCommentDTO> toMap(TodoComment todoComment) {
+        Map<Long, ResponseTodoCommentDTO> object = new HashMap<>();
+        object.put(todoComment.getTodoCommentId(), entityToResponseDTO(todoComment));
+        return object;
+    }
+
 }

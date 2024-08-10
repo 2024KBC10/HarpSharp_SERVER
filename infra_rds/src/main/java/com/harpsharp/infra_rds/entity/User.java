@@ -63,11 +63,17 @@ public class User {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime updated_at;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<TodoPost> todoPosts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<TodoComment> todoComments = new ArrayList<>();
 
     @Builder(toBuilder = true)
     public User(String username, String password, String email, String social_type, String role){

@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @ResponseBody
 @RequiredArgsConstructor
 public class JoinController {
-
     private final UserService userService;
 
     @PostMapping("/join")
