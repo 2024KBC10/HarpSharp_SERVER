@@ -38,6 +38,9 @@ jobs:
     steps:
       - name: 체크아웃
         uses: actions/checkout@v2
+        with:
+          python-version: 3.12.4
+
       - name: Verify MySQL connection from host
         run: mysql -h 127.0.0.1 --port=3306 -u root -pwlghks24461! -e "SHOW DATABASES"
 
@@ -61,8 +64,6 @@ jobs:
           echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > todo/src/main/resources/application.yaml
           echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > todo/src/main/resources/application-local.yaml
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > todo/src/main/resources/application-prod.yaml
-          
-          echo "${{ secrets.ENV_PY  }}" | base64 --decode > ./ai/env
 
       - name: 빌드 및 API 명세서 생성 (Auth)
         working-directory: ./auth
@@ -98,6 +99,21 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: 배포 Dir 생성
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
+        working-directory: ./ai
+        run: |
+          mkdir -p deploy-ai
+          echo "${{ secrets.ENV }}" | base64 --decode >> ./deploy-ai/env
+          ls deploy-ai -a
+          cp ./app.py ./deploy-ai
+          cp ./docker-compose.yml ./deploy-ai
+          cp ./Dockerfile ./deploy-ai
+          cp ./openai_api.py ./deploy-ai
+          cp ./requirements.txt ./deploy-ai
+          cd ../ && mkdir -p deploy/ai
+          mv ./ai/deploy-ai/* deploy/ai
 
       - name: 배포 Dir 생성(DB)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
