@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/deploy
+    destination: /home/ubuntu/deploy-ai
     overwrite: yes
 
 permissions:
@@ -14,5 +14,5 @@ permissions:
 hooks:
   ApplicationStart:
     - location: deploy.sh
-      timeout: 90
+      timeout: 60
       runas: ubuntu

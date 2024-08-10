@@ -64,22 +64,29 @@ runDB
 
 cd /home/ubuntu/deploy/auth
 serviceDown auth
+swaggerDown "swagger-auth"
 docker-compose up --build -d
 
 cd /home/ubuntu/deploy/board
 serviceDown board
+swaggerDown "swagger-board"
 docker-compose up --build -d
 
 cd /home/ubuntu/deploy/todo
 serviceDown todo
+swaggerDown "swagger-todo"
 docker-compose up --build -d
+
+cd /home/ubuntu/deploy/ai
+mv env .env
+serviceDown gpt4o
+docker-compose up -d --build
 
 cd /home/ubuntu/deploy/swagger
 serviceDown swagger
-docker-compose up --build -d
+docker-compose up -d --build
 
 reloadNginx
 cleanUpImages
-
 
 

@@ -61,6 +61,8 @@ jobs:
           echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > todo/src/main/resources/application.yaml
           echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > todo/src/main/resources/application-local.yaml
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > todo/src/main/resources/application-prod.yaml
+          
+          echo "${{ secrets.ENV_PY  }}" | base64 --decode > ./ai/env
 
       - name: 빌드 및 API 명세서 생성 (Auth)
         working-directory: ./auth
