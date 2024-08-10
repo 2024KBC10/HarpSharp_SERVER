@@ -237,7 +237,7 @@ class AuthApplicationTests {
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
-				.andDo(document("/user", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Get User Data", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("닉네임"),
 								fieldWithPath("role").description("권한")
@@ -284,7 +284,7 @@ class AuthApplicationTests {
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
-				.andDo(document("/user/board/posts", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Get User's Posts", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("닉네임"),
 								fieldWithPath("role").description("권한")
@@ -322,7 +322,7 @@ class AuthApplicationTests {
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
-				.andDo(document("/user/board/comments", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Get User's Comments", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("닉네임"),
 								fieldWithPath("role").description("권한")
@@ -360,7 +360,7 @@ class AuthApplicationTests {
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
-				.andDo(document("/user/todo/posts", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Get User's Todo Posts", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("닉네임"),
 								fieldWithPath("role").description("권한")
@@ -398,7 +398,7 @@ class AuthApplicationTests {
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
-				.andDo(document("/user/board/comments", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Get Users Todo Comments", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("닉네임"),
 								fieldWithPath("role").description("권한")
