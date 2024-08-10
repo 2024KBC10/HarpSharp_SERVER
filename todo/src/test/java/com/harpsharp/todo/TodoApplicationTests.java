@@ -310,7 +310,7 @@ class TodoApplicationTests {
 		writePost();
 		this.mockMvc.perform(get("/todo/posts"))
 				.andExpect(status().isOk())
-				.andDo(document("Post", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Get All Todo Posts", // 문서화할 때 사용할 경로와 이름
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -349,7 +349,7 @@ class TodoApplicationTests {
 		this.mockMvc.perform(get("/todo/posts/{postId}", postId))
 				.andExpect(status().isOk())
 				.andDo(
-						document("Post",
+						document("Get Todo Post by todoPostId",
 								pathParameters(parameterWithName("postId").description("게시글 ID")),
 								responseFields(
 										fieldWithPath("timeStamp")
@@ -401,7 +401,7 @@ class TodoApplicationTests {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(requestPostDTO)))
 				.andExpect(status().isOk())
-				.andDo(document("Post",
+				.andDo(document("Update Todo Post",
 						pathParameters(parameterWithName("postId").description("게시글 ID")),
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("작성자"),
@@ -464,7 +464,7 @@ class TodoApplicationTests {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(requestPostDTO)))
 				.andExpect(status().isOk())
-				.andDo(document("Post", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Delete Todo Post", // 문서화할 때 사용할 경로와 이름
 						pathParameters(parameterWithName("postId").description("게시글 ID")),
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("작성자"),
@@ -510,7 +510,7 @@ class TodoApplicationTests {
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isCreated())
-				.andDo(document("Comments", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Write Todo Comment", // 문서화할 때 사용할 경로와 이름
 						pathParameters(parameterWithName("postId").description("게시글 ID")),
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("todoPostId").description("Todo Post ID"),
@@ -552,7 +552,7 @@ class TodoApplicationTests {
 		System.out.println("commentId = " + commentId);
 		this.mockMvc.perform(get("/todo/posts/{postId}/comments/{commentId}", postId, commentId))
 				.andExpect(status().isOk())
-				.andDo(document("Comments", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Get Todo Comment by commentId", // 문서화할 때 사용할 경로와 이름
 						pathParameters(parameterWithName("postId").description("게시글 Id"),
 								parameterWithName("commentId").description("댓글 ID")),
 						responseFields(
@@ -586,7 +586,7 @@ class TodoApplicationTests {
 		this.mockMvc.perform(get("/todo/posts/{postId}/comments", postId))
 				.andExpect(status().isOk())
 				.andDo(
-						document("Comments",
+						document("Get Comments by todoPostId",
 								pathParameters(parameterWithName("postId").description("게시글 ID")),
 								responseFields(
 										fieldWithPath("timeStamp")
@@ -623,7 +623,7 @@ class TodoApplicationTests {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isOk())
-				.andDo(document("Comments",
+				.andDo(document("Update Todo Comment",
 						pathParameters(parameterWithName("postId").description("게시글 ID"),
 								parameterWithName("commentId").description("댓글 ID")),
 						requestFields( // 요청 파라미터 문서화
@@ -668,7 +668,7 @@ class TodoApplicationTests {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isOk())
-				.andDo(document("Comments", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Delete Todo Comment", // 문서화할 때 사용할 경로와 이름
 						pathParameters(parameterWithName("postId").description("게시글 ID"),
 								parameterWithName("commentId").description("댓글 ID")),
 						requestHeaders(headerWithName("Authorization").description("유효한 access token")),

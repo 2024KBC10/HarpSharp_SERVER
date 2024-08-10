@@ -8,11 +8,10 @@ plugins {
 
 openapi3 {
 	servers = [
-			{ url = "http://swagger-todo" },
-			{ url = "http://harpsharp.com/swagger/todo" }
+			{ url = "http://harpsharp.com" }
 	]
 	title = "Harp Sharp Todo API"
-	description = "Harp Sharp Todo List와 관련된 API입니다."
+	description = "Harp Sharp Todo List API입니다."
 	version = "1.0.0"
 	format = 'json'
 	outputFileNamePrefix = 'todo'

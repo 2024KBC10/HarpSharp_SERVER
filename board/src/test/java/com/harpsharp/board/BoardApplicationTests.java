@@ -220,7 +220,7 @@ class BoardApplicationTests {
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(objectMapper.writeValueAsString(postDTO)))
 				.andExpect(status().isCreated())
-				.andDo(document("Post", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Write Post", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("작성자"),
 								fieldWithPath("title").description("제목"),
@@ -262,7 +262,7 @@ class BoardApplicationTests {
 		writePost();
 		this.mockMvc.perform(get("/board/posts"))
 				.andExpect(status().isOk())
-				.andDo(document("Post", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Get All Posts", // 문서화할 때 사용할 경로와 이름
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -295,7 +295,7 @@ class BoardApplicationTests {
         this.mockMvc.perform(get("/board/posts/{postId}", postId))
                 .andExpect(status().isOk())
                 .andDo(
-						document("Post",
+						document("Get Post by postId",
 								pathParameters(parameterWithName("postId").description("게시글 ID")),
                         responseFields(
                                 fieldWithPath("timeStamp")
@@ -332,7 +332,7 @@ class BoardApplicationTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestPostDTO)))
                 .andExpect(status().isOk())
-                .andDo(document("Post",
+                .andDo(document("Update Post",
 						pathParameters(parameterWithName("postId").description("게시글 ID")),
                         requestFields( // 요청 파라미터 문서화
                                 fieldWithPath("username").description("작성자"),
@@ -376,7 +376,7 @@ class BoardApplicationTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestPostDTO)))
                 .andExpect(status().isOk())
-                .andDo(document("Post", // 문서화할 때 사용할 경로와 이름
+                .andDo(document("Delete Post", // 문서화할 때 사용할 경로와 이름
 						pathParameters(parameterWithName("postId").description("게시글 ID")),
                         requestFields( // 요청 파라미터 문서화
                                 fieldWithPath("username").description("작성자"),
@@ -417,7 +417,7 @@ class BoardApplicationTests {
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isCreated())
-				.andDo(document("Comments", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Write Comment", // 문서화할 때 사용할 경로와 이름
 						pathParameters(parameterWithName("postId").description("게시글 ID")),
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("postId").description("Post ID"),
@@ -459,7 +459,7 @@ class BoardApplicationTests {
 		System.out.println("commentId = " + commentId);
 		this.mockMvc.perform(get("/board/posts/{postId}/comments/{commentId}", postId, commentId))
 				.andExpect(status().isOk())
-				.andDo(document("Comments", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Get Comment by commentId", // 문서화할 때 사용할 경로와 이름
 						pathParameters(parameterWithName("postId").description("게시글 Id"),
 								parameterWithName("commentId").description("댓글 ID")),
 						responseFields(
@@ -493,7 +493,7 @@ class BoardApplicationTests {
 		this.mockMvc.perform(get("/board/posts/{postId}/comments", postId))
 				.andExpect(status().isOk())
 				.andDo(
-						document("Comments",
+						document("Get All Comments",
 								pathParameters(parameterWithName("postId").description("게시글 ID")),
 								responseFields(
 										fieldWithPath("timeStamp")
@@ -530,7 +530,7 @@ class BoardApplicationTests {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isOk())
-				.andDo(document("Comments",
+				.andDo(document("Update Comment",
 						pathParameters(parameterWithName("postId").description("게시글 ID"),
 								parameterWithName("commentId").description("댓글 ID")),
 						requestFields( // 요청 파라미터 문서화
@@ -576,7 +576,7 @@ class BoardApplicationTests {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isOk())
-				.andDo(document("Comments", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Delete Comment", // 문서화할 때 사용할 경로와 이름
 						pathParameters(parameterWithName("postId").description("게시글 ID"),
 								parameterWithName("commentId").description("댓글 ID")),
 						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
