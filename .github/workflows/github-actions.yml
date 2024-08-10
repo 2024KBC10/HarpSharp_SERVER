@@ -100,7 +100,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: 배포 Dir 생성
+      - name: 배포 Dir 생성 (AI)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         working-directory: ./ai
         run: |
@@ -129,7 +129,8 @@ jobs:
         working-directory: ./swagger
         run: |
           mkdir -p deploy-swagger
-          cp * deploy-swagger/
+          cp *.json deploy-swagger/
+          cp docker-compose.yml deploy-swagger/
           cd ../ && mkdir -p deploy/swagger
           mv ./swagger/deploy-swagger/* deploy/swagger
 
