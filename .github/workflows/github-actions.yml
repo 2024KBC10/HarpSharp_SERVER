@@ -142,7 +142,6 @@ jobs:
           cp build/libs/auth-*.jar deploy-auth/
           cp Dockerfile deploy-auth/
           cp docker-compose.yml deploy-auth/
-          cp build/api-spec/auth.json deploy-auth/
           cd ../ && mkdir -p deploy/auth
           mv ./auth/deploy-auth/* deploy/auth
 
@@ -154,7 +153,6 @@ jobs:
           cp build/libs/board-*.jar deploy-board/
           cp Dockerfile deploy-board/
           cp docker-compose.yml deploy-board/
-          cp build/api-spec/board.json deploy-board/
           cd ../ && mkdir -p deploy/board
           mv ./board/deploy-board/* deploy/board 
 
@@ -166,7 +164,6 @@ jobs:
           cp build/libs/todo-*.jar deploy-todo/
           cp Dockerfile deploy-todo/
           cp docker-compose.yml deploy-todo/
-          cp build/api-spec/todo.json deploy-todo/
           cd ../ && mkdir -p deploy/todo
           mv ./todo/deploy-todo/* deploy/todo 
 
