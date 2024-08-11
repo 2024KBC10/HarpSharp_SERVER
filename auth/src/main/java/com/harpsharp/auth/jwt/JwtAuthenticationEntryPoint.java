@@ -49,9 +49,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                             "INVALID_TOKEN",
                             "유효하지 않은 토큰입니다."
                     );
+            String json = objectMapper.writeValueAsString(apiResponse);
             response.setStatus(HttpStatus.OK.value());
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(apiResponse.toString());
+            response.getWriter().write(json);
             response.getWriter().flush();
         }
     }

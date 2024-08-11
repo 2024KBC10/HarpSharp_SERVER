@@ -70,7 +70,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/", "/join", "/board/**", "/todo/**", "user/board/**", "user/todo/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/user")
+                        .requestMatchers(HttpMethod.GET, "/user/**")
                         .permitAll()
                         .requestMatchers("/admin")
                         .hasRole("ADMIN")
