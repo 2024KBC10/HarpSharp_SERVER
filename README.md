@@ -5,8 +5,8 @@ HarpSharp는 백오피스를 지향하는 서비스로 <br>
 
 <br>
 
-인증/인가를 담당하는 Auth, <br>
-게시글, 댓글 CRUD 기능을 가진 Board/TODO <br>
+인증/인가를 담당하는 **Auth** <br>
+게시글, 댓글 CRUD 기능을 가진 **Board/TODO** <br>
 ChatGPT API를 연결한 생성형 AI 서버로 구성되어 있습니다. <br>
  
  <br>
@@ -26,7 +26,10 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 | DB | ![mySQL 8.0](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white) ![Redis](https://img.shields.io/badge/Redis-FF4438?style=for-the-badge&logo=Redis&logoColor=white) |
 | 빌드 | ![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white) |
 | 협업 | ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white) ![notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white) ![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=Slack&logoColor=white) |
+| 테스트 | ![JUnit5](https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=JUnit5&logoColor=white) ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white) ![MockMVC](https://img.shields.io/badge/MockMVC-f2d418?style=for-the-badge)|
 
+
+<br>
 
 ### 구성도
 ![배포 구성도 drawio (3) (1) drawio](https://github.com/user-attachments/assets/5d9c108f-9359-49c2-88e3-f2c99b6618ea)
