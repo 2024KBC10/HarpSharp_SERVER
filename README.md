@@ -1,6 +1,8 @@
 ### 🍀 HarpSharp_SERVER
 <img src = "https://github.com/user-attachments/assets/e017dfcb-d65d-4e78-a607-9444707db272" width = "30%" height = "30%">
-<br><br>
+
+<br></br>
+
 **HarpSharp backend**입니다. <br>
 **HarpSharp**는 백오피스를 지향하는 서비스로 <br>
 클라우드 네이티브 환경에서 도커 기반의 MSA 방식으로 구현되었습니다.<br>
