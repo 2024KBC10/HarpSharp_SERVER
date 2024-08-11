@@ -1,5 +1,6 @@
 ### 🍀 HarpSharp_SERVER
-<img src = "https://github.com/user-attachments/assets/e017dfcb-d65d-4e78-a607-9444707db272" width = "70%" height = "70%">
+<img src = "https://github.com/user-attachments/assets/e017dfcb-d65d-4e78-a607-9444707db272" width = "30%" height = "30%">
+<br>
 HarpSharp backend입니다. <br>
 HarpSharp는 백오피스를 지향하는 서비스로 <br>
 클라우드 네이티브 환경
