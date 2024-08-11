@@ -43,7 +43,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 3. CodeDeploy에 배포 요청을 전달, 트리거가 발동돼 S3 버킷에 업로드 된 deploy.zip 파일을 받아 스크립트에 따라 배포를 시작합니다.
 4. 스크립트는 현재 배포 전 서비스의 컨테이너를 내린 후, 배포 폴더 내부의 docker-compose up을 실행 시킵니다.
 5. 배포 폴더의 구조는 아래와 같습니다.
-<img src = "https://github.com/user-attachments/assets/d3f86f6a-f84f-4743-a853-3a825f5e638a" width = "30%" height = "30%">
+<img src = "https://github.com/user-attachments/assets/d3f86f6a-f84f-4743-a853-3a825f5e638a" width = "30%" height = "10%">
 
 
 <br></br>
