@@ -65,11 +65,8 @@ Auth, board, todo의 API 문서를 배포하는 **swagger** 서버도 함께 운
 ### 🍏 주요 기능
 
 #### JWT 인증/인가
-
 #### 리버스 프록시 및 API 라우팅
-
 #### Swagger + RestDocs를 활용한 API 명세서 자동화
-
 #### CRUD
 
 <br>
