@@ -11,7 +11,7 @@
 
 인증/인가를 담당하는 **Auth** <br>
 게시글, 댓글 CRUD 기능을 가진 **Board/TODO** <br>
-ChatGPT API를 연결한 생성형 AI 서버로 구성되어 있습니다. <br>
+ChatGPT API를 연결한 **생성형 AI 서버**로 구성되어 있습니다. <br>
 <br> 
 현재 https://harpsharp.com 도메인으로 접근 가능하며 <br>
 AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
