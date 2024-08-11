@@ -47,6 +47,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 <br></br>
 
 ### 서버 구성
+
 <img src = "https://github.com/user-attachments/assets/76e605eb-5fa3-4526-ab36-e62c526d314f" width = "80%" height = "80%">
 
 #### 리버스 프록시 서버 (NGINX)
@@ -75,7 +76,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 
 #### JWT 인증/인가
 #### 발급과정
-<img src = "https://github.com/user-attachments/assets/c1c75088-bd8f-4229-b73b-d690a65256bb" width = "30%" height = "30%">
+![flow_JWT drawio (1)](https://github.com/user-attachments/assets/0ca7e7e3-9a35-4c48-b80d-62876f1e1142)
 1. 클라이언트가 로그인을 요청합니다.
 2. 스프링 시큐리티에서 회원 DB를 확인해 해당 클라이언트가 가입된 회원인지를 검증합니다.
 3. 회원의 식별자 + username + role을 조합해 Access Token과 Refresh Token을 발급합니다.
@@ -85,7 +86,8 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 <br>
 
 #### 검증 과정
-<img src = "https://github.com/user-attachments/assets/76c171bc-5ab2-4471-b142-6b48105497a4" width = "30%" height = "30%">
+![auth_JWT drawio (1)](https://github.com/user-attachments/assets/341d192a-925e-44a2-8693-610e1ba98e1a)
+<br>
 1. 클라이언트가 헤더에 Access Token을 담아 NGINX(프록시 서버)로 Request를 전달합니다.
 2. Request가 인가가 필요한 API인 경우, Auth 서버로 해당 Request를 전달합니다.
 3. Request에 담긴 Access Token을 꺼내 유효성을 검증합니다.
