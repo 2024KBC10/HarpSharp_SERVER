@@ -20,7 +20,7 @@ public class TodoCommentMapper {
 
     public TodoComment requestToEntity(RequestTodoCommentDTO requestTodoCommentDTO) {
         TodoPost todoPost = todoPostRepository
-                .findById(requestTodoCommentDTO.todoPostId())
+                .findById(requestTodoCommentDTO.postId())
                 .orElseThrow(() -> new IllegalArgumentException("TODO_POST_NOT_FOUND"));
 
         return new TodoComment(

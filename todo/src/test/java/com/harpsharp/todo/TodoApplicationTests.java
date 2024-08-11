@@ -504,7 +504,7 @@ class TodoApplicationTests {
 				.andExpect(status().isCreated())
 				.andDo(document("Write Todo Comment", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("todoPostId").description("Todo Post ID"),
+								fieldWithPath("postId").description("Todo Post ID"),
 								fieldWithPath("username").description("작성자"),
 								fieldWithPath("content").description("내용")
 						),
