@@ -2,23 +2,18 @@
 HarpSharp backend입니다. <br>
 HarpSharp는 백오피스를 지향하는 서비스로 <br>
 클라우드 네이티브 환경에서 도커 기반의 MSA 방식으로 구현되었습니다.<br>
-
 <br>
-
 인증/인가를 담당하는 **Auth** <br>
 게시글, 댓글 CRUD 기능을 가진 **Board/TODO** <br>
 ChatGPT API를 연결한 생성형 AI 서버로 구성되어 있습니다. <br>
- 
- <br>
- 
+<br> 
 현재 https://harpsharp.com 도메인으로 접근 가능하며 <br>
 AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
-
- <br>
+<br>
 
 ### 🛠️ 기술 스택
 
-| 목적 | 기술 |
+| 목적 | 사용 기술 |
 |:---:|:----:|
 |CI/CD|![Github actions](https://img.shields.io/badge/Actions-2088FF?style=for-the-badge&logo=GithubActions&logoColor=white) ![S3](https://img.shields.io/badge/S3-569A31?style=for-the-badge&logo=AmazoneS3&logoColor=whit) ![CodeDeploy](https://img.shields.io/badge/CodeDeploy-ab0fd7?style=for-the-badge) ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white) ![NGINX](https://img.shields.io/badge/NGINX-009639?style=for-the-badge&logo=Nginx&logoColor=white)|
 |API 서버|![JAVA17](https://img.shields.io/badge/JAVA17-6DB33F?style=for-the-badge) ![Spring Boot 3.3.1](https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white) ![Spring Security](https://img.shields.io/badge/SpringSecurity-6DB33F?style=for-the-badge&logo=SpringSecurity&logoColor=white) ![JPA](https://img.shields.io/badge/JPA-6DB33F?style=for-the-badge) ![python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white) ![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=Flask&logoColor=white) |
@@ -31,5 +26,46 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 
 <br>
 
-### 🗺️ 구성도
+### 🗺️ 시스템 아키텍처
 ![배포 구성도 drawio (3) (1) drawio](https://github.com/user-attachments/assets/5d9c108f-9359-49c2-88e3-f2c99b6618ea)
+
+<br>
+
+### 🧱 ERD
+![Untitled (1)](https://github.com/user-attachments/assets/d0f6794a-4dff-4e00-b7da-0c53dd787d39)
+
+
+
+<br>
+
+### 🍏 주요 기능
+
+#### JWT 인증/인가
+
+#### 리버스 프록시 및 API 라우팅
+
+#### Swagger + RestDocs를 활용한 API 명세서 자동화
+
+#### CRUD
+
+<br>
+
+#### 💣 트러블 슈팅
+
+1. CI/CD 구축
+2. 스프링 시큐리티 필터체인 Exception Handling
+3. NGINX 커스텀
+4. JPA 연관 관계 매핑과 영속성 컨택스트
+5. Swagger 서버 통합까지의 시행 착오
+6. Response 컨벤션 통합
+
+
+<br>
+
+### 🕰️ 진행 현황
+#### 서버 배포 및 포스트맨 기반 API 테스트 
+2024.07.17 ~ 2024.08.11
+#### 프론트 연결
+2024.08.10 ~
+[notion](https://www.notion.so/aa19bf4f9e87408391e2b9d29fb3a2dd) <br>
+[swagger](http://harpsharp.com:9000/) <br>
