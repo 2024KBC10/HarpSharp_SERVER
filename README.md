@@ -32,8 +32,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 <br>
 
 ### 🧱 ERD
-<img src = "[2021-06-30-22-37-11.png](https://github.com/user-attachments/assets/d0f6794a-4dff-4e00-b7da-0c53dd787d39)" width = "50%" height = "50%">  
-
+<img src = "https://github.com/user-attachments/assets/776a5064-9923-41b4-87ac-86012cf94628" width = "50%" height = "50%">  
 
 <br>
 
