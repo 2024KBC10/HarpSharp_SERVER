@@ -84,18 +84,17 @@ public class PostController {
                 .body(apiResponse);
     }
 
-    @PatchMapping("/board/posts/{postId}")
+    @PatchMapping("/board/posts")
     public ResponseEntity<ResponseWithData<Map<Long, ResponsePostDTO>>> updatePost(
             @RequestHeader("Authorization") String accessToken,
-            @PathVariable Long postId,
-            @RequestBody RequestPostDTO requestPostDTO) {
+            @RequestBody RequestUpdatePostDTO requestPostDTO) {
 
         if(!isValid(accessToken, requestPostDTO.username()))
             throw new IllegalArgumentException("INVALID_ACCESS");
 
         RequestUpdatePostDTO updated =
                 new RequestUpdatePostDTO(
-                        postId,
+                        requestPostDTO.postId(),
                         requestPostDTO.username(),
                         requestPostDTO.title(),
                         requestPostDTO.content());
@@ -115,14 +114,15 @@ public class PostController {
                 .body(apiResponse);
     }
 
-    @DeleteMapping("/board/posts/{postId}")
+    @DeleteMapping("/board/posts")
     public ResponseEntity<ApiResponse> deletePost(
             @RequestHeader("Authorization") String accessToken,
-            @PathVariable Long postId,
-            @RequestBody RequestPostDTO requestPostDTO) {
+            @RequestBody RequestUpdatePostDTO requestPostDTO) {
 
         if(!isValid(accessToken, requestPostDTO.username()))
             throw new IllegalArgumentException("INVALID_ACCESS");
+
+        Long postId = requestPostDTO.postId();
 
         postService.deletePost(postId);
 

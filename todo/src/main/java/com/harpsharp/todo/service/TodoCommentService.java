@@ -1,6 +1,7 @@
 package com.harpsharp.todo.service;
 
 import com.harpsharp.infra_rds.dto.todo.RequestTodoCommentDTO;
+import com.harpsharp.infra_rds.dto.todo.RequestUpdateTodoCommentDTO;
 import com.harpsharp.infra_rds.dto.todo.ResponseTodoCommentDTO;
 import com.harpsharp.infra_rds.entity.TodoComment;
 import com.harpsharp.infra_rds.entity.TodoPost;
@@ -46,7 +47,9 @@ public class TodoCommentService {
         return commentMapper.toMap(commentRepository.save(comment));
     }
 
-    public Map<Long,ResponseTodoCommentDTO> updateComment(Long id, RequestTodoCommentDTO commentDTO) {
+    public Map<Long,ResponseTodoCommentDTO> updateComment(RequestUpdateTodoCommentDTO commentDTO) {
+        Long id = commentDTO.commentId();
+
         TodoComment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid comment Id:" + id));
         TodoComment updatedComment = comment

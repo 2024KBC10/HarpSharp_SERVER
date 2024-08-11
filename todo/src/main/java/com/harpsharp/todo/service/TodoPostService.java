@@ -1,6 +1,7 @@
 package com.harpsharp.todo.service;
 
 import com.harpsharp.infra_rds.dto.todo.RequestTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.RequestUpdateTodoPostDTO;
 import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.entity.TodoPost;
 import com.harpsharp.infra_rds.entity.User;
@@ -51,7 +52,9 @@ public class TodoPostService {
         return todoPostMapper.toMap(todoPost);
     }
 
-    public Map<Long,ResponseTodoPostDTO> updateTodoPost(Long postId, RequestTodoPostDTO updatedPostDTO) {
+    public Map<Long,ResponseTodoPostDTO> updateTodoPost(RequestUpdateTodoPostDTO updatedPostDTO) {
+
+        Long postId = updatedPostDTO.postId();
 
         TodoPost existedPost = todoPostRepository
                 .findById(postId)

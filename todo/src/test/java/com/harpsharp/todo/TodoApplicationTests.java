@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.service.RefreshTokenService;
 import com.harpsharp.auth.service.UserService;
 import com.harpsharp.infra_rds.dto.board.*;
-import com.harpsharp.infra_rds.dto.todo.RequestTodoCommentDTO;
-import com.harpsharp.infra_rds.dto.todo.RequestTodoPostDTO;
-import com.harpsharp.infra_rds.dto.todo.ResponseTodoCommentDTO;
-import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.*;
 import com.harpsharp.infra_rds.dto.user.JoinTestDTO;
 import com.harpsharp.infra_rds.dto.user.LoginDTO;
 import com.harpsharp.infra_rds.util.TodoStatus;
@@ -177,7 +174,7 @@ class TodoApplicationTests {
 
 		MvcResult resultComment = this.mockMvc
 				.perform(
-						post("/todo/posts/"+postId+"/comments")
+						post("/todo/posts/comments")
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(commentJson))
@@ -379,7 +376,8 @@ class TodoApplicationTests {
 	@Transactional
 	public void updatePost() throws Exception {
 		Long postId = writePost();
-		RequestTodoPostDTO requestPostDTO = new RequestTodoPostDTO(
+		RequestUpdateTodoPostDTO requestPostDTO = new RequestUpdateTodoPostDTO(
+				postId,
 				username,
 				"Modified!",
 				content,
@@ -389,14 +387,14 @@ class TodoApplicationTests {
 				startAt,
 				endAt);
 
-		this.mockMvc.perform(patch("/todo/posts/{postId}", postId)
+		this.mockMvc.perform(patch("/todo/posts")
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(requestPostDTO)))
 				.andExpect(status().isOk())
 				.andDo(document("Update Todo Post",
-						pathParameters(parameterWithName("postId").description("게시글 ID")),
 						requestFields( // 요청 파라미터 문서화
+								fieldWithPath("postId").description("postId"),
 								fieldWithPath("username").description("작성자"),
 								fieldWithPath("title").description("제목"),
 								fieldWithPath("content").description("내용"),
@@ -443,7 +441,8 @@ class TodoApplicationTests {
 	@Transactional
 	public void deletePost() throws Exception {
 		Long postId = writePost();
-		RequestTodoPostDTO requestPostDTO = new RequestTodoPostDTO(
+		RequestUpdateTodoPostDTO requestPostDTO = new RequestUpdateTodoPostDTO(
+				postId,
 				username,
 				"Modified!",
 				content,
@@ -452,14 +451,14 @@ class TodoApplicationTests {
 				status,
 				startAt,
 				endAt);
-		this.mockMvc.perform(delete("/todo/posts/{postId}", postId)
+		this.mockMvc.perform(delete("/todo/posts")
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(requestPostDTO)))
 				.andExpect(status().isOk())
 				.andDo(document("Delete Todo Post", // 문서화할 때 사용할 경로와 이름
-						pathParameters(parameterWithName("postId").description("게시글 ID")),
 						requestFields( // 요청 파라미터 문서화
+								fieldWithPath("postId").description("todoPostId"),
 								fieldWithPath("username").description("작성자"),
 								fieldWithPath("title").description("제목"),
 								fieldWithPath("content").description("내용"),
@@ -498,13 +497,12 @@ class TodoApplicationTests {
 		RequestTodoCommentDTO commentDTO = new RequestTodoCommentDTO(postId, username, content);
 
 		this.mockMvc.perform(
-						post("/todo/posts/{postId}/comments", postId)
+						post("/todo/posts/comments")
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isCreated())
 				.andDo(document("Write Todo Comment", // 문서화할 때 사용할 경로와 이름
-						pathParameters(parameterWithName("postId").description("게시글 ID")),
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("todoPostId").description("Todo Post ID"),
 								fieldWithPath("username").description("작성자"),
@@ -608,19 +606,16 @@ class TodoApplicationTests {
 	@Transactional
 	public void updateComment() throws Exception {
 		List<Long> list_id = writePC();
-		Long postId    = list_id.get(0);
 		Long commentId = list_id.get(1);
-		RequestTodoCommentDTO commentDTO = new RequestTodoCommentDTO(postId, username, "Modified!");
-		this.mockMvc.perform(patch("/todo/posts/{postId}/comments/{commentId}", postId, commentId)
+		RequestUpdateTodoCommentDTO commentDTO = new RequestUpdateTodoCommentDTO(commentId, username, "Modified!");
+		this.mockMvc.perform(patch("/todo/posts/comments")
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isOk())
 				.andDo(document("Update Todo Comment",
-						pathParameters(parameterWithName("postId").description("게시글 ID"),
-								parameterWithName("commentId").description("댓글 ID")),
 						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("todoPostId").description("Comment 식별자"),
+								fieldWithPath("commentId").description("Comment 식별자"),
 								fieldWithPath("username").description("작성자"),
 								fieldWithPath("content").description("내용 (if null: 변경 X)")
 						),
@@ -653,17 +648,14 @@ class TodoApplicationTests {
 	@Transactional
 	public void deleteComment() throws Exception {
 		List<Long> list_id = writePC();
-		Long postId    = list_id.get(0);
 		Long commentId = list_id.get(1);
-		RequestTodoCommentDTO commentDTO = new RequestTodoCommentDTO(postId, username, content);
-		this.mockMvc.perform(delete("/todo/posts/{postId}/comments/{commentId}", postId, commentId)
+		RequestUpdateTodoCommentDTO commentDTO = new RequestUpdateTodoCommentDTO(commentId, username, content);
+		this.mockMvc.perform(delete("/todo/posts/comments")
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isOk())
 				.andDo(document("Delete Todo Comment", // 문서화할 때 사용할 경로와 이름
-						pathParameters(parameterWithName("postId").description("게시글 ID"),
-								parameterWithName("commentId").description("댓글 ID")),
 						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						responseFields(
 								fieldWithPath("timeStamp")

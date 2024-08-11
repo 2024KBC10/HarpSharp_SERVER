@@ -53,7 +53,7 @@ public class CommentController {
                 .body(apiResponse);
     }
 
-    @PostMapping("/board/posts/{postId}/comments")
+    @PostMapping("/board/posts/comments")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> addComment(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestCommentDTO commentDTO) throws IllegalAccessException {
@@ -77,7 +77,7 @@ public class CommentController {
 
     }
 
-    @PatchMapping("/board/posts/{postId}/comments/{commentId}")
+    @PatchMapping("/board/posts/comments")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> updateComment(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdateCommentDTO updatedComment) throws IllegalAccessException {
@@ -103,11 +103,12 @@ public class CommentController {
     }
 
 
-    @DeleteMapping("/board/posts/{postId}/comments/{commentId}")
+    @DeleteMapping("/board/posts/comments")
     public ResponseEntity<ApiResponse> deleteComment(
             @RequestHeader("Authorization") String accessToken,
-            @RequestBody RequestCommentDTO commentDTO,
-            @PathVariable Long commentId) throws IllegalAccessException {
+            @RequestBody RequestUpdateCommentDTO commentDTO) throws IllegalAccessException {
+
+        Long commentId = commentDTO.commentId();
 
         if(!isValid(accessToken, commentDTO.username()))
             throw new IllegalAccessException("INVALID_ACCESS");

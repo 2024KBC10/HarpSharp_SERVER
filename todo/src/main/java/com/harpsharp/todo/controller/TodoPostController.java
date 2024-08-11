@@ -4,6 +4,7 @@ import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.infra_rds.dto.response.ResponseWithData;
 import com.harpsharp.infra_rds.dto.todo.RequestTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.RequestUpdateTodoPostDTO;
 import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
 import com.harpsharp.todo.service.TodoPostService;
 import jakarta.validation.constraints.NotNull;
@@ -76,16 +77,16 @@ public class TodoPostController {
                 .body(apiResponse);
     }
 
-    @PatchMapping("/todo/posts/{postId}")
+    @PatchMapping("/todo/posts")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoPostDTO>>> updatePost(
-            @PathVariable Long postId,
             @RequestHeader("Authorization") String accessToken,
-            @RequestBody RequestTodoPostDTO postDTO) {
+            @RequestBody RequestUpdateTodoPostDTO postDTO) {
 
         if(!isValid(accessToken, postDTO.username()))
             throw new IllegalArgumentException("INVALID_ACCESS");
 
-        Map<Long, ResponseTodoPostDTO> todoPost = todoPostService.updateTodoPost(postId, postDTO);
+
+        Map<Long, ResponseTodoPostDTO> todoPost = todoPostService.updateTodoPost(postDTO);
         ResponseWithData<Map<Long, ResponseTodoPostDTO>> apiResponse =
                 new ResponseWithData<>(
                         LocalDateTime.now(),
@@ -99,14 +100,15 @@ public class TodoPostController {
                 .body(apiResponse);
     }
 
-    @DeleteMapping("/todo/posts/{postId}")
+    @DeleteMapping("/todo/posts")
     public ResponseEntity<ApiResponse> deletePost(
             @RequestHeader("Authorization") String accessToken,
-            @PathVariable Long postId,
-            @RequestBody RequestTodoPostDTO requestTodoPostDTO) {
+            @RequestBody RequestUpdateTodoPostDTO requestTodoPostDTO) {
 
         if(!isValid(accessToken, requestTodoPostDTO.username()))
             throw new IllegalArgumentException("INVALID_ACCESS");
+
+        Long postId = requestTodoPostDTO.postId();
 
         todoPostService.deleteTodoPost(postId);
         ApiResponse apiResponse = new ApiResponse(

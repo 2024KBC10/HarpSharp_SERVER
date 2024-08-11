@@ -146,7 +146,7 @@ class BoardApplicationTests {
 
 		MvcResult resultComment = this.mockMvc
 				.perform(
-						post("/board/posts/"+postId+"/comments")
+						post("/board/posts/comments")
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(commentJson))
@@ -317,15 +317,15 @@ class BoardApplicationTests {
     @Transactional
     public void updatePost() throws Exception {
 		Long postId = writePost();
-        RequestPostDTO requestPostDTO = new RequestPostDTO(username, "Modified!", content);
-        this.mockMvc.perform(patch("/board/posts/{postId}", postId)
+        RequestUpdatePostDTO requestPostDTO = new RequestUpdatePostDTO(postId, username, "Modified!", content);
+        this.mockMvc.perform(patch("/board/posts")
 						.header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestPostDTO)))
                 .andExpect(status().isOk())
                 .andDo(document("Update Post",
-						pathParameters(parameterWithName("postId").description("게시글 ID")),
                         requestFields( // 요청 파라미터 문서화
+								fieldWithPath("postId").description("post 식별자"),
                                 fieldWithPath("username").description("작성자"),
                                 fieldWithPath("title").description("제목 (if null: 변경 X)"),
                                 fieldWithPath("content").description("내용 (if null: 변경 X)")
@@ -361,15 +361,15 @@ class BoardApplicationTests {
     @Transactional
     public void deletePost() throws Exception {
 		Long postId = writePost();
-        RequestPostDTO requestPostDTO = new RequestPostDTO(username, title, content);
-        this.mockMvc.perform(delete("/board/posts/{postId}", postId)
+        RequestUpdatePostDTO requestPostDTO = new RequestUpdatePostDTO(postId, username, title, content);
+        this.mockMvc.perform(delete("/board/posts", postId)
                         .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestPostDTO)))
                 .andExpect(status().isOk())
                 .andDo(document("Delete Post", // 문서화할 때 사용할 경로와 이름
-						pathParameters(parameterWithName("postId").description("게시글 ID")),
                         requestFields( // 요청 파라미터 문서화
+								fieldWithPath("postId").description("post 식별자"),
                                 fieldWithPath("username").description("작성자"),
                                 fieldWithPath("title").description("제목"),
                                 fieldWithPath("content").description("내용")
@@ -403,13 +403,12 @@ class BoardApplicationTests {
 		RequestCommentDTO commentDTO = new RequestCommentDTO(postId, username, content);
 
 		this.mockMvc.perform(
-						post("/board/posts/{postId}/comments", postId)
+						post("/board/posts/comments")
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isCreated())
 				.andDo(document("Write Comment", // 문서화할 때 사용할 경로와 이름
-						pathParameters(parameterWithName("postId").description("게시글 ID")),
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("postId").description("Post ID"),
 								fieldWithPath("username").description("작성자"),
@@ -516,14 +515,12 @@ class BoardApplicationTests {
 		Long postId    = list_id.get(0);
 		Long commentId = list_id.get(1);
 		RequestUpdateCommentDTO commentDTO = new RequestUpdateCommentDTO(commentId, username, "Modified!");
-		this.mockMvc.perform(patch("/board/posts/{postId}/comments/{commentId}", postId, commentId)
+		this.mockMvc.perform(patch("/board/posts/comments", postId, commentId)
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isOk())
 				.andDo(document("Update Comment",
-						pathParameters(parameterWithName("postId").description("게시글 ID"),
-								parameterWithName("commentId").description("댓글 ID")),
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("commentId").description("Comment 식별자"),
 								fieldWithPath("username").description("작성자"),
@@ -562,14 +559,17 @@ class BoardApplicationTests {
 		Long commentId = list_id.get(1);
 		RequestUpdateCommentDTO commentDTO = new RequestUpdateCommentDTO(commentId, username, "Modified!");
 
-		this.mockMvc.perform(delete("/board/posts/{postId}/comments/{commentId}", postId, commentId)
+		this.mockMvc.perform(delete("/board/posts/comments")
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isOk())
 				.andDo(document("Delete Comment", // 문서화할 때 사용할 경로와 이름
-						pathParameters(parameterWithName("postId").description("게시글 ID"),
-								parameterWithName("commentId").description("댓글 ID")),
+						requestFields( // 요청 파라미터 문서화
+								fieldWithPath("commentId").description("Comment 식별자"),
+								fieldWithPath("username").description("작성자"),
+								fieldWithPath("content").description("내용 (if null: 변경 X)")
+						),
 						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						responseFields(
 								fieldWithPath("timeStamp")

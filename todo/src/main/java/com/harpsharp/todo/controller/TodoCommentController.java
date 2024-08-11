@@ -1,10 +1,12 @@
 package com.harpsharp.todo.controller;
 
 import com.harpsharp.auth.jwt.JwtUtil;
+import com.harpsharp.infra_rds.dto.board.RequestUpdateCommentDTO;
 import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.infra_rds.dto.response.ResponseWithData;
 import com.harpsharp.infra_rds.dto.todo.RequestTodoCommentDTO;
+import com.harpsharp.infra_rds.dto.todo.RequestUpdateTodoCommentDTO;
 import com.harpsharp.infra_rds.dto.todo.ResponseTodoCommentDTO;
 import com.harpsharp.todo.service.TodoCommentService;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -80,7 +82,7 @@ public class TodoCommentController {
                 .body(apiResponse);
     }
 
-    @PostMapping("/todo/posts/{postId}/comments")
+    @PostMapping("/todo/posts/comments")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoCommentDTO>>> addComment(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestTodoCommentDTO commentDTO) {
@@ -104,17 +106,16 @@ public class TodoCommentController {
                 .body(apiResponse);
     }
 
-    @PatchMapping("/todo/posts/{postId}/comments/{commentId}")
+    @PatchMapping("/todo/posts/comments")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoCommentDTO>>> updateComment(
             @RequestHeader("Authorization") String accessToken,
-            @PathVariable Long commentId,
-            @RequestBody RequestTodoCommentDTO commentDTO) throws IllegalAccessException {
+            @RequestBody RequestUpdateTodoCommentDTO commentDTO) throws IllegalAccessException {
 
         if(!isValid(accessToken, commentDTO.username()))
             throw new IllegalAccessException("INVALID_ACCESS");
 
         Map<Long, ResponseTodoCommentDTO> object =
-                todoCommentService.updateComment(commentId, commentDTO);
+                todoCommentService.updateComment(commentDTO);
 
         ResponseWithData<Map<Long, ResponseTodoCommentDTO>> apiResponse
                 = new ResponseWithData<>(
@@ -129,14 +130,16 @@ public class TodoCommentController {
                 .body(apiResponse);
     }
 
-    @DeleteMapping("/todo/posts/{postId}/comments/{commentId}")
+    @DeleteMapping("/todo/posts/comments")
     public ResponseEntity<ApiResponse> deleteComment(
-            @PathVariable Long commentId,
             @RequestHeader("Authorization") String accessToken,
-            @RequestBody RequestTodoCommentDTO commentDTO) throws IllegalAccessException {
+            @RequestBody RequestUpdateTodoCommentDTO commentDTO) throws IllegalAccessException {
 
         if(!isValid(accessToken, commentDTO.username()))
             throw new IllegalAccessException("INVALID_ACCESS");
+        Long commentId = commentDTO.commentId();
+
+        todoCommentService.deleteComment(commentId);
 
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
@@ -144,7 +147,6 @@ public class TodoCommentController {
                 "DELETE_COMMNET_SUCCESSFULLY",
                 "댓글이 성공적으로 삭제되었습니다."
         );
-        todoCommentService.deleteComment(commentId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
