@@ -37,7 +37,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 <br>
 
 
-### 배포 절차
+### 🏭 배포 절차
 1. main or dev 브랜치로 push 혹은 PR이 발생하면 CI 스크립트에 따라 Actions에서 빌드 및 테스트가 진행됩니다. 
 2. 배포에 필요한 파일들을 zip으로 압축해 S3에 업로드 합니다. 
 3. CodeDeploy에 배포 요청을 전달, 트리거가 발동돼 S3 버킷에 업로드 된 deploy.zip 파일을 EC2에 업로드합니다.
@@ -47,7 +47,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 
 <br></br>
 
-### 서버 구성
+### 🍽️ 서버 구성
 
 <img src = "https://github.com/user-attachments/assets/76e605eb-5fa3-4526-ab36-e62c526d314f" width = "80%" height = "80%">
 
