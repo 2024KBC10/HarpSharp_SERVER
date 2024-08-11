@@ -94,21 +94,21 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 4. Redis 내부에 Access Token을 키로 가진 Refresh Entity가 존재하는 지 확인합니다.
 5. Access Token과 Refresh Token의 유효성 여부를 NGINX로 전달합니다.
 6. 유효성이 검증된 경우, 기존 도메인 엔드포인트로 해당 요청을 전달합니다.
-
-#### 리버스 프록시 및 API 라우팅
-#### Swagger + RestDocs를 활용한 API 명세서 자동화
-#### CRUD
+   
 
 <br>
 
 #### 💣 트러블 슈팅
 
-1. CI/CD 구축
-2. 스프링 시큐리티 필터체인 Exception Handling
-3. NGINX 커스텀
-4. JPA 연관 관계 매핑과 영속성 컨택스트
-5. Swagger 서버 통합까지의 시행 착오
-6. Response 컨벤션 통합
+[CI/CD 구축](https://www.notion.so/CI-CD-Auth-affecce9d61240faa17cb4f0cf91ec1a)
+[스프링 시큐리티 필터체인 Exception Handling](https://www.notion.so/Exception-Handling-06b2eb233827434d991a43d8a128fee1)
+[NGINX 커스텀 - 1](https://www.notion.so/nginx-API-5dc220068eb94a73a225bb61f9ce2451)
+[NGINX 커스텀 - 2](https://www.notion.so/a81e178bafeb462085358c448ac347fa?v=d5768f826212401b9a504287b1836ad2&p=acb60a4de3dc43eba920238fefa29d64&pm=s)
+[JPA 연관 관계 매핑과 영속성 컨택스트](https://www.notion.so/a81e178bafeb462085358c448ac347fa?v=d5768f826212401b9a504287b1836ad2&p=13c0417be7aa4addbd40b336112b8a47&pm=s)
+[Swagger + RestDocss를 활용한 API 명세서 자동화와 서버 통합까지의 시행 착오 - 1](https://www.notion.so/swagger-auth-52fd07b1114047d2b14206581a69a0ee)
+[Swagger + RestDocss를 활용한 API 명세서 자동화와 서버 통합까지의 시행 착오 - 2](https://www.notion.so/Swagger-cab6507f18fd43c4ae53870acb839219)
+[Response 컨벤션 통합 - 1](https://www.notion.so/Response-6baaebd19a264339906ae2ad38a1379b)
+[Response 컨벤션 통합 - 2](https://www.notion.so/Response-1c8f497b693a4b1ba47e8d8d3770adbf)
 
 
 <br>
