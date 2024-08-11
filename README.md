@@ -38,23 +38,34 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 <br>
 
 ### 배포 절차
-<img src = "https://github.com/user-attachments/assets/d3f86f6a-f84f-4743-a853-3a825f5e638a" width = "30%" height = "10%">
-<br></br>
-1. main or dev 브랜치로 push 혹은 pull request가 발생하면 Actions CI 스크립트에 따라 빌드 및 테스트가 진행됩니다. <br>
-2. 배포 스크립트, appspec.yml, docker.yml, *.jar 등 배포에 필요한 파일들을 zip으로 압축해 S3에 업로드 합니다. <br>
-3. CodeDeploy에 배포 요청을 전달, S3 버킷에 업로드 한 deploy.zip 파일을 EC2로 받아 스크립트에 따라 배포를 시작합니다. <br>
-4. 스크립트는 현재 배포 전 서비스의 컨테이너를 내린 후, 배포 폴더 내부의 docker-compose를 실행 시킵니다.
+1. main or dev 브랜치로 push 혹은 pull request가 발생하면 Actions CI 스크립트에 따라 빌드 및 테스트가 진행됩니다. 
+2. 배포 스크립트, appspec.yml, docker.yml, *.jar 등 배포에 필요한 파일들을 zip으로 압축해 S3에 업로드 합니다. 
+3. CodeDeploy에 배포 요청을 전달, 트리거가 발동돼 S3 버킷에 업로드 된 deploy.zip 파일을 받아 스크립트에 따라 배포를 시작합니다.
+4. 스크립트는 현재 배포 전 서비스의 컨테이너를 내린 후, 배포 폴더 내부의 docker-compose up을 실행 시킵니다.
+5. 배포 폴더의 구조는 아래와 같습니다.
+<img src = "https://github.com/user-attachments/assets/d3f86f6a-f84f-4743-a853-3a825f5e638a" width = "30%" height = "30%">
 
 
 <br></br>
 
 ### 서버 구성
-모든 서버와 DB는 도커 컨테이너로 배포 되었으며 <br>
-현재 운용되고 있는 도메인 서버는 <br>
-리버스 프록시 서버(**Nginx**)와 <br>
-4가지 도메인 서버(**Auth**, **board**, **todo**, **ai**), <br>
-Auth, board, todo의 API 문서를 배포하는 **swagger** 서버도 함께 운용 중입니다. <br>
-<br>
+![서버 구성 drawio](https://github.com/user-attachments/assets/cf546632-6b30-4172-94d5-02e22ba77bb3)
+
+#### 리버스 프록시 (NGINX)
+- 서버의 앞단에 위치하며 리버스 프록시를 수행합니다.
+- 클라이언트의 API를 올바른 엔드포인트로 전달합니다.
+- 인증/인가가 필요한 요청의 경우 Auth 서버로 전달합니다.
+- 인증/인가를 받은 API를 기존 엔드포인트로 전달합니다.
+#### 인증/인가 서버(Auth)
+- 헤더에 포함된 JWT의 유효성 검증 및 인증/인가를 수행합니다.
+- 유효한 요청의 경우 Nginx으로 검증이 완료되었다는 응답을 보냅니다. (200 OK)
+#### 도메인 서버(Board, Todo, AI)
+- 도메인 로직을 수행합니다.
+- CRUD와 ChatGPT API 요청 및 응답을 수행합니다. 
+#### DB (mySQL, Redis)
+- 인증/인가 서버와 도메인 서버 모두가 공유하는 DB 입니다.
+- RDB에선 유저 정보, Posts, Comments와 같은 실질적인 리소스를 저장합니다.
+- Redis의 경우 Refresh Token을 저장하며 Auth 서버에서 JWT 유효성을 검증하는 로직에 활용됩니다.
 
 
 ### 🧱 ERD
@@ -65,8 +76,11 @@ Auth, board, todo의 API 문서를 배포하는 **swagger** 서버도 함께 운
 ### 🍏 주요 기능
 
 #### JWT 인증/인가
+
 #### 리버스 프록시 및 API 라우팅
+
 #### Swagger + RestDocs를 활용한 API 명세서 자동화
+
 #### CRUD
 
 <br>
