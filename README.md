@@ -33,9 +33,9 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 <br>
 
 ### 🗺️ 시스템 아키텍처
-<img src = "https://github.com/user-attachments/assets/d2fa4517-f686-42b7-83bc-4d7460e1fdd5" width = "80%" height = "80%">
-
+<img src = "https://github.com/user-attachments/assets/11003ee2-1868-4fbe-a3d1-f2afdeae2753" width = "80%" height = "80%">
 <br>
+
 
 ### 배포 절차
 1. main or dev 브랜치로 push 혹은 pull request가 발생하면 Actions CI 스크립트에 따라 빌드 및 테스트가 진행됩니다. 
