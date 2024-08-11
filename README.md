@@ -51,9 +51,9 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 ### 서버 구성
 모든 서버와 DB는 도커 컨테이너로 배포 되었으며 <br>
 현재 운용되고 있는 도메인 서버는 <br>
-리버스 프록시 서버(Nginx)와,
-4가지 도메인 서버(Auth, board, todo, ai), <br>
-Auth, board, todo의 API 문서를 배포하는 swagger 서버도 함께 운용 중입니다. <br>
+리버스 프록시 서버(**Nginx**)와 <br>
+4가지 도메인 서버(**Auth**, **board**, **todo**, **ai**), <br>
+Auth, board, todo의 API 문서를 배포하는 **swagger** 서버도 함께 운용 중입니다. <br>
 <br>
 
 
