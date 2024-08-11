@@ -33,7 +33,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 <br>
 
 ### 🗺️ 시스템 아키텍처
-<img src = "https://github.com/user-attachments/assets/5d9c108f-9359-49c2-88e3-f2c99b6618ea" width = "80%" height = "80%">
+<img src = "https://github.com/user-attachments/assets/d2fa4517-f686-42b7-83bc-4d7460e1fdd5" width = "80%" height = "80%">
 
 <br>
 
