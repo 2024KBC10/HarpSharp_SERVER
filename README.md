@@ -34,17 +34,17 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 
 ### 🗺️ 시스템 아키텍처
 <img src = "https://github.com/user-attachments/assets/5d9c108f-9359-49c2-88e3-f2c99b6618ea" width = "80%" height = "80%">
+
 <br>
 
-github에서 main | dev 브랜치로 push 혹은 pull request가 발생하면 <br>
-actions CI 스크립트에 따라 빌드 및 테스트가 진행됩니다. <br>
-배포 스크립트, appspec.yml, docker.yml, *.jar 등 <br>
-배포에 필요한 파일들을 zip으로 압축해 S3에 업로드 한 이후 <br>
-CodeDeploy에 배포 요청을 전달, 트리거가 발동돼 <br>
-S3 버킷에 업로드 된 deploy.zip 파일을 받아 <br>
-스크립트에 따라 배포를 시작합니다. <br>
-<br>
+### 배포 절차
+1 .github에서 main | dev 브랜치로 push 혹은 pull request가 발생하면 actions CI 스크립트에 따라 빌드 및 테스트가 진행됩니다. <br>
+2. 배포 스크립트, appspec.yml, docker.yml, *.jar 등 배포에 필요한 파일들을 zip으로 압축해 S3에 업로드 합니다.
+3. CodeDeploy에 배포 요청을 전달, 트리거가 발동돼 S3 버킷에 업로드 된 deploy.zip 파일을 받아 스크립트에 따라 배포를 시작합니다. 
 
+<br></br>
+
+### 서버 구성
 모든 서버와 DB는 도커 컨테이너로 배포 되었으며 <br>
 현재 운용되고 있는 도메인 서버는 <br>
 리버스 프록시 서버(Nginx)와,
