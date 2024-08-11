@@ -82,9 +82,9 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 2. Board/TODO CRUD
 3. ChatGPT API를 연동한 챗봇
   
-   
+<br>
 
-#### 🪙 JWT 인증/인가
+### 🪙 JWT 인증/인가
 #### 발급과정
 ![flow_JWT drawio (1)](https://github.com/user-attachments/assets/0ca7e7e3-9a35-4c48-b80d-62876f1e1142)
 1. 클라이언트가 로그인을 요청합니다.
