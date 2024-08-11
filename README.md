@@ -74,7 +74,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 
 ### 🍏 주요 기능
 
-#### JWT 인증/인가
+### JWT 인증/인가
 #### 발급과정
 ![flow_JWT drawio (1)](https://github.com/user-attachments/assets/0ca7e7e3-9a35-4c48-b80d-62876f1e1142)
 1. 클라이언트가 로그인을 요청합니다.
@@ -96,9 +96,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 6. 유효성이 검증된 경우, 기존 도메인 엔드포인트로 해당 요청을 전달합니다.
 
 #### 리버스 프록시 및 API 라우팅
-
 #### Swagger + RestDocs를 활용한 API 명세서 자동화
-
 #### CRUD
 
 <br>
