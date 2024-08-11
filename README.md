@@ -40,10 +40,10 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 ### 배포 절차
 <img src = "https://github.com/user-attachments/assets/d3f86f6a-f84f-4743-a853-3a825f5e638a" width = "30%" height = "10%">
 <br></br>
-1. main or dev 브랜치로 push 혹은 pull request가 발생하면 Actions CI 스크립트에 따라 빌드 및 테스트가 진행됩니다. 
-2. 배포 스크립트, appspec.yml, docker.yml, *.jar 등 배포에 필요한 파일들을 zip으로 압축해 S3에 업로드 합니다. 
-3. CodeDeploy에 배포 요청을 전달, 트리거가 발동돼 S3 버킷에 업로드 된 deploy.zip 파일을 받아 스크립트에 따라 배포를 시작합니다.
-4. 스크립트는 현재 배포 전 서비스의 컨테이너를 내린 후, 배포 폴더 내부의 docker-compose를를 실행 시킵니다.
+1. main or dev 브랜치로 push 혹은 pull request가 발생하면 Actions CI 스크립트에 따라 빌드 및 테스트가 진행됩니다. <br>
+2. 배포 스크립트, appspec.yml, docker.yml, *.jar 등 배포에 필요한 파일들을 zip으로 압축해 S3에 업로드 합니다. <br>
+3. CodeDeploy에 배포 요청을 전달, S3 버킷에 업로드 한 deploy.zip 파일을 EC2로 받아 스크립트에 따라 배포를 시작합니다. <br>
+4. 스크립트는 현재 배포 전 서비스의 컨테이너를 내린 후, 배포 폴더 내부의 docker-compose를 실행 시킵니다.
 
 
 <br></br>
