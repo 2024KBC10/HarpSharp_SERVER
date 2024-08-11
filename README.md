@@ -47,7 +47,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 <br></br>
 
 ### 서버 구성
-![서버 구성 drawio (3)](https://github.com/user-attachments/assets/76e605eb-5fa3-4526-ab36-e62c526d314f)
+<img src = "https://github.com/user-attachments/assets/76e605eb-5fa3-4526-ab36-e62c526d314f" width = "80%" height = "80%">
 
 #### 리버스 프록시 서버 (NGINX)
 - 서버의 앞단에 위치하며 리버스 프록시를 수행합니다.
