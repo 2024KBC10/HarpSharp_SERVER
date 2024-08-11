@@ -27,12 +27,12 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 <br>
 
 ### 🗺️ 시스템 아키텍처
-<img src = "https://github.com/user-attachments/assets/5d9c108f-9359-49c2-88e3-f2c99b6618ea" width = "50%" height = "50%">
+<img src = "https://github.com/user-attachments/assets/5d9c108f-9359-49c2-88e3-f2c99b6618ea" width = "80%" height = "80%">
 
 <br>
 
 ### 🧱 ERD
-<img src = "https://github.com/user-attachments/assets/776a5064-9923-41b4-87ac-86012cf94628" width = "50%" height = "50%">  
+<img src = "https://github.com/user-attachments/assets/776a5064-9923-41b4-87ac-86012cf94628" width = "50%" height = "25%">  
 
 <br>
 
