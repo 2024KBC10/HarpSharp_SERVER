@@ -32,7 +32,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 <br>
 
 ### 🧱 ERD
-![Untitled (1)](https://github.com/user-attachments/assets/d0f6794a-4dff-4e00-b7da-0c53dd787d39)
+![Untitled (1)](https://github.com/user-attachments/assets/d0f6794a-4dff-4e00-b7da-0c53dd787d39){: width="50%" height="50%"}
 
 
 
