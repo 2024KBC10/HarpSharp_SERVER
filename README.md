@@ -80,7 +80,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 2. NGINX 기반의 리버스 프록시 및 API 라우팅 서버
 
 #### API
-1. JWT 기반 로그인/로그아웃 및 인증/인가
+1. JWT+Spring Security 기반 회원 시스템 및 인증/인가
 2. Board/TODO CRUD
 3. ChatGPT API를 연동한 챗봇
   
