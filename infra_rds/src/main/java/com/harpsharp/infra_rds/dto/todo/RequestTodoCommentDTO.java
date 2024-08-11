@@ -1,7 +1,7 @@
 package com.harpsharp.infra_rds.dto.todo;
 
 public record RequestTodoCommentDTO(
-        Long todoPostId,
+        Long postId,
         String username,
         String content
 ) {}

@@ -98,7 +98,7 @@ public class TodoCommentController {
                 LocalDateTime.now(),
                 HttpStatus.CREATED.value(),
                 "UPDATE_TODO_COMMNET_SUCCESSFULLY",
-                "댓글이 성공적으로 수정되었습니다.",
+                "댓글이 성공적으로 작성 되었습니다.",
                 object);
 
         return ResponseEntity
@@ -122,7 +122,7 @@ public class TodoCommentController {
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
                 "UPDATE_TODO_COMMNET_SUCCESSFULLY",
-                "댓글이 성공적으로 수정되었습니다.",
+                "댓글이 성공적으로 수정 되었습니다.",
                 object);
 
         return ResponseEntity
@@ -145,7 +145,7 @@ public class TodoCommentController {
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
                 "DELETE_COMMNET_SUCCESSFULLY",
-                "댓글이 성공적으로 삭제되었습니다."
+                "댓글이 성공적으로 삭제 되었습니다."
         );
 
         return ResponseEntity
