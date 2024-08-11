@@ -75,7 +75,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 
 #### JWT 인증/인가
 #### 발급과정
-<img src = "https://github.com/user-attachments/assets/3ea2d271-35b0-40a1-8763-629b721c4c9f" width = "30%" height = "30%">
+<img src = "https://github.com/user-attachments/assets/c1c75088-bd8f-4229-b73b-d690a65256bb" width = "30%" height = "30%">
 1. 클라이언트가 로그인을 요청합니다.
 2. 스프링 시큐리티에서 회원 DB를 확인해 해당 클라이언트가 가입된 회원인지를 검증합니다.
 3. 회원의 식별자 + username + role을 조합해 Access Token과 Refresh Token을 발급합니다.
