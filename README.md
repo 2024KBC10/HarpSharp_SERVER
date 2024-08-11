@@ -11,7 +11,7 @@ ChatGPT API를 연결한 생성형 AI 서버로 구성되어 있습니다. <br>
  
  <br>
  
-현재 https://harpsharp.com 도메인으로 접근 가능하며
+현재 https://harpsharp.com 도메인으로 접근 가능하며 <br>
 AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 
  <br>
@@ -29,9 +29,9 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 
 ### 운용 환경
 #### HW
-EC2 t3.medium <br>
+![EC2 t3.medium](https://img.shields.io/badge/t3.midium-FF9900?style=for-the-badge&logo=AmazoneEC2&logoColor=white) <br>
 #### OS
-ubuntu <br>
+![ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=Ubuntu&logoColor=white) <br>
 ### DB
 #### 통합 DB
 ![mySQL 8.0](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white) <br>
