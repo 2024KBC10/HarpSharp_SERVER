@@ -64,6 +64,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 #### 서버 배포 및 포스트맨 기반 API 테스트 
 2024.07.17 ~ 2024.08.11
 #### 프론트 연결
-2024.08.10 ~
+2024.08.10 ~ <br>
+#### 협업 링크
 [notion](https://www.notion.so/aa19bf4f9e87408391e2b9d29fb3a2dd) <br>
 [swagger](http://harpsharp.com:9000/) <br>
