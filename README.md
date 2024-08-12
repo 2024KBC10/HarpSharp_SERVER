@@ -124,6 +124,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 + [Swagger + RestDocss를 활용한 API 명세서 자동화와 통합 배포까지의 시행 착오 - 3](https://www.notion.so/NGINX-Swagger-23c001b4363346448189cec06081ccb0)
 + [Response 컨벤션 통합 - 1](https://www.notion.so/Response-6baaebd19a264339906ae2ad38a1379b)
 + [Response 컨벤션 통합 - 2](https://www.notion.so/Response-1c8f497b693a4b1ba47e8d8d3770adbf)
++ [DB를 기존 네트워크와 분리](https://www.notion.so/DB-91d3d602e9bc452eba8b26e6fb25cecd)
 
 
 
