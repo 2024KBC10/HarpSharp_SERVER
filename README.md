@@ -119,10 +119,12 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 +  [NGINX 커스텀 - 2](https://www.notion.so/a81e178bafeb462085358c448ac347fa?v=d5768f826212401b9a504287b1836ad2&p=acb60a4de3dc43eba920238fefa29d64&pm=s)
 +  [JPA 연관 관계 매핑과 영속성 컨택스트](https://www.notion.so/a81e178bafeb462085358c448ac347fa?v=d5768f826212401b9a504287b1836ad2&p=13c0417be7aa4addbd40b336112b8a47&pm=s)
 + [서버 통합 과정에서 겪은 여러 시행착오들](https://www.notion.so/34db9b8e73bc46bca5740a93e89e6a85?pvs=4)
-+ [Swagger + RestDocss를 활용한 API 명세서 자동화와 서버 통합까지의 시행 착오 - 1](https://www.notion.so/swagger-auth-52fd07b1114047d2b14206581a69a0ee)
-+ [Swagger + RestDocss를 활용한 API 명세서 자동화와 서버 통합까지의 시행 착오 - 2](https://www.notion.so/Swagger-cab6507f18fd43c4ae53870acb839219)
++ [Swagger + RestDocss를 활용한 API 명세서 자동화와 통합 배포까지의 시행 착오 - 1](https://www.notion.so/swagger-auth-52fd07b1114047d2b14206581a69a0ee)
++ [Swagger + RestDocss를 활용한 API 명세서 자동화와 통합 배포까지의 시행 착오 - 2](https://www.notion.so/Swagger-cab6507f18fd43c4ae53870acb839219)
++ [Swagger + RestDocss를 활용한 API 명세서 자동화와 통합 배포까지의 시행 착오 - 3](https://www.notion.so/NGINX-Swagger-23c001b4363346448189cec06081ccb0)
 + [Response 컨벤션 통합 - 1](https://www.notion.so/Response-6baaebd19a264339906ae2ad38a1379b)
 + [Response 컨벤션 통합 - 2](https://www.notion.so/Response-1c8f497b693a4b1ba47e8d8d3770adbf)
+
 
 
 <br>
