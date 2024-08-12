@@ -9,8 +9,6 @@ public record ResponsePostDTO(
         String username,
         String title,
         String content,
-        String memoColor,
-        String pinColor,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         LocalDateTime createdAt,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")

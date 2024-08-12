@@ -17,6 +17,8 @@ public class CommentMapper {
         return new ResponseCommentDTO(
                 comment.getUsername(),
                 comment.getContent(),
+                comment.getMemoColor(),
+                comment.getPinColor(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt());
     }

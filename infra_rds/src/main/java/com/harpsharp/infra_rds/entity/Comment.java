@@ -1,7 +1,9 @@
 package com.harpsharp.infra_rds.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
@@ -20,11 +22,24 @@ public class Comment extends BasePost {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @NotNull
+    @Column(name = "memo_color")
+    @ColumnDefault("yellow")
+    String memoColor;
+
+    @NotNull
+    @Column(name = "pin_color")
+    @ColumnDefault("brown")
+    String pinColor;
+
+
     @Builder(toBuilder = true)
-    public Comment(User user, String content, Post post){
+    public Comment(User user, String content, Post post, String memoColor, String pinColor){
         this.setContent(content);
         this.setUser(user);
         this.post = post;
+        this.memoColor = memoColor;
+        this.pinColor = pinColor;
         post.addComment(this);
     }
 

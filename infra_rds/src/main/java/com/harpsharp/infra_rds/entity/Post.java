@@ -42,24 +42,12 @@ public class Post extends BasePost {
         comments.add(comment);
     }
 
-    @NotNull
-    @Column(name = "memo_color")
-    @ColumnDefault("yellow")
-    String memoColor;
-
-    @NotNull
-    @Column(name = "pin_color")
-    @ColumnDefault("brown")
-    String pinColor;
-
     @Builder(toBuilder = true)
-    public Post(Long postId, User user, String content, String title, String memoColor, String pinColor, LocalDateTime createdAt){
+    public Post(Long postId, User user, String content, String title, LocalDateTime createdAt){
         this.postId = postId;
         this.setUser(user);
         this.setContent(content);
         this.title = title;
-        this.memoColor = memoColor;
-        this.pinColor = pinColor;
         this.createdAt = createdAt;
         this.comments = new ArrayList<>();
     }
