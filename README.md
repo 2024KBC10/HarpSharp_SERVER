@@ -92,8 +92,9 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 1. 클라이언트가 로그인을 요청합니다.
 2. 스프링 시큐리티에서 회원 DB를 확인해 해당 클라이언트가 가입된 회원인지를 검증합니다.
 3. 회원의 식별자 + username + role을 조합해 Access Token과 Refresh Token을 발급합니다.
-4. Refresh Token은 차후 Access Token 검증 과정에 활용되며, Redis에 저장합니다. (Key: Access Token, Value: RefreshEntity)
-5. HTTP 통신을 통해 Access Token은 헤더에 담고, Refresh Token은 쿠키에 담아 클라이언트에게 전달합니다.
+4. Refresh Token은 차후 Access Token 검증 과정에 활용되며, Redis에 저장합니다.
+   (Key: Access Token, Value: RefreshEntity)
+6. HTTP 통신을 통해 Access Token은 헤더에 담고, Refresh Token은 쿠키에 담아 클라이언트에게 전달합니다.
 
 <br>
 
