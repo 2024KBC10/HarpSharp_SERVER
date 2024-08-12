@@ -32,7 +32,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 
 <br>
 
-### 🗺️ 시스템 아키텍처
+### 🌏 시스템 아키텍처
 <img src = "https://github.com/user-attachments/assets/11003ee2-1868-4fbe-a3d1-f2afdeae2753" width = "80%" height = "80%">
 <br>
 
