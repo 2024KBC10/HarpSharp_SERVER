@@ -2,10 +2,15 @@ package com.harpsharp.auth.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.utils.CustomUserDetails;
+import com.harpsharp.infra_rds.dto.response.ResponseWithData;
 import com.harpsharp.infra_rds.dto.user.LoginDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.auth.entity.RefreshToken;
 import com.harpsharp.auth.service.RefreshTokenService;
+import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
+import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.mapper.UserMapper;
+import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +32,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 
 @Slf4j
@@ -36,6 +42,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final RefreshTokenService refreshTokenService;
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -85,12 +93,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         refreshTokenService.save(refreshEntity);
 
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("INVALID_USERNAME"));
 
-        ApiResponse responseDTO = new ApiResponse(
+        ResponseWithData<Map<Long, ResponseUserDTO>> responseDTO = new ResponseWithData<>(
                 LocalDateTime.now(),
                 HttpStatus.CREATED.value(),
                 "TOKEN_PUBLISHED_SUCCESSFULLY",
-                username + "님이 로그인 했습니다.");
+                username + "님이 로그인 했습니다.",
+                userMapper.toMap(user));
 
 
         String json = objectMapper.writeValueAsString(responseDTO);
@@ -109,6 +121,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
+
 
         ApiResponse responseDTO = new ApiResponse(
                 LocalDateTime.now(),

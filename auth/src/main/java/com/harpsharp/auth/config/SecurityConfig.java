@@ -5,6 +5,8 @@ import com.harpsharp.auth.jwt.*;
 import com.harpsharp.auth.oauth2.CustomSuccessHandler;
 import com.harpsharp.auth.service.CustomOAuth2UserService;
 import com.harpsharp.auth.service.RefreshTokenService;
+import com.harpsharp.infra_rds.mapper.UserMapper;
+import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +42,8 @@ public class SecurityConfig {
     private final RefreshTokenService refreshTokenService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final ObjectMapper objectMapper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Bean
     public CookieSameSiteSupplier applicationCookieSameSiteSupplier() {
@@ -82,7 +86,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .addFilterBefore(new ExceptionHandlerFilter(objectMapper), LoginFilter.class)
                 .addFilterBefore(new JwtFilter(jwtUtil,objectMapper), LoginFilter.class)
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), refreshTokenService, jwtUtil, objectMapper), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), refreshTokenService, jwtUtil, objectMapper, userRepository, userMapper), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshTokenService,objectMapper), LogoutFilter.class)
                 .sessionManagement((session)->session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));

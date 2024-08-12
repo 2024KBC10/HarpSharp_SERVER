@@ -185,7 +185,19 @@ class AuthApplicationTests {
 										.description("로그인 여부"),
 								fieldWithPath("details")
 										.type(JsonFieldType.STRING)
-										.description("상세 메세지")
+										.description("상세 메세지"),
+								fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성자 정보"),
+								fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("닉네임"),
+								fieldWithPath("data.*.email").type(JsonFieldType.STRING).description("이메일"),
+								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("가입 날짜"),
+								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 날짜"),
+								fieldWithPath("data.*.socialType").type(JsonFieldType.STRING).description("소셜 계정 가입 타입"),
+								fieldWithPath("data.*.role").type(JsonFieldType.STRING).description("권한"),
+								fieldWithPath("data.*.posts").type(JsonFieldType.OBJECT).description("작성글"),
+								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("작성 댓글"),
+								fieldWithPath("data.*.todoPosts").type(JsonFieldType.OBJECT).description("작성글(TODO)"),
+								fieldWithPath("data.*.todoComments").type(JsonFieldType.OBJECT).description("작성 댓글(TODO)")
+
 						),
 						responseHeaders(headerWithName("Authorization").description("발급된 access token"))
 				));
@@ -257,15 +269,15 @@ class AuthApplicationTests {
 										.description("상세 메세지"),
 								fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성자 정보"),
 								fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("닉네임"),
-								fieldWithPath("data.*.email").type(JsonFieldType.STRING).description("게시글 제목"),
-								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("게시글 내용"),
-								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("게시글 내용"),
-								fieldWithPath("data.*.socialType").type(JsonFieldType.STRING).description("게시글 내용"),
-								fieldWithPath("data.*.role").type(JsonFieldType.STRING).description("작성 일자"),
-								fieldWithPath("data.*.posts").type(JsonFieldType.OBJECT).description("작성 일자"),
-								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("수정 일자"),
-								fieldWithPath("data.*.todoPosts").type(JsonFieldType.OBJECT).description("작성 일자"),
-								fieldWithPath("data.*.todoComments").type(JsonFieldType.OBJECT).description("수정 일자"))
+								fieldWithPath("data.*.email").type(JsonFieldType.STRING).description("이메일"),
+								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("가입 날짜"),
+								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 날짜"),
+								fieldWithPath("data.*.socialType").type(JsonFieldType.STRING).description("소셜 계정 가입 타입"),
+								fieldWithPath("data.*.role").type(JsonFieldType.STRING).description("권한"),
+								fieldWithPath("data.*.posts").type(JsonFieldType.OBJECT).description("작성글"),
+								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("작성 댓글"),
+								fieldWithPath("data.*.todoPosts").type(JsonFieldType.OBJECT).description("작성글(TODO)"),
+								fieldWithPath("data.*.todoComments").type(JsonFieldType.OBJECT).description("작성 댓글(TODO)"))
 				));
 	}
 
