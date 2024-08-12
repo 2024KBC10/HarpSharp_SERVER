@@ -1,6 +1,7 @@
 package com.harpsharp.auth.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.harpsharp.auth.service.UserService;
 import com.harpsharp.auth.utils.CustomUserDetails;
 import com.harpsharp.infra_rds.dto.response.ResponseWithData;
 import com.harpsharp.infra_rds.dto.user.LoginDTO;
@@ -32,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 
@@ -42,32 +44,27 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final RefreshTokenService refreshTokenService;
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final UserService userService;
+
+
+    private String username;
+    private String password;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        try {
-            // JSON 문자열 읽기
-            String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
-            // JSON 파싱
-            LoginDTO loginDTO = objectMapper.readValue(messageBody, LoginDTO.class);
-
-            // 사용자 이름과 비밀번호 추출
-            String username = loginDTO.username();
-            String password = loginDTO.password();
-
+            String username = obtainUsername(request);
+            String password = obtainPassword(request);
+//
+            System.out.println("username = " + username);
+            System.out.println("password = " + password);
 
             // 인증 토큰 생성
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
 
             // 인증 시도
             return authenticationManager.authenticate(authToken);
-        } catch (IOException e) {
-            System.out.println("e = " + e);
 
-            throw new AuthenticationServiceException("인증에 실패했습니다.", e);
-        }
+
     }
 
     @Override
@@ -93,16 +90,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         refreshTokenService.save(refreshEntity);
 
-        User user = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("INVALID_USERNAME"));
+        Map<Long, ResponseUserDTO> user = userService.findByUsername(username);
 
         ResponseWithData<Map<Long, ResponseUserDTO>> responseDTO = new ResponseWithData<>(
                 LocalDateTime.now(),
                 HttpStatus.CREATED.value(),
                 "TOKEN_PUBLISHED_SUCCESSFULLY",
                 username + "님이 로그인 했습니다.",
-                userMapper.toMap(user));
+                user);
 
 
         String json = objectMapper.writeValueAsString(responseDTO);
@@ -130,5 +125,35 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 "유효하지 않은 접근입니다.");
         response.getWriter().write(objectMapper.writeValueAsString(responseDTO));
         response.getWriter().flush();
+    }
+
+    @Override
+    protected String obtainUsername(HttpServletRequest request) {
+        if (username == null) {
+            parseRequest(request);
+        }
+        return username;
+    }
+
+    @Override
+    protected String obtainPassword(HttpServletRequest request) {
+        if (password == null) {
+            parseRequest(request);
+        }
+        return password;
+    }
+
+    private void parseRequest(HttpServletRequest request) {
+        try {
+            String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+            Map<String, String> loginData = objectMapper.readValue(messageBody, Map.class);
+
+            this.username = loginData.get("username");
+            this.password = loginData.get("password");
+
+        } catch (IOException e) {
+            log.error("Error parsing login request", e);
+            throw new AuthenticationServiceException("Invalid login data format", e);
+        }
     }
 }

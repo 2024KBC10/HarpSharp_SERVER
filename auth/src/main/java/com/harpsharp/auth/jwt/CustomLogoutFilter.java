@@ -36,7 +36,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
 
         if(accessToken == null || !accessToken.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
-            System.out.println("accessToken = " + accessToken);
             return;
         }
 
@@ -56,6 +55,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
         //get refresh token
         String refresh = null;
         Cookie[] cookies = request.getCookies();
+
+        if(cookies == null) throw new IllegalArgumentException("INVALID_COOKIE");
 
         for (Cookie cookie : cookies) {
 

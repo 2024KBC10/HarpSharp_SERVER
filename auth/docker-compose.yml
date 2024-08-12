@@ -14,8 +14,11 @@ services:
       SPRING_PROFILES_ACTIVE: prod
     networks:
       - harpsharp
+      - datasource
 
 networks:
   harpsharp:
+    external: true
+  datasource:
     external: true
 

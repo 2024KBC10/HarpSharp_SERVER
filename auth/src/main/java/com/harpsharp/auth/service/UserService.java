@@ -30,7 +30,6 @@ public class UserService {
     private final RefreshTokenService refreshTokenService;
 
     private final UserMapper userMapper;
-    private final PostRepository postRepository;
 
     private final PostMapper postMapper;
     private final CommentMapper commentMapper;
