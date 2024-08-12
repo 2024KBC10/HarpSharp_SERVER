@@ -37,6 +37,8 @@ public class PostMapper {
                 post.getUsername(),
                 post.getTitle(),
                 post.getContent(),
+                post.getMemoColor(),
+                post.getPinColor(),
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
                 commentMapper.toMap(post.getComments()));

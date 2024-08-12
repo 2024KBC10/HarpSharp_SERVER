@@ -114,8 +114,6 @@ public class UserController {
 
         Long userId = jwtUtil.getUserId(accessToken);
         String username = jwtUtil.getUsername(accessToken);
-        System.out.println("DTO password: " + deleteDTO.password());
-        System.out.println("Entity password: " + userService.findPasswordByUsername(username));
 
         if(!passwordEncoder.matches(deleteDTO.password(), userService.findPasswordByUsername(username)))
             throw new IllegalArgumentException("INVALID_PASSWORD");

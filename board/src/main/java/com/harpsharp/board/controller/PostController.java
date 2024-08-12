@@ -97,7 +97,9 @@ public class PostController {
                         requestPostDTO.postId(),
                         requestPostDTO.username(),
                         requestPostDTO.title(),
-                        requestPostDTO.content());
+                        requestPostDTO.content(),
+                        requestPostDTO.memoColor(),
+                        requestPostDTO.pinColor());
 
         Map<Long, ResponsePostDTO> object = postService.updatePost(updated);
 
