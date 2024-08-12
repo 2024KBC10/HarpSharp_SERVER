@@ -106,7 +106,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 3. Request에 담긴 Access Token을 꺼내 유효성을 검증합니다.
 4. Redis 내부에 Access Token을 키로 가진 Refresh Entity가 존재하는 지 확인합니다.
 5. Access Token과 Refresh Token의 유효성 여부를 NGINX로 전달합니다.
-6. 유효성이 검증된 경우, 기존 도메인 엔드포인트로 해당 요청을 전달합니다.
+6. 유효성이 검증된 경우, 기존 엔드포인트로 해당 요청을 전달합니다.
    
 
 <br>
