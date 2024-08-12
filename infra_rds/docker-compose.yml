@@ -15,7 +15,7 @@ services:
     expose:
       - "3306"
     networks:
-      - harpsharp
+      - datasource
 
   redis:
     container_name: redis
@@ -23,8 +23,8 @@ services:
     expose:
       - "6379"
     networks:
-      - harpsharp
+      - datasource
 
 networks:
-  harpsharp:
+  datasource:
     external: true
