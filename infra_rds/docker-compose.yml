@@ -23,8 +23,8 @@ services:
     expose:
       - "6379"
     networks:
-      - datasource
+      - harpsharp
 
 networks:
-  datasource:
+  harpsharp:
     external: true

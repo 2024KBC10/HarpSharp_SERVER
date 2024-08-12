@@ -24,12 +24,10 @@ public class Comment extends BasePost {
 
     @NotNull
     @Column(name = "memo_color")
-    @ColumnDefault("yellow")
     String memoColor;
 
     @NotNull
     @Column(name = "pin_color")
-    @ColumnDefault("brown")
     String pinColor;
 
 
@@ -49,5 +47,15 @@ public class Comment extends BasePost {
 
     public void clearPost(){
         post = null;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.memoColor == null) {
+            this.memoColor = "yellow";
+        }
+        if (this.pinColor == null) {
+            this.pinColor = "brown";
+        }
     }
 }
