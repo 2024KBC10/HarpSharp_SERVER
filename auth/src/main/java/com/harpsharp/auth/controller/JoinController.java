@@ -6,6 +6,7 @@ import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 public class JoinController {
     private final UserService userService;
 
-    @PostMapping(value="/join")
+    @PostMapping(value="/join", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ApiResponse> joinUser(@RequestBody JoinDTO joinDTO){
         userService.registerUser(joinDTO, "ROLE_USER");
 
