@@ -105,7 +105,7 @@ class TodoApplicationTests {
 						post("/login")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(loginJson))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andReturn();
 
 		accessToken  = result.getResponse().getHeader("Authorization").split(" ")[1];
