@@ -130,7 +130,7 @@ class TodoApplicationTests {
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(postJson))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andReturn();
 
 		String responseContent = result.getResponse().getContentAsString();
@@ -159,7 +159,7 @@ class TodoApplicationTests {
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(postJson))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andReturn();
 
 		String responseContent = result.getResponse().getContentAsString();
@@ -178,7 +178,7 @@ class TodoApplicationTests {
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(commentJson))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andReturn();
 
 		responseContent = resultComment.getResponse().getContentAsString();
@@ -247,7 +247,7 @@ class TodoApplicationTests {
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(objectMapper.writeValueAsString(postDTO)))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andDo(document("Post", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("작성자"),
@@ -501,7 +501,7 @@ class TodoApplicationTests {
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(objectMapper.writeValueAsString(commentDTO)))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andDo(document("Write Todo Comment", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("postId").description("Todo Post ID"),
