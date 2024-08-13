@@ -106,8 +106,6 @@ public class UserService {
                     .build();
         }
 
-
-
         if(updatedUsername == null){
             updatedUsername = existUser.getUsername();
         }
@@ -119,7 +117,7 @@ public class UserService {
         }
 
         existUser.setUsername(updatedUsername);
-        existUser.setPassword(updatedPassword);
+        existUser.setPassword(passwordEncoder.encode(updatedPassword));
         existUser.setEmail(updatedEmail);
 
         System.out.println("updatedUser.getUserId() = " + existUser.getUserId());
