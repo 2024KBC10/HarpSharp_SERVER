@@ -1,6 +1,8 @@
 package com.harpsharp.auth.controller;
 
 
+import com.harpsharp.auth.entity.RefreshToken;
+import com.harpsharp.auth.service.RefreshTokenService;
 import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
 import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
 import com.harpsharp.infra_rds.dto.response.ResponseWithData;
@@ -13,6 +15,8 @@ import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.UserService;
+import com.harpsharp.infra_rds.mapper.UserMapper;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +25,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
@@ -35,6 +38,8 @@ public class UserController {
     private final JwtUtil jwtUtil;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenService refreshTokenService;
+    private final UserMapper userMapper;
 
 
     @GetMapping("/user")
@@ -59,9 +64,9 @@ public class UserController {
     }
 
     @PatchMapping("/user")
-    public ResponseEntity<ApiResponse> updateUser(
+    public ResponseEntity<ResponseWithData<Map<Long, ResponseUserDTO>>> updateUser(
             HttpServletRequest request,
-            @RequestBody UpdateUserDTO updatedDTO) throws IOException {
+            @RequestBody UpdateUserDTO updatedDTO) throws Exception {
 
         String accessToken = request.getHeader("Authorization");
 
@@ -72,30 +77,57 @@ public class UserController {
         accessToken = accessToken.substring("Bearer ".length());
 
         String username = jwtUtil.getUsername(accessToken);
-        Long userId = jwtUtil.getUserId(accessToken);
 
-        userService.updateUser(userId, updatedDTO);
+        Map<Long, ResponseUserDTO> object = userService.updateUser(username, updatedDTO);
 
-        String redirectURI = ServletUriComponentsBuilder
-                .fromCurrentRequestUri()
-                .replacePath("/reissue")
-                .toUriString();
+        ResponseUserDTO user =
+                object.values().stream().findFirst().orElseThrow(()-> new RuntimeException("USER_NOT_FOUND"));
 
+
+        String newAccess  = jwtUtil.createAccessToken (user.username(), user.role());
+        String newRefresh = jwtUtil.createRefreshToken(user.username(), user.role());
+
+        refreshTokenService.deleteByToken(accessToken);
+
+        System.out.println("ok");
+        RefreshToken refreshEntity = RefreshToken
+                .builder()
+                .accessToken(newAccess)
+                .refreshToken(newRefresh)
+                .build();
+
+        refreshTokenService.save(refreshEntity);
+
+
+        System.out.println("ok delete");
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(redirectURI));
-        headers.add("Authorization", "Bearer " + accessToken);
-        System.out.println("headers = " + headers);
 
-        ApiResponse apiResponse =
-                new ApiResponse(
-                        LocalDateTime.now(),
-                        HttpStatus.SEE_OTHER.value(),
-                        "GO_TO_REISSUE",
-                        "유저 정보를 수정하였습니다. 토큰을 재발급 합니다."
-                );
+        headers.set("Authorization", "Bearer " + newAccess);
+
+        Cookie refreshCookie = jwtUtil.createCookie("refresh", newRefresh);
+        String cookieHeader = String.format("%s=%s; Path=%s; HttpOnly; Max-Age=%d",
+                refreshCookie.getName(),
+                refreshCookie.getValue(),
+                refreshCookie.getPath(),
+                refreshCookie.getMaxAge());
+
+        System.out.println("ok cookie = " + cookieHeader);
+
+        headers.add(HttpHeaders.SET_COOKIE, cookieHeader);
+
+
+        ResponseWithData<Map<Long, ResponseUserDTO>> apiResponse =
+                new ResponseWithData<Map<Long,ResponseUserDTO>>(
+                LocalDateTime.now(),
+                HttpStatus.OK.value(),
+                "USER_UPDATED_SUCCESSFULLY",
+                "유저 정보가 성공적으로 수정되었습니다.",
+                        object);
+        System.out.println("object = " + object);
+        System.out.println("apiResponse = " + apiResponse);
 
         return ResponseEntity
-                .status(HttpStatus.SEE_OTHER)
+                .status(HttpStatus.OK)
                 .headers(headers)
                 .body(apiResponse);
     }
@@ -112,13 +144,13 @@ public class UserController {
 
         accessToken = accessToken.substring("Bearer ".length());
 
-        Long userId = jwtUtil.getUserId(accessToken);
         String username = jwtUtil.getUsername(accessToken);
 
         if(!passwordEncoder.matches(deleteDTO.password(), userService.findPasswordByUsername(username)))
             throw new IllegalArgumentException("INVALID_PASSWORD");
 
-        userService.deleteById(userId, accessToken);
+        userService.deleteByUsername(username, accessToken);
+        jwtUtil.deleteByToken(accessToken);
 
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
@@ -140,17 +172,12 @@ public class UserController {
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("INVALID_INFO"));
 
-        Map<Long, ResponsePostDTO> data = user.posts();
-
-        ResponseWithData<Map<Long, ResponsePostDTO>> responseWithData
-                = new ResponseWithData<>(
+        return new ResponseWithData<>(
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
                 "SELECT_POSTS_BY_INFO_SUCCESSFULLY",
                 user.username() + "님이 작성한 게시글 입니다",
-                data);
-
-        return responseWithData;
+                user.posts());
     }
 
     @GetMapping("/user/board/comments")
@@ -163,17 +190,12 @@ public class UserController {
                         .orElseThrow(() -> new IllegalArgumentException("INVALID_INFO"));
 
 
-        Map<Long, ResponseCommentDTO> data = user.comments();
-
-        ResponseWithData<Map<Long, ResponseCommentDTO>> responseWithData
-                = new ResponseWithData<>(
+        return new ResponseWithData<>(
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
                 "SELECT_POSTS_BY_INFO_SUCCESSFULLY",
                 user.username() + "님이 작성한 댓글 입니다",
-                data);
-
-        return responseWithData;
+                user.comments());
     }
 
     @GetMapping("/user/todo/posts")
@@ -185,17 +207,12 @@ public class UserController {
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("INVALID_INFO"));
 
-        Map<Long, ResponseTodoPostDTO> data = user.todoPosts();
-
-        ResponseWithData<Map<Long, ResponseTodoPostDTO>> responseWithData
-                = new ResponseWithData<>(
+        return new ResponseWithData<>(
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
                 "SELECT_POSTS_BY_INFO_SUCCESSFULLY",
                 user.username() + "님이 작성한 Todo 게시글 입니다",
-                data);
-
-        return responseWithData;
+                user.todoPosts());
     }
 
     @GetMapping("/user/todo/comments")
@@ -207,18 +224,12 @@ public class UserController {
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("INVALID_INFO"));
 
-
-        Map<Long, ResponseTodoCommentDTO> data = user.todoComments();
-
-        ResponseWithData<Map<Long, ResponseTodoCommentDTO>> responseWithData
-                = new ResponseWithData<>(
+        return new ResponseWithData<>(
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
                 "SELECT_POSTS_BY_INFO_SUCCESSFULLY",
                 user.username() + "님이 작성한 Todo 댓글 입니다",
-                data);
-
-        return responseWithData;
+                user.todoComments());
     }
 
 }

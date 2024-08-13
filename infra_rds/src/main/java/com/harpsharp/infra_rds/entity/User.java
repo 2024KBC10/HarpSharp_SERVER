@@ -3,10 +3,7 @@ package com.harpsharp.infra_rds.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -18,7 +15,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @DynamicUpdate
 @Table(name = "users")
@@ -63,16 +61,16 @@ public class User {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user")
-    private List<Post> posts = new ArrayList<>();
+    private List<Post> posts;
 
     @OneToMany(mappedBy = "user")
-    private List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments;
 
     @OneToMany(mappedBy = "user")
-    private List<TodoPost> todoPosts = new ArrayList<>();
+    private List<TodoPost> todoPosts;
 
     @OneToMany(mappedBy = "user")
-    private List<TodoComment> todoComments = new ArrayList<>();
+    private List<TodoComment> todoComments;
 
     @Builder(toBuilder = true)
     public User(String username, String password, String email, String socialType, String role){
@@ -81,6 +79,10 @@ public class User {
         this.email = email;
         this.role = role;
         this.socialType = socialType;
+        this.posts = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.todoPosts = new ArrayList<>();
+        this.todoComments = new ArrayList<>();
     }
 
     public User updateUser(User updatedUser){

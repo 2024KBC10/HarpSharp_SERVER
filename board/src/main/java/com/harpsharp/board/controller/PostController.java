@@ -62,7 +62,7 @@ public class PostController {
                 savedPost);
 
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
     }
 

@@ -7,14 +7,14 @@ import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.dto.user.JoinDTO;
 import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
-import com.harpsharp.infra_rds.dto.user.RequestUserDTO;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
 import com.harpsharp.infra_rds.mapper.*;
-import com.harpsharp.infra_rds.repository.PostRepository;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +25,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
-    private final RefreshTokenService refreshTokenService;
 
     private final UserMapper userMapper;
-
     private final PostMapper postMapper;
     private final CommentMapper commentMapper;
     private final TodoCommentMapper todoCommentMapper;
@@ -43,15 +40,17 @@ public class UserService {
 
         if (userRepository.existsByEmail(email)) {
             throw UserAlreadyExistsException.builder()
-                    .code("USER_ALREADY_EXISTS")
-                    .message("User with email " + joinDTO.email() + " already exists.")
+                    .code(409)
+                    .message("USER_ALREADY_EXISTS")
+                    .details("이미 존재하는 이메일입니다.")
                     .build();
         }
 
         if(userRepository.existsByUsername(username)) {
             throw UserAlreadyExistsException.builder()
-                    .code("USER_ALREADY_EXISTS")
-                    .message("User with username " + joinDTO.username() + " already exists.")
+                    .code(409)
+                    .message("USER_ALREADY_EXISTS")
+                    .message("이미 존재하는 이메일입니다.")
                     .build();
         }
 
@@ -62,8 +61,13 @@ public class UserService {
                 .role(role)
                 .socialType("harp")
                 .build();
-
+        
+        ;
+        
+        
         userRepository.save(user);
+        System.out.println("userMapper.toMap(user) = " + userMapper.toMap(user));
+        
         return userMapper.toMap(user);
     }
 
@@ -71,15 +75,24 @@ public class UserService {
         userRepository.deleteAll();
     }
 
-    public void updateUser(Long userId, UpdateUserDTO updatedDTO){
+    public Map<Long, ResponseUserDTO> updateUser(String username, UpdateUserDTO updatedDTO){
         String updatedUsername = updatedDTO.updatedUsername();
         String updatedPassword = updatedDTO.updatedPassword();
         String updatedEmail = updatedDTO.updatedEmail();
 
+        User existUser = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("INVALID_USERNAME"));
+
+        if(!passwordEncoder.matches(updatedDTO.password(), existUser.getPassword())){
+            throw new IllegalArgumentException("INVALID_PASSWORD");
+        }
+
         if(userRepository.existsByUsername(updatedUsername)){
             throw UserAlreadyExistsException
                     .builder()
-                    .code("USER_NAME_ALREADY_EXISTS")
+                    .code(409)
+                    .message("USER_ALREADY_EXISTS")
                     .message("이미 존재하는 닉네임입니다.")
                     .build();
         }
@@ -87,18 +100,13 @@ public class UserService {
         if(userRepository.existsByEmail(updatedEmail)){
             throw UserAlreadyExistsException
                     .builder()
-                    .code("USER_EMAIL_ALREADY_EXISTS")
-                    .message("이미 존재하는 이메일입니다.")
+                    .code(409)
+                    .message("USER_ALREADY_EXISTS")
+                    .details("이미 존재하는 이메일입니다.")
                     .build();
         }
 
-        User existUser = userRepository
-                .findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("INVALID_USER_ID"));
 
-        if(!passwordEncoder.matches(updatedDTO.password(), existUser.getPassword())){
-            throw new IllegalArgumentException("INVALID_PASSWORD");
-        }
 
         if(updatedUsername == null){
             updatedUsername = existUser.getUsername();
@@ -110,16 +118,17 @@ public class UserService {
             updatedEmail = existUser.getEmail();
         }
 
-        User updatedUser = existUser.toBuilder()
-                .username(updatedUsername)
-                .password(passwordEncoder.encode(updatedPassword))
-                .email(updatedEmail)
-                .build();
+        existUser.setUsername(updatedUsername);
+        existUser.setPassword(updatedPassword);
+        existUser.setEmail(updatedEmail);
 
-        if(updatedUser == null) throw new IllegalArgumentException("USER_NOT_FOUND");
+        System.out.println("updatedUser.getUserId() = " + existUser.getUserId());
 
+        userRepository.save(existUser);
 
-        userRepository.save(existUser.updateUser(updatedUser));
+        System.out.println("existUser = " + existUser);
+
+        return userMapper.toMap(existUser);
     }
 
     public Map<Long, ResponseUserDTO> findById(Long userId){
@@ -134,13 +143,12 @@ public class UserService {
         return userMapper.toMap(user);
     }
 
-    public Map<Long, ResponseUserDTO> deleteById(Long userId, String accessToken){
+    public Map<Long, ResponseUserDTO> deleteByUsername(String username, String accessToken){
         User deletedUser = userRepository
-                .findById(userId)
+                .findByUsername(username)
                 .orElseThrow(()->new IllegalArgumentException("INVALID_USER_ID"));
 
-        userRepository.deleteById(userId);
-        refreshTokenService.deleteByToken(accessToken);
+        userRepository.deleteById(deletedUser.getUserId());
 
         return userMapper.toMap(deletedUser);
     }

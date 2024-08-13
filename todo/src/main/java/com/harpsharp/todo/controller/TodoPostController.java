@@ -73,7 +73,7 @@ public class TodoPostController {
                         todoPost);
 
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
     }
 

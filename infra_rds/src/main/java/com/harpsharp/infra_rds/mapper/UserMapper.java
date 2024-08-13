@@ -10,6 +10,7 @@ import com.harpsharp.infra_rds.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +47,7 @@ public class UserMapper {
         return new RequestUserDTO(
                 user.getUsername(),
                 user.getEmail(),
-                user.getRole(),
-                user.getSocialType());
+                user.getRole());
     }
 
     public ResponseUserDTO userToResponseDTO(User user){
@@ -76,6 +76,10 @@ public class UserMapper {
     public Map<Long, ResponseUserDTO> toMap(List<User> users){
         return users.stream().collect(
                 Collectors.toMap(User::getUserId, this::userToResponseDTO));
+    }
+
+    public List<ResponseUserDTO> mapToList(Map<Long, ResponseUserDTO> object){
+        return new ArrayList<>(object.values());
     }
 
 }

@@ -72,7 +72,7 @@ public class CommentController {
                 object);
 
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
 
     }

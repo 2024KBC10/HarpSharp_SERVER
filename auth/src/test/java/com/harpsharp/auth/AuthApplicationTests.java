@@ -451,7 +451,7 @@ class AuthApplicationTests {
 								.cookie(refreshToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(updateJson))
-				.andExpect(status().is3xxRedirection())
+				.andExpect(status().isOk())
 				.andDo(document("Update", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("password").description("기존 비밀번호"),
@@ -474,8 +474,18 @@ class AuthApplicationTests {
 										.description("업데이트 여부"),
 								fieldWithPath("details")
 										.type(JsonFieldType.STRING)
-										.description("상세 메세지")
-								)
+										.description("상세 메세지"),
+								fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성자 정보"),
+								fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("닉네임"),
+								fieldWithPath("data.*.email").type(JsonFieldType.STRING).description("이메일"),
+								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("가입 날짜"),
+								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 날짜"),
+								fieldWithPath("data.*.socialType").type(JsonFieldType.STRING).description("소셜 계정 가입 타입"),
+								fieldWithPath("data.*.role").type(JsonFieldType.STRING).description("권한"),
+								fieldWithPath("data.*.posts").type(JsonFieldType.OBJECT).description("작성글"),
+								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("작성 댓글"),
+								fieldWithPath("data.*.todoPosts").type(JsonFieldType.OBJECT).description("작성글(TODO)"),
+								fieldWithPath("data.*.todoComments").type(JsonFieldType.OBJECT).description("작성 댓글(TODO)"))
 				));
 	}
 

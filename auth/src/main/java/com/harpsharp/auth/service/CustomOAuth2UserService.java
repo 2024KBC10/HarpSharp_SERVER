@@ -1,14 +1,17 @@
 package com.harpsharp.auth.service;
 
-import com.harpsharp.auth.oauth2.GoogleResponse;
-import com.harpsharp.auth.oauth2.KaKaoResponse;
-import com.harpsharp.auth.oauth2.NaverResponse;
+import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
+import com.harpsharp.infra_rds.dto.oauth2.GoogleResponse;
+import com.harpsharp.infra_rds.dto.oauth2.KaKaoResponse;
+import com.harpsharp.infra_rds.dto.oauth2.NaverResponse;
 import com.harpsharp.auth.oauth2.*;
+import com.harpsharp.infra_rds.dto.oauth2.OAuth2Response;
 import com.harpsharp.infra_rds.dto.user.RequestUserDTO;
 import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.mapper.UserMapper;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Request;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -29,7 +32,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-
         if(registrationId.equals("naver")){
             oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
         }
@@ -42,29 +44,23 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         if(oAuth2Response == null) return null;
 
+        String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
         String email = oAuth2Response.getEmail();
 
-        User duplicated = userRepository
-                .findByUsername(email)
-                .orElseThrow(IllegalArgumentException::new);
+        RequestUserDTO requestUserDTO = new RequestUserDTO(username, email, "ROLE_USER");
 
-        if(duplicated == null){
-            User user = User.builder()
-                    .username(oAuth2Response.getUsername())
-                    .email(email)
-                    .role("ROLE_USER")
-                    .socialType(registrationId)
-                    .build();
+        boolean existed = userRepository.existsByEmail(email);
 
-            userRepository.save(user);
+        if(existed) throw new UserAlreadyExistsException(409, "USER_ALEADY_EXISTED", "이미 존재하는 유저입니다.");
 
-            RequestUserDTO requestUserDTO = userMapper.userToRequestDTO(user);
+        User user = User.builder()
+                .username(username)
+                .email(email)
+                .role("ROLE_USER")
+                .socialType(registrationId)
+                .build();
 
-            return new CustomOAuth2User(requestUserDTO);
-        }
-
-
-
-        return null;
+        userRepository.save(user);
+        return new CustomOAuth2User(requestUserDTO);
     }
 }

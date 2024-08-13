@@ -3,6 +3,7 @@ package com.harpsharp.auth.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.service.RefreshTokenService;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
+import com.harpsharp.infra_rds.util.ResponseUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,8 +22,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
     private final JwtUtil jwtUtil;
-    private final RefreshTokenService refreshTokenService;
-    private final ObjectMapper objectMapper;
+    private final ResponseUtils responseUtils;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -34,20 +34,14 @@ public class CustomLogoutFilter extends GenericFilterBean {
         String accessToken = request.getHeader("Authorization");
         String requestUri = request.getRequestURI();
 
-        if(accessToken == null || !accessToken.startsWith("Bearer ")){
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-
         if (!requestUri.matches("^\\/logout$")) {
+            System.out.println("pass the logout filter");
             filterChain.doFilter(request, response);
             return;
         }
 
         String requestMethod = request.getMethod();
         if (!requestMethod.equals("POST")) {
-
             filterChain.doFilter(request, response);
             return;
         }
@@ -59,118 +53,30 @@ public class CustomLogoutFilter extends GenericFilterBean {
         if(cookies == null) throw new IllegalArgumentException("INVALID_COOKIE");
 
         for (Cookie cookie : cookies) {
-
             if (cookie.getName().equals("refresh")) {
                 refresh = cookie.getValue();
             }
         }
 
-        //refresh null check
-        if (refresh == null) {
-            ApiResponse apiResponse =
-                    new ApiResponse(
-                            LocalDateTime.now(),
-                            HttpStatus.UNAUTHORIZED.value(),
-                            "INVALID_ACCESS",
-                            "유효하지 않은 접근입니다."
-                    );
-            response.setStatus(HttpStatus.OK.value());
-            response.setContentType("application/json;charset=UTF-8");
-            String json = objectMapper.writeValueAsString(apiResponse);
-            response.getWriter().write(json);
-            response.getWriter().flush();
-            System.out.println("refresh is null");
-            return;
-        }
+        if(refresh == null) throw new IllegalArgumentException("INVALID_REFRESH_TOKEN");
 
-        //expired check
-        try {
-            jwtUtil.isExpired(refresh);
-        } catch (ExpiredJwtException e) {
+        if(jwtUtil.isExpired(refresh)) throw new IllegalArgumentException("REFRESH_TOKEN_EXPIRED");
 
-            //response status code
-            ApiResponse apiResponse =
-                    new ApiResponse(
-                            LocalDateTime.now(),
-                            HttpStatus.UNAUTHORIZED.value(),
-                            "INVALID_ACCESS",
-                            "유효하지 않은 접근입니다."
-                    );
-            response.setStatus(HttpStatus.OK.value());
-            response.setContentType("application/json;charset=UTF-8");
-            String json = objectMapper.writeValueAsString(apiResponse);
-            response.getWriter().write(json);
-            response.getWriter().flush();
-            System.out.println("refresh is expired");
-            return;
-        }
-
-        // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
         String category = jwtUtil.getCategory(refresh);
-        if (!category.equals("refresh")) {
-
-            //response status code
-            ApiResponse apiResponse =
-                    new ApiResponse(
-                            LocalDateTime.now(),
-                            HttpStatus.UNAUTHORIZED.value(),
-                            "INVALID_ACCESS",
-                            "유효하지 않은 접근입니다."
-                    );
-            response.setStatus(HttpStatus.OK.value());
-            response.setContentType("application/json;charset=UTF-8");
-            String json = objectMapper.writeValueAsString(apiResponse);
-            response.getWriter().write(json);
-            response.getWriter().flush();
-            System.out.println("category = " + category);
-            return;
-        }
+        if (!category.equals("refresh")) throw new IllegalArgumentException("INVALID_REFRESH_TOKEN");
 
         accessToken = accessToken.replace("Bearer ", "");
 
-        //DB에 저장되어 있는지 확인
-        boolean isExist = refreshTokenService.existsByToken(accessToken);
+        boolean isExist = jwtUtil.existsByToken(accessToken);
+        if (!isExist) throw new IllegalArgumentException("INVALID_ACCESS_TOKEN");
 
-        if (!isExist) {
-            ApiResponse apiResponse =
-                    new ApiResponse(
-                            LocalDateTime.now(),
-                            HttpStatus.UNAUTHORIZED.value(),
-                            "INVALID_ACCESS",
-                            "유효하지 않은 접근입니다."
-                    );
-            response.setStatus(HttpStatus.OK.value());
-            response.setContentType("application/json;charset=UTF-8");
-            String json = objectMapper.writeValueAsString(apiResponse);
-            response.getWriter().write(json);
-            response.getWriter().flush();
-            System.out.println("refresh = " + refresh + " is invalid");
-            return;
-        }
 
-        //로그아웃 진행
-        //Refresh 토큰 DB에서 제거
-        refreshTokenService.deleteByToken(accessToken);
+        jwtUtil.deleteByToken(accessToken);
 
-        //Refresh 토큰 Cookie 값 0
         Cookie cookie = new Cookie("refresh", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
 
-        ApiResponse apiResponse =
-                new ApiResponse(
-                        LocalDateTime.now(),
-                        HttpStatus.CREATED.value(),
-                        "LOGOUT_SUCCESS",
-                        "정상적으로 로그아웃 되었습니다."
-                );
-        response.setStatus(HttpStatus.OK.value());
-        response.setContentType("application/json;charset=UTF-8");
-        response.addCookie(cookie);
-
-        String json = objectMapper.writeValueAsString(apiResponse);
-        response.getWriter().write(json);
-        response.getWriter().flush();
-
+        responseUtils.writeResponseEntity(response, HttpStatus.OK.value(), "LOGOUT_SUCCESS", "정상적으로 로그아웃 되었습니다.");
     }
 }

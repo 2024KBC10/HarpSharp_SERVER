@@ -26,7 +26,8 @@ public class ReissueController {
     private final RefreshTokenService refreshTokenService;
 
     @GetMapping(value = "/reissue")
-    public ResponseEntity<ApiResponse> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ResponseEntity<ApiResponse> reissue(HttpServletRequest request)
+    {
         String refreshToken = null;
         String accessToken  = request.getHeader("Authorization");
 
@@ -53,9 +54,10 @@ public class ReissueController {
         }
 
         try{
-            jwtUtil.isExpired(refreshToken);
+            if(jwtUtil.isExpired(refreshToken))
+                throw new JwtException("INVALID REFRESH_TOKEN");
         }catch(JwtException e){
-            throw new IllegalArgumentException("Invalid cookies");
+            throw new IllegalArgumentException("INVALID REFRESH_TOKEN");
         }
 
 
@@ -71,14 +73,12 @@ public class ReissueController {
             throw new IllegalArgumentException("Invalid cookies");
         }
 
-        Long   userId   = jwtUtil.getUserId(refreshToken);
         String username = jwtUtil.getUsername(refreshToken);
         String role     = jwtUtil.getRole(refreshToken);
 
-        String newAccess  = jwtUtil.createAccessToken (userId, username, role);
-        String newRefresh = jwtUtil.createRefreshToken(userId, username, role);
+        String newAccess  = jwtUtil.createAccessToken (username, role);
+        String newRefresh = jwtUtil.createRefreshToken(username, role);
 
-        // DB에 존재하는 Refresh 토큰 삭제 후 재발급
         refreshTokenService.deleteByToken(accessToken);
 
         RefreshToken refreshEntity = RefreshToken
@@ -102,15 +102,14 @@ public class ReissueController {
 
         headers.add(HttpHeaders.SET_COOKIE, cookieHeader);
 
-        HttpStatus status = (request.getMethod().equals("POST")) ? HttpStatus.CREATED : HttpStatus.OK;
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                status.value(),
+                HttpStatus.OK.value(),
                 "JWT_REISSUED_SUCCESSFULLY",
                 "JWT 재발급에 성공하였습니다.");
 
         return ResponseEntity
-                .status(status)
+                .status(HttpStatus.OK)
                 .headers(headers)
                 .body(apiResponse);
     }
