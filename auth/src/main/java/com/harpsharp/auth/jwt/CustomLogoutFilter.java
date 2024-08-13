@@ -164,7 +164,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
                         "LOGOUT_SUCCESS",
                         "정상적으로 로그아웃 되었습니다."
                 );
-        response.setStatus(HttpStatus.CREATED.value());
+        response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json;charset=UTF-8");
         response.addCookie(cookie);
 

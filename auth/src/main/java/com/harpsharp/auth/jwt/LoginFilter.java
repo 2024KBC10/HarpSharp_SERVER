@@ -106,7 +106,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.addCookie(jwtUtil.createCookie("refresh", refreshToken));
         response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpStatus.CREATED.value());
+        response.setStatus(HttpStatus.OK.value());
         response.getWriter().write(json);
         response.getWriter().flush();
     }
