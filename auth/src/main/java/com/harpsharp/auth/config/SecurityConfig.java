@@ -11,6 +11,7 @@ import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.filters.CorsFilter;
 import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -30,7 +31,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -43,6 +46,7 @@ public class SecurityConfig {
     private final RefreshTokenService refreshTokenService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final ObjectMapper objectMapper;
+    private final CorsConfig corsConfig;
 
     @Bean
     public CookieSameSiteSupplier applicationCookieSameSiteSupplier() {
@@ -83,6 +87,7 @@ public class SecurityConfig {
                         .authenticated())
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                .addFilter(corsConfig.corsFilter())
                 .addFilterBefore(new ExceptionHandlerFilter(objectMapper), LoginFilter.class)
                 .addFilterBefore(new JwtFilter(jwtUtil,objectMapper), LoginFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), refreshTokenService, jwtUtil, objectMapper, userService), UsernamePasswordAuthenticationFilter.class)
@@ -93,4 +98,6 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+
 }
