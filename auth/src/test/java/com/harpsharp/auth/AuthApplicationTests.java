@@ -85,7 +85,7 @@ class AuthApplicationTests {
 						post("/login")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(loginJson))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andReturn();
 
 		accessToken  = result.getResponse().getHeader("Authorization").split(" ")[1];
@@ -128,7 +128,7 @@ class AuthApplicationTests {
 				post("/join")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andDo(document("Join", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("닉네임"),
@@ -167,7 +167,7 @@ class AuthApplicationTests {
 						post("/login")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(loginJson))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andDo(document("Login", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("닉네임"),
@@ -214,7 +214,7 @@ class AuthApplicationTests {
 						post("/logout")
 								.header("Authorization", "Bearer " + accessToken)
 								.cookie(refreshToken))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andDo(document("Logout", // 문서화할 때 사용할 경로와 이름
 						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						responseFields(
