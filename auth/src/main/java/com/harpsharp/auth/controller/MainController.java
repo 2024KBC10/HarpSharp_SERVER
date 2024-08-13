@@ -10,15 +10,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Iterator;
 
-@Controller
+@RestController
 public class MainController {
     @GetMapping("/")
-    @ResponseBody
     public ResponseEntity<ApiResponse> mainAPI(){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

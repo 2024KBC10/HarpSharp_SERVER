@@ -8,20 +8,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
-@Controller
-@ResponseBody
+@RestController
 @RequiredArgsConstructor
 public class JoinController {
     private final UserService userService;
 
-    @PostMapping(value="/join", consumes="application/json;charset=UTF-8")
+    @PostMapping(value="/join")
     public ResponseEntity<ApiResponse> joinUser(@RequestBody JoinDTO joinDTO){
         userService.registerUser(joinDTO, "ROLE_USER");
 
