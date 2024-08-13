@@ -47,6 +47,7 @@ reloadNginx(){
 }
 cleanUpImages(){
   docker rmi $(docker images -f "dangling=true" -q)
+  sudo docker system prune -af
 }
 
 
