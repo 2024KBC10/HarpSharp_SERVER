@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class JoinController {
     private final UserService userService;
 
-    @PostMapping(value="/join", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value="/join", consumes = {MediaType.APPLICATION_JSON_VALUE + ";charset=UTF-8"})
     public ResponseEntity<ApiResponse> joinUser(@RequestBody JoinDTO joinDTO){
         userService.registerUser(joinDTO, "ROLE_USER");
 
