@@ -27,8 +27,9 @@ public class JoinController {
                         HttpStatus.CREATED.value(),
                         "USER_JOINED_SUCCESSFULLY",
                 joinDTO.username() + "님이 성공적으로 가입 되셨습니다.");
+
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.OK)
                 .body(apiResponse);
     }
 }
