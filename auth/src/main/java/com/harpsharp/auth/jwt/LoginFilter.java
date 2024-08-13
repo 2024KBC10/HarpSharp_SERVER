@@ -63,8 +63,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
             // 인증 시도
             return authenticationManager.authenticate(authToken);
-
-
     }
 
     @Override

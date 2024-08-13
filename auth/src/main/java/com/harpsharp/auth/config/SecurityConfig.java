@@ -46,7 +46,6 @@ public class SecurityConfig {
     private final RefreshTokenService refreshTokenService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final ObjectMapper objectMapper;
-    private final CorsConfig corsConfig;
 
     @Bean
     public CookieSameSiteSupplier applicationCookieSameSiteSupplier() {
@@ -87,7 +86,6 @@ public class SecurityConfig {
                         .authenticated())
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                .addFilter(corsConfig.corsFilter())
                 .addFilterBefore(new ExceptionHandlerFilter(objectMapper), LoginFilter.class)
                 .addFilterBefore(new JwtFilter(jwtUtil,objectMapper), LoginFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), refreshTokenService, jwtUtil, objectMapper, userService), UsernamePasswordAuthenticationFilter.class)
