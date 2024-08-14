@@ -29,8 +29,6 @@ public class TodoPostMapper {
                 .user(user)
                 .title(requestTodoPostDTO.title())
                 .content(requestTodoPostDTO.content())
-                .content_hint(requestTodoPostDTO.content_hint())
-                .content_goal(requestTodoPostDTO.content_goal())
                 .status(requestTodoPostDTO.status())
                 .startAt(requestTodoPostDTO.startAt())
                 .endAt(requestTodoPostDTO.endAt())
@@ -42,8 +40,6 @@ public class TodoPostMapper {
                 todoPost.getUser().getUsername(),
                 todoPost.getTitle(),
                 todoPost.getContent(),
-                todoPost.getContent_hint(),
-                todoPost.getContent_goal(),
                 todoPost.getStatus(),
                 todoPost.getStartAt(),
                 todoPost.getEndAt(),
