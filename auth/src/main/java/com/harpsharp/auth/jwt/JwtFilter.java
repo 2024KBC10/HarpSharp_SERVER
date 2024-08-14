@@ -41,11 +41,8 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         if(!accessToken.startsWith("Bearer ")){
-            throw JwtAuthenticationException
-                    .builder()
-                    .code(HttpStatus.UNAUTHORIZED.value())
-                    .message("INVALID_ACCESS_TOKEN")
-                    .build();
+            filterChain.doFilter(request, response);
+            return;
         }
 
         accessToken = accessToken.substring("Bearer ".length());
