@@ -126,7 +126,7 @@ public class JwtUtil {
     public <T> void responseLogin(HttpServletResponse response, String username, String role, T user) throws IOException {
         ResponseWithData<T> apiResponse = new ResponseWithData<>(
                 LocalDateTime.now(),
-                HttpStatus.OK.value(),
+                HttpStatus.CREATED.value(),
                 "JWT_PUBLISHED_SUCCESSFULLY",
                 "로그인에 성공하였습니다.",
                 user);
