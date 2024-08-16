@@ -98,7 +98,7 @@ class BoardApplicationTests {
 						post("/login")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(loginJson))
-				.andExpect(status().isOk())
+				.andExpect(status().isCreated())
 				.andReturn();
 
 		accessToken  = result.getResponse().getHeader("Authorization").split(" ")[1];
