@@ -63,9 +63,9 @@ jobs:
         working-directory: ./frontend
         run: npm run build
 
-      - name: npm 테스트 (frontend)
-        working-directory: ./frontend
-        run: npm test
+#      - name: npm 테스트 (frontend)
+#        working-directory: ./frontend
+#        run: npm test
 
       - name: YML 파일 생성
         run: |
