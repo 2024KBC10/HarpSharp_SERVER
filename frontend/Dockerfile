@@ -5,10 +5,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /usr/src/app
 
 # Dependancy install을 위해 package.json, package-lock.json, yarn.lock 복사
-COPY package.json yarn.lock ./
-
-# Dependancy 설치 (새로운 lock 파일 수정 또는 생성 방지)
-RUN yarn --frozen-lockfile
+COPY *.json ./
 
 ###########################################################
 
@@ -23,7 +20,7 @@ COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY . .
 
 # 구축 환경에 따라 env 변수를 다르게 가져가야 하는 경우 환경 변수를 이용해서 env를 구분해준다.
-COPY .env.local ./.env.production
+COPY .env.local ./.env.local
 RUN yarn build
 
 ###########################################################
