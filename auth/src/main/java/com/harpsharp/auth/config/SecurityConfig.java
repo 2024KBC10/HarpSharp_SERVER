@@ -75,9 +75,9 @@ public class SecurityConfig {
 //                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
 //                                .userService(customOAuth2UserService)))
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/v1/login", "/api/v1/", "/api/v1/join", "/api/v1/board/**", "/api/v1/todo/**", "/api/v1/user/board/**", "/api/v1/user/todo/**")
+                        .requestMatchers("/login", "/api/v1/", "/api/v1/join", "/api/v1/board/**", "/api/v1/todo/**", "/api/v1/user/board/**", "/api/v1/user/todo/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/user/**")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/user/**")
                         .permitAll()
                         .requestMatchers("/admin")
                         .hasRole("ADMIN")

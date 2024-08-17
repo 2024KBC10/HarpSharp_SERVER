@@ -82,7 +82,7 @@ class AuthApplicationTests {
 		String loginJson = objectMapper.writeValueAsString(loginDto);
 
 		MvcResult result = this.mockMvc.perform(
-						post("/api/v1/login")
+						post("/login")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(loginJson))
 				.andExpect(status().isCreated())
@@ -164,7 +164,7 @@ class AuthApplicationTests {
 		String loginJson = objectMapper.writeValueAsString(loginDto);
 
 		this.mockMvc.perform(
-						post("/api/v1/login")
+						post("/login")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(loginJson))
 				.andExpect(status().isCreated())
@@ -211,7 +211,7 @@ class AuthApplicationTests {
 		login();
 
 		this.mockMvc.perform(
-						post("/api/v1/logout")
+						post("/logout")
 								.header("Authorization", "Bearer " + accessToken)
 								.cookie(refreshToken))
 				.andExpect(status().isOk())
@@ -239,7 +239,7 @@ class AuthApplicationTests {
 	@Transactional
 	public void getUserDataTest() throws Exception{
 		login();
-		InfoDTO infoDto = new InfoDTO(username, password);
+		InfoDTO infoDto = new InfoDTO(username, "ROLE_USER");
 
 		String infoJson = objectMapper.writeValueAsString(infoDto);
 

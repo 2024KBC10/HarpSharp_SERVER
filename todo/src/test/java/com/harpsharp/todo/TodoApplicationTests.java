@@ -102,7 +102,7 @@ class TodoApplicationTests {
 		String loginJson = objectMapper.writeValueAsString(loginDto);
 
 		MvcResult result = this.mockMvc.perform(
-						post("/api/v1/login")
+						post("/login")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(loginJson))
 				.andExpect(status().isCreated())
