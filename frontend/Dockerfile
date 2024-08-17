@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # 6. Next.js 애플리케이션을 빌드합니다.
-RUN npm run build
+RUN npm run dev
 
 # 7. Next.js 애플리케이션을 실행합니다.
 ENTRYPOINT ["npm", "start"]
