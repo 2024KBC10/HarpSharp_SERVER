@@ -18,7 +18,8 @@ RUN rm -rf ./.next/cache
 FROM node:alpine AS runner
 WORKDIR /app
 
-ENV NODE_ENV=production
+# Set environment variables for local environment
+ENV NODE_ENV=local
 ENV SHOULD_PROFILE=true
 ENV SHOULD_TRACE=true
 
