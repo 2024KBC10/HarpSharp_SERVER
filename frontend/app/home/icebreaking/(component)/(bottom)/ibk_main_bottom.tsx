@@ -7,7 +7,7 @@ export default function IBKMainBottom() {
     const onClick = async () => {
         try {
             const result = await APIManager.post({
-                route: "/api/v1/gpt/chat",
+                route: "/gpt/chat",
                 body: {
                     prompt: "---Context: \"너의 소속은 harpsharp야\"---너 소속이 어디야?"
                 }
