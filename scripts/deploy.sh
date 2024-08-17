@@ -76,6 +76,10 @@ mv env .env
 serviceDown gpt4o
 docker-compose up -d --build
 
+cd /home/ubuntu/deploy/front
+serviceDown front
+docker-compose up -d
+
 cd /home/ubuntu/deploy/swagger
 serviceDown swagger
 docker-compose up -d --build

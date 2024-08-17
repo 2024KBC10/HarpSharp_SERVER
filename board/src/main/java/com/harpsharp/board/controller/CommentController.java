@@ -20,7 +20,7 @@ public class CommentController {
     private final CommentService commentService;
     private final JwtUtil jwtUtil;
 
-    @GetMapping("/board/posts/{postId}/comments")
+    @GetMapping("/api/v1/board/posts/{postId}/comments")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> getCommentsByPostId(@PathVariable Long postId) {
 
         Map<Long, ResponseCommentDTO> comments = commentService.getCommentsByPostId(postId);
@@ -37,7 +37,7 @@ public class CommentController {
                 .body(apiResponse);
     }
 
-    @GetMapping("/board/posts/{postId}/comments/{commentId}")
+    @GetMapping("/api/v1/board/posts/{postId}/comments/{commentId}")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> getCommentByCommentId(@PathVariable Long commentId) {
         Map<Long, ResponseCommentDTO> comment = commentService.getCommentById(commentId);
         ResponseWithData<Map<Long, ResponseCommentDTO>> apiResponse
@@ -53,7 +53,7 @@ public class CommentController {
                 .body(apiResponse);
     }
 
-    @PostMapping("/board/posts/comments")
+    @PostMapping("/api/v1/board/posts/comments")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> addComment(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestCommentDTO commentDTO) throws IllegalAccessException {
@@ -77,7 +77,7 @@ public class CommentController {
 
     }
 
-    @PatchMapping("/board/posts/comments")
+    @PatchMapping("/api/v1/board/posts/comments")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> updateComment(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdateCommentDTO updatedComment) throws IllegalAccessException {
@@ -103,7 +103,7 @@ public class CommentController {
     }
 
 
-    @DeleteMapping("/board/posts/comments")
+    @DeleteMapping("/api/v1/board/posts/comments")
     public ResponseEntity<ApiResponse> deleteComment(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdateCommentDTO commentDTO) throws IllegalAccessException {

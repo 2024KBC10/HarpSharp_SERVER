@@ -18,7 +18,7 @@ import java.util.Iterator;
 
 @RestController
 public class MainController {
-    @GetMapping("/")
+    @GetMapping("/api/v1/")
     public ResponseEntity<ApiResponse> mainAPI(){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

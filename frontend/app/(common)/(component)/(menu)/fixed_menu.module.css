@@ -1,0 +1,27 @@
+.container {
+    max-width: 340px;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 100%;
+    background-color: #F6F3F2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container .tab_container {
+    width: 340px;
+    flex: 1 1 auto;
+    margin-top: 10px;
+    border-bottom: solid 1px #C6C6C7;
+}
+
+.container .top_container {
+    width: 340px;
+    flex: 0 1 140px;
+}
+
+.container .bottom_container {
+    width: 340px;
+    flex: 0 1 125px;
+}

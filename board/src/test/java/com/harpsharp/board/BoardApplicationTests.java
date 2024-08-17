@@ -419,7 +419,6 @@ class BoardApplicationTests {
 								fieldWithPath("content").description("내용"),
 								fieldWithPath("memoColor").description("메모 색상"),
 								fieldWithPath("pinColor").description("핀 색상")
-
 						),
 						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						responseFields(
@@ -458,7 +457,7 @@ class BoardApplicationTests {
 		System.out.println("commentId = " + commentId);
 		this.mockMvc.perform(get("/board/posts/{postId}/comments/{commentId}", postId, commentId))
 				.andExpect(status().isOk())
-				.andDo(document("Get Comment by commentId", // 문서화할 때 사용할 경로와 이름
+				.andDo(document("Get Comment by commentId",
 						pathParameters(parameterWithName("postId").description("게시글 Id"),
 								parameterWithName("commentId").description("댓글 ID")),
 						responseFields(

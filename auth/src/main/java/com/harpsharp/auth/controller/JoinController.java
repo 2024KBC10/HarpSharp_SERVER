@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class JoinController {
     private final UserService userService;
 
-    @PostMapping("/join")
+    @PostMapping("/api/v1/join")
     public ResponseEntity<ApiResponse> joinUser(@RequestBody JoinDTO joinDTO){
         userService.registerUser(joinDTO, "ROLE_USER");
 
@@ -34,7 +34,7 @@ public class JoinController {
                 .body(apiResponse);
     }
 
-    @PostMapping("/admin/join")
+    @PostMapping("/api/v1/admin/join")
     public ResponseEntity<ApiResponse> joinAdmin(@RequestBody JoinDTO joinDTO){
         userService.registerUser(joinDTO, "ROLE_ADMIN");
         ApiResponse apiResponse =

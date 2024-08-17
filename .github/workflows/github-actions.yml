@@ -50,6 +50,20 @@ jobs:
           java-version: "17"
           distribution: "corretto"
 
+      - name: Node.js 설정 (version:18)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 의존성 설치 (frontend)
+        run: npm install
+
+      - name: npm 빌드 (frontend)
+        run: npm run build
+
+      - name: npm 테스트 (frontend)
+        run: npm test
+
       - name: YML 파일 생성
         run: |
           mkdir -p auth/src/main/resources
@@ -173,6 +187,15 @@ jobs:
         run : |
           mkdir -p deploy/nginx
           mv ./nginx/* deploy/nginx
+
+      - name: 배포 Dir 생성(frontend)
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
+        working-directory: ./frontend
+        run: |
+          mkdir -p deploy-front
+          rsync -av --exclude='deploy-front' ./ deploy-front/
+          cd ../ && mkdir -p deploy/front
+          mv ./frontend/deploy-front/* deploy/front
 
       - name: S3 업로드 및 CD 요청
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}

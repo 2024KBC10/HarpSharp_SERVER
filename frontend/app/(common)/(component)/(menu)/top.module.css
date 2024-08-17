@@ -1,0 +1,55 @@
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: solid 1px #C6C6C7;
+}
+
+.container span {
+    font-size: 10px;
+    font-weight: 400;
+    color: #737575;
+}
+
+.title {
+    margin-left: 5px;
+    cursor: pointer;
+    align-self: flex-start;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.title span {
+    color: #737575;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.info {
+    width: 100%;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.info .name_container {
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.name_container .name {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.name_container .nickname {
+    font-size: 12px;
+    font-weight: 400;
+    color: #737575;
+}

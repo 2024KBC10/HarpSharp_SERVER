@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @RestController
 public class HomeController {
 
-    @GetMapping("/board")
+    @GetMapping("/api/v1/board")
     public ResponseEntity<ApiResponse> home() {
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
@@ -24,7 +24,7 @@ public class HomeController {
                 .body(apiResponse);
     }
 
-    @PostMapping("/board")
+    @PostMapping("/api/v1/board")
     public ResponseEntity<ApiResponse> board(@RequestBody testDTO test) {
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),

@@ -67,7 +67,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        responseUtils.writeResponseEntity(response, HttpStatus.UNAUTHORIZED.value(), "INVALID_AUTHENTICATION", "유효하지 않은 인가입니다.");
+        responseUtils.writeResponseEntity(response, HttpStatus.UNAUTHORIZED.value(), "INVALID_INPUT", "유효하지 않은 입력입니다.");
     }
 
     @Override

@@ -1,0 +1,29 @@
+.container_default {
+    padding: 10px;
+    transition: .2s ease-out;
+    color: black;
+    background-color: #f6f3f2;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.container_default:hover {
+    background-color: #E5E2E1;
+}
+
+.container_blue {
+    padding: 10px;
+    transition: .2s ease-out;
+    color: white;
+    background-color: #5686E1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.container_blue:hover {
+    background-color: #4c77c7;
+}
+
+.button_icon {
+    transition: .2s ease-out;
+}

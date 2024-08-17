@@ -31,7 +31,7 @@ public class TodoCommentController {
     private final TodoCommentService todoCommentService;
     private final JwtUtil jwtUtil;
 
-    @GetMapping("/todo/comments")
+    @GetMapping("/api/v1/todo/comments")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoCommentDTO>>> getAllComments() {
         Map<Long, ResponseTodoCommentDTO> allComments = todoCommentService.getAllComments();
         ResponseWithData<Map<Long, ResponseTodoCommentDTO>> apiResponse =
@@ -47,7 +47,7 @@ public class TodoCommentController {
                 .body(apiResponse);
     }
 
-    @GetMapping("/todo/posts/{postId}/comments")
+    @GetMapping("/api/v1/todo/posts/{postId}/comments")
     public ResponseEntity<ResponseWithData<Map<Long,ResponseTodoCommentDTO>>> getAllPostComments(@PathVariable Long postId) {
         Map<Long, ResponseTodoCommentDTO> comment = todoCommentService.getCommentsByPostId(postId);
 
@@ -64,7 +64,7 @@ public class TodoCommentController {
                 .status(HttpStatus.OK)
                 .body(apiResponse);
     }
-    @GetMapping("/todo/posts/{postId}/comments/{commentId}")
+    @GetMapping("/api/v1/todo/posts/{postId}/comments/{commentId}")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoCommentDTO>>> getCommentById(@PathVariable Long commentId) {
         Map<Long, ResponseTodoCommentDTO> object
                 = todoCommentService.getCommentById(commentId);
@@ -82,7 +82,7 @@ public class TodoCommentController {
                 .body(apiResponse);
     }
 
-    @PostMapping("/todo/posts/comments")
+    @PostMapping("/api/v1/todo/posts/comments")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoCommentDTO>>> addComment(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestTodoCommentDTO commentDTO) {
@@ -106,7 +106,7 @@ public class TodoCommentController {
                 .body(apiResponse);
     }
 
-    @PatchMapping("/todo/posts/comments")
+    @PatchMapping("/api/v1/todo/posts/comments")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoCommentDTO>>> updateComment(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdateTodoCommentDTO commentDTO) throws IllegalAccessException {
@@ -130,7 +130,7 @@ public class TodoCommentController {
                 .body(apiResponse);
     }
 
-    @DeleteMapping("/todo/posts/comments")
+    @DeleteMapping("/api/v1/todo/posts/comments")
     public ResponseEntity<ApiResponse> deleteComment(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdateTodoCommentDTO commentDTO) throws IllegalAccessException {

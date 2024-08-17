@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class VerificationController {
     private final JwtUtil jwtUtil;
 
-    @GetMapping("/verify")
+    @GetMapping("/api/v1/verify")
     public ResponseEntity<ApiResponse> verificationCreatePost() {
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),

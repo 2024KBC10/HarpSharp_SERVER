@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @RestController
 public class HomeController {
-    @GetMapping("/todo")
+    @GetMapping("/api/v1/todo")
     public ResponseEntity<ApiResponse> home() {
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),

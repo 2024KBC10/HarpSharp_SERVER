@@ -23,7 +23,7 @@ public class TodoPostController {
     private final TodoPostService todoPostService;
     private final JwtUtil jwtUtil;
 
-    @GetMapping("/todo/posts")
+    @GetMapping("/api/v1/todo/posts")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoPostDTO>>> getAllPosts() {
         Map<Long, ResponseTodoPostDTO> allPosts = todoPostService.getAllTodoPosts();
         ResponseWithData<Map<Long, ResponseTodoPostDTO>> apiResponse =
@@ -39,7 +39,7 @@ public class TodoPostController {
                 .body(apiResponse);
     }
 
-    @GetMapping("/todo/posts/{postId}")
+    @GetMapping("/api/v1/todo/posts/{postId}")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoPostDTO>>> getPostById(@PathVariable Long postId) {
         Map<Long, ResponseTodoPostDTO> todoPost = todoPostService.getTodoPostById(postId);
         ResponseWithData<Map<Long, ResponseTodoPostDTO>> apiResponse =
@@ -55,7 +55,7 @@ public class TodoPostController {
                 .body(apiResponse);
     }
 
-    @PostMapping("/todo/posts")
+    @PostMapping("/api/v1/todo/posts")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoPostDTO>>> createPost(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestTodoPostDTO postDTO) {
@@ -77,7 +77,7 @@ public class TodoPostController {
                 .body(apiResponse);
     }
 
-    @PatchMapping("/todo/posts")
+    @PatchMapping("/api/v1/todo/posts")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoPostDTO>>> updatePost(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdateTodoPostDTO postDTO) {
@@ -100,7 +100,7 @@ public class TodoPostController {
                 .body(apiResponse);
     }
 
-    @DeleteMapping("/todo/posts")
+    @DeleteMapping("/api/v1/todo/posts")
     public ResponseEntity<ApiResponse> deletePost(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdateTodoPostDTO requestTodoPostDTO) {

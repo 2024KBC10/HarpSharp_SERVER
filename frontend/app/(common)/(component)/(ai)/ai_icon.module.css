@@ -1,0 +1,15 @@
+.container {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+}
+
+.container .ai_icon_wrapper {
+    right: 40px;
+    bottom: 40px;
+    transition: 0.08s ease-in;
+    cursor: pointer;
+    position: fixed;
+
+    &:active { transform: scale(0.88); }
+}

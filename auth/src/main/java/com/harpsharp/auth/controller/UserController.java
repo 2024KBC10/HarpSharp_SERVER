@@ -42,7 +42,7 @@ public class UserController {
     private final UserMapper userMapper;
 
 
-    @GetMapping("/user")
+    @GetMapping("/api/v1/user")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseUserDTO>>> getUserDataById
             (@RequestBody InfoDTO info) {
 
@@ -63,7 +63,7 @@ public class UserController {
                 .body(responseWithData);
     }
 
-    @PatchMapping("/user")
+    @PatchMapping("/api/v1/user")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseUserDTO>>> updateUser(
             HttpServletRequest request,
             @RequestBody UpdateUserDTO updatedDTO) throws Exception {
@@ -132,7 +132,7 @@ public class UserController {
                 .body(apiResponse);
     }
 
-    @DeleteMapping("/user")
+    @DeleteMapping("/api/v1/user")
     public ResponseEntity<ApiResponse> deleteUser(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody DeleteDTO deleteDTO) throws IOException {
@@ -163,7 +163,7 @@ public class UserController {
                 .body(apiResponse);
     }
 
-    @GetMapping("/user/board/posts")
+    @GetMapping("/api/v1/user/board/posts")
     public ResponseWithData<Map<Long, ResponsePostDTO>> getPostsByUserInfo(@RequestBody InfoDTO info){
         ResponseUserDTO user = userService
                 .findByUsername(info.username())
@@ -180,7 +180,7 @@ public class UserController {
                 user.posts());
     }
 
-    @GetMapping("/user/board/comments")
+    @GetMapping("/api/v1/user/board/comments")
     public ResponseWithData<Map<Long, ResponseCommentDTO>> getCommentsByUserInfo(@RequestBody InfoDTO info){
         ResponseUserDTO user = userService
                         .findByUsername(info.username())
@@ -198,7 +198,7 @@ public class UserController {
                 user.comments());
     }
 
-    @GetMapping("/user/todo/posts")
+    @GetMapping("/api/v1/user/todo/posts")
     public ResponseWithData<Map<Long, ResponseTodoPostDTO>> getTodoPostsByUserInfo(@RequestBody InfoDTO info){
         ResponseUserDTO user = userService
                 .findByUsername(info.username())
@@ -215,7 +215,7 @@ public class UserController {
                 user.todoPosts());
     }
 
-    @GetMapping("/user/todo/comments")
+    @GetMapping("/api/v1/user/todo/comments")
     public ResponseWithData<Map<Long, ResponseTodoCommentDTO>> getTodoCommentsByUserInfo(@RequestBody InfoDTO info){
         ResponseUserDTO user = userService
                 .findByUsername(info.username())

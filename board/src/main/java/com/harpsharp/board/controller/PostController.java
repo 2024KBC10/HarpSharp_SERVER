@@ -26,7 +26,7 @@ public class PostController {
     private final PostService postService;
     private final JwtUtil jwtUtil;
 
-    @GetMapping("/board/posts")
+    @GetMapping("/api/v1/board/posts")
     public ResponseEntity<?> getAllPosts() {
         Map<Long, ResponsePostDTO> allPosts = postService.getAllPosts();
 
@@ -43,7 +43,7 @@ public class PostController {
                 .body(apiResponse);
     }
 
-    @PostMapping("/board/posts")
+    @PostMapping("/api/v1/board/posts")
     public ResponseEntity<ResponseWithData<?>> savePost(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestPostDTO requestPostDTO) {
@@ -66,7 +66,7 @@ public class PostController {
                 .body(apiResponse);
     }
 
-    @GetMapping("/board/posts/{postId}")
+    @GetMapping("/api/v1/board/posts/{postId}")
     public ResponseEntity<ResponseWithData<Map<Long,ResponsePostDTO>>> getPostById(@PathVariable Long postId) {
 
         Map<Long,ResponsePostDTO> responsePostDTO = postService.getPostById(postId);
@@ -84,7 +84,7 @@ public class PostController {
                 .body(apiResponse);
     }
 
-    @PatchMapping("/board/posts")
+    @PatchMapping("/api/v1/board/posts")
     public ResponseEntity<ResponseWithData<Map<Long, ResponsePostDTO>>> updatePost(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdatePostDTO requestPostDTO) {
@@ -114,7 +114,7 @@ public class PostController {
                 .body(apiResponse);
     }
 
-    @DeleteMapping("/board/posts")
+    @DeleteMapping("/api/v1/board/posts")
     public ResponseEntity<ApiResponse> deletePost(
             @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdatePostDTO requestPostDTO) {

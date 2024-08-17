@@ -1,0 +1,70 @@
+.container {
+    width: 30.33%;
+    height: 100%;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.state_container {
+    width: 100%;
+    height: 10%;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.state_container span {
+    font-size: 16px;
+    color: #737575;
+}
+
+.state_progress {
+    width: 80px;
+    height: 40px;
+    border-radius: 999px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #EFF2FF;
+    color: #99ACFF;
+}
+
+.state_stop {
+    width: 80px;
+    height: 40px;
+    border-radius: 999px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(229,73,67,.16);
+    color: #D91C29;    
+}
+
+.state_success {
+    width: 80px;
+    height: 40px;
+    border-radius: 999px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,168,129,.16);
+    color: #08785E;
+}
+
+.task_wrapper {
+    width: 90%;
+    height: 90%;
+    border-radius: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 30px;
+    float: left;
+    background-color: #F0F0F5;
+    scrollbar-width: none;
+    overflow: scroll;
+}
