@@ -53,7 +53,7 @@ jobs:
       - name: Node.js 설정 (version:18)
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: '18'
 
       - name: 의존성 설치 (frontend)
         working-directory: ./frontend
