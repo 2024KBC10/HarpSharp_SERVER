@@ -78,7 +78,7 @@ docker-compose up -d --build
 
 cd /home/ubuntu/deploy/front
 serviceDown front
-docker-compose up -d
+docker-compose up -d --build
 
 cd /home/ubuntu/deploy/swagger
 serviceDown swagger
