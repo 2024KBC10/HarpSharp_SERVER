@@ -89,7 +89,7 @@ class TodoApplicationTests {
 
 
 		this.mockMvc.perform(
-						post("/join")
+						post("/api/v1/join")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(joinJson))
 				.andReturn();
@@ -102,7 +102,7 @@ class TodoApplicationTests {
 		String loginJson = objectMapper.writeValueAsString(loginDto);
 
 		MvcResult result = this.mockMvc.perform(
-						post("/login")
+						post("/api/v1/login")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(loginJson))
 				.andExpect(status().isCreated())
@@ -124,7 +124,7 @@ class TodoApplicationTests {
 		String postJson = objectMapper.writeValueAsString(requestPostDTO);
 
 		MvcResult result = this.mockMvc.perform(
-						post("/todo/posts")
+						post("/api/v1/todo/posts")
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(postJson))
@@ -151,7 +151,7 @@ class TodoApplicationTests {
 		String postJson = objectMapper.writeValueAsString(requestPostDTO);
 
 		MvcResult result = this.mockMvc.perform(
-						post("/todo/posts")
+						post("/api/v1/todo/posts")
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(postJson))
@@ -170,7 +170,7 @@ class TodoApplicationTests {
 
 		MvcResult resultComment = this.mockMvc
 				.perform(
-						post("/todo/posts/comments")
+						post("/api/v1/todo/posts/comments")
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(commentJson))
@@ -204,7 +204,7 @@ class TodoApplicationTests {
 	@Test
 	@Transactional
 	public void rootPage() throws Exception {
-		this.mockMvc.perform(get("/todo"))
+		this.mockMvc.perform(get("/api/v1/todo"))
 				.andExpect(status().isOk())
 				.andDo(document("Root Page", // 문서화할 때 사용할 경로와 이름
 						responseFields(
@@ -237,7 +237,7 @@ class TodoApplicationTests {
 				endAt);
 
 		this.mockMvc.perform(
-						post("/todo/posts")
+						post("/api/v1/todo/posts")
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(objectMapper.writeValueAsString(postDTO)))
@@ -288,7 +288,7 @@ class TodoApplicationTests {
 	@Transactional
 	public void getAllPostsTest() throws Exception {
 		writePost();
-		this.mockMvc.perform(get("/todo/posts"))
+		this.mockMvc.perform(get("/api/v1/todo/posts"))
 				.andExpect(status().isOk())
 				.andDo(document("Get All Todo Posts", // 문서화할 때 사용할 경로와 이름
 						responseFields(
@@ -324,7 +324,7 @@ class TodoApplicationTests {
 	@Transactional
 	public void getPostByPostId() throws Exception {
 		Long postId = writePost();
-		this.mockMvc.perform(get("/todo/posts/{postId}", postId))
+		this.mockMvc.perform(get("/api/v1/todo/posts/{postId}", postId))
 				.andExpect(status().isOk())
 				.andDo(
 						document("Get Todo Post by todoPostId",
@@ -371,7 +371,7 @@ class TodoApplicationTests {
 				startAt,
 				endAt);
 
-		this.mockMvc.perform(patch("/todo/posts")
+		this.mockMvc.perform(patch("/api/v1/todo/posts")
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(requestPostDTO)))
@@ -429,7 +429,7 @@ class TodoApplicationTests {
 				status,
 				startAt,
 				endAt);
-		this.mockMvc.perform(delete("/todo/posts")
+		this.mockMvc.perform(delete("/api/v1/todo/posts")
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(requestPostDTO)))
@@ -473,7 +473,7 @@ class TodoApplicationTests {
 		RequestTodoCommentDTO commentDTO = new RequestTodoCommentDTO(postId, username, content);
 
 		this.mockMvc.perform(
-						post("/todo/posts/comments")
+						post("/api/v1/todo/posts/comments")
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(objectMapper.writeValueAsString(commentDTO)))
@@ -517,7 +517,7 @@ class TodoApplicationTests {
 		Long commentId = list_id.get(1);
 		System.out.println("postId = " + postId);
 		System.out.println("commentId = " + commentId);
-		this.mockMvc.perform(get("/todo/posts/{postId}/comments/{commentId}", postId, commentId))
+		this.mockMvc.perform(get("/api/v1/todo/posts/{postId}/comments/{commentId}", postId, commentId))
 				.andExpect(status().isOk())
 				.andDo(document("Get Todo Comment by commentId", // 문서화할 때 사용할 경로와 이름
 						pathParameters(parameterWithName("postId").description("게시글 Id"),
@@ -550,7 +550,7 @@ class TodoApplicationTests {
 	public void getCommentsByPostId() throws Exception {
 		List<Long> list_id = writePC();
 		Long postId    = list_id.get(0);
-		this.mockMvc.perform(get("/todo/posts/{postId}/comments", postId))
+		this.mockMvc.perform(get("/api/v1/todo/posts/{postId}/comments", postId))
 				.andExpect(status().isOk())
 				.andDo(
 						document("Get Comments by todoPostId",
@@ -584,7 +584,7 @@ class TodoApplicationTests {
 		List<Long> list_id = writePC();
 		Long commentId = list_id.get(1);
 		RequestUpdateTodoCommentDTO commentDTO = new RequestUpdateTodoCommentDTO(commentId, username, "Modified!");
-		this.mockMvc.perform(patch("/todo/posts/comments")
+		this.mockMvc.perform(patch("/api/v1/todo/posts/comments")
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))
@@ -626,7 +626,7 @@ class TodoApplicationTests {
 		List<Long> list_id = writePC();
 		Long commentId = list_id.get(1);
 		RequestUpdateTodoCommentDTO commentDTO = new RequestUpdateTodoCommentDTO(commentId, username, content);
-		this.mockMvc.perform(delete("/todo/posts/comments")
+		this.mockMvc.perform(delete("/api/v1/todo/posts/comments")
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))

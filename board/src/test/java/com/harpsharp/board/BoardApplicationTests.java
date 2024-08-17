@@ -81,7 +81,7 @@ class BoardApplicationTests {
 
 
 		this.mockMvc.perform(
-						post("/join")
+						post("/api/v1/join")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(joinJson))
 				.andReturn();
@@ -95,7 +95,7 @@ class BoardApplicationTests {
 		String loginJson = objectMapper.writeValueAsString(loginDto);
 
 		MvcResult result = this.mockMvc.perform(
-						post("/login")
+						post("/api/v1/login")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(loginJson))
 				.andExpect(status().isCreated())
@@ -110,7 +110,7 @@ class BoardApplicationTests {
 		String postJson = objectMapper.writeValueAsString(requestPostDTO);
 
 		MvcResult result = this.mockMvc.perform(
-				post("/board/posts")
+				post("/api/v1/board/posts")
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(postJson))
@@ -131,7 +131,7 @@ class BoardApplicationTests {
 		String postJson = objectMapper.writeValueAsString(requestPostDTO);
 
 		MvcResult result = this.mockMvc.perform(
-						post("/board/posts")
+						post("/api/v1/board/posts")
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(postJson))
@@ -150,7 +150,7 @@ class BoardApplicationTests {
 
 		MvcResult resultComment = this.mockMvc
 				.perform(
-						post("/board/posts/comments")
+						post("/api/v1/board/posts/comments")
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(commentJson))
@@ -184,7 +184,7 @@ class BoardApplicationTests {
 	@Test
 	@Transactional
 	public void rootPage() throws Exception {
-		this.mockMvc.perform(get("/board"))
+		this.mockMvc.perform(get("/api/v1/board"))
 				.andExpect(status().isOk())
 				.andDo(document("Root Page", // 문서화할 때 사용할 경로와 이름
 						responseFields(
@@ -211,7 +211,7 @@ class BoardApplicationTests {
 		RequestPostDTO postDTO = new RequestPostDTO(username, title, content);
 
 		this.mockMvc.perform(
-						post("/board/posts")
+						post("/api/v1/board/posts")
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(objectMapper.writeValueAsString(postDTO)))
@@ -255,7 +255,7 @@ class BoardApplicationTests {
 	@Transactional
 	public void getAllPostsTest() throws Exception {
 		writePost();
-		this.mockMvc.perform(get("/board/posts"))
+		this.mockMvc.perform(get("/api/v1/board/posts"))
 				.andExpect(status().isOk())
 				.andDo(document("Get All Posts", // 문서화할 때 사용할 경로와 이름
 						responseFields(
@@ -287,7 +287,7 @@ class BoardApplicationTests {
     @Transactional
 	public void getPostByPostId() throws Exception {
 		Long postId = writePost();
-        this.mockMvc.perform(get("/board/posts/{postId}", postId))
+        this.mockMvc.perform(get("/api/v1/board/posts/{postId}", postId))
                 .andExpect(status().isOk())
                 .andDo(
 						document("Get Post by postId",
@@ -322,7 +322,7 @@ class BoardApplicationTests {
     public void updatePost() throws Exception {
 		Long postId = writePost();
         RequestUpdatePostDTO requestPostDTO = new RequestUpdatePostDTO(postId, username, "modified!", content);
-        this.mockMvc.perform(patch("/board/posts")
+        this.mockMvc.perform(patch("/api/v1/board/posts")
 						.header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestPostDTO)))
@@ -366,7 +366,7 @@ class BoardApplicationTests {
     public void deletePost() throws Exception {
 		Long postId = writePost();
         RequestUpdatePostDTO requestPostDTO = new RequestUpdatePostDTO(postId, username, title, content);
-        this.mockMvc.perform(delete("/board/posts", postId)
+        this.mockMvc.perform(delete("/api/v1/board/posts", postId)
                         .header("Authorization", "Bearer " + accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestPostDTO)))
@@ -407,7 +407,7 @@ class BoardApplicationTests {
 		RequestCommentDTO commentDTO = new RequestCommentDTO(postId, username, content,memoColor, pinColor);
 
 		this.mockMvc.perform(
-						post("/board/posts/comments")
+						post("/api/v1/board/posts/comments")
 								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(objectMapper.writeValueAsString(commentDTO)))
@@ -455,7 +455,7 @@ class BoardApplicationTests {
 		Long commentId = list_id.get(1);
 		System.out.println("postId = " + postId);
 		System.out.println("commentId = " + commentId);
-		this.mockMvc.perform(get("/board/posts/{postId}/comments/{commentId}", postId, commentId))
+		this.mockMvc.perform(get("/api/v1/board/posts/{postId}/comments/{commentId}", postId, commentId))
 				.andExpect(status().isOk())
 				.andDo(document("Get Comment by commentId",
 						pathParameters(parameterWithName("postId").description("게시글 Id"),
@@ -490,7 +490,7 @@ class BoardApplicationTests {
 	public void getCommentsByPostId() throws Exception {
 		List<Long> list_id = writePC();
 		Long postId    = list_id.get(0);
-		this.mockMvc.perform(get("/board/posts/{postId}/comments", postId))
+		this.mockMvc.perform(get("/api/v1/board/posts/{postId}/comments", postId))
 				.andExpect(status().isOk())
 				.andDo(
 						document("Get All Comments",
@@ -526,7 +526,7 @@ class BoardApplicationTests {
 		Long postId    = list_id.get(0);
 		Long commentId = list_id.get(1);
 		RequestUpdateCommentDTO commentDTO = new RequestUpdateCommentDTO(commentId, username, "Modified!",memoColor, pinColor);
-		this.mockMvc.perform(patch("/board/posts/comments", postId, commentId)
+		this.mockMvc.perform(patch("/api/v1/board/posts/comments", postId, commentId)
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))
@@ -573,7 +573,7 @@ class BoardApplicationTests {
 		Long commentId = list_id.get(1);
 		RequestUpdateCommentDTO commentDTO = new RequestUpdateCommentDTO(commentId, username, "Modified!",memoColor, pinColor);
 
-		this.mockMvc.perform(delete("/board/posts/comments")
+		this.mockMvc.perform(delete("/api/v1/board/posts/comments")
 						.header("Authorization", "Bearer " + accessToken)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))

@@ -68,7 +68,7 @@ class AuthApplicationTests {
 
 
 		this.mockMvc.perform(
-				post("/join")
+				post("/api/v1/join")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(joinJson))
 						.andReturn();
@@ -82,7 +82,7 @@ class AuthApplicationTests {
 		String loginJson = objectMapper.writeValueAsString(loginDto);
 
 		MvcResult result = this.mockMvc.perform(
-						post("/login")
+						post("/api/v1/login")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(loginJson))
 				.andExpect(status().isCreated())
@@ -96,7 +96,7 @@ class AuthApplicationTests {
 	@Test
 	@Transactional
 	public void rootPage() throws Exception {
-		this.mockMvc.perform(get("/"))
+		this.mockMvc.perform(get("/api/v1/"))
 				.andExpect(status().isOk())
 				.andDo(document("Root Page", // 문서화할 때 사용할 경로와 이름
 						responseFields(
@@ -125,7 +125,7 @@ class AuthApplicationTests {
 
 
 		this.mockMvc.perform(
-				post("/join")
+				post("/api/v1/join")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
 				.andExpect(status().isOk())
@@ -164,7 +164,7 @@ class AuthApplicationTests {
 		String loginJson = objectMapper.writeValueAsString(loginDto);
 
 		this.mockMvc.perform(
-						post("/login")
+						post("/api/v1/login")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(loginJson))
 				.andExpect(status().isCreated())
@@ -211,7 +211,7 @@ class AuthApplicationTests {
 		login();
 
 		this.mockMvc.perform(
-						post("/logout")
+						post("/api/v1/logout")
 								.header("Authorization", "Bearer " + accessToken)
 								.cookie(refreshToken))
 				.andExpect(status().isOk())
@@ -245,7 +245,7 @@ class AuthApplicationTests {
 
 
 		this.mockMvc.perform(
-						get("/user")
+						get("/api/v1/user")
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
@@ -292,7 +292,7 @@ class AuthApplicationTests {
 
 
 		this.mockMvc.perform(
-						get("/user/board/posts")
+						get("/api/v1/user/board/posts")
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
@@ -330,7 +330,7 @@ class AuthApplicationTests {
 
 
 		this.mockMvc.perform(
-						get("/user/board/comments")
+						get("/api/v1/user/board/comments")
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
@@ -368,7 +368,7 @@ class AuthApplicationTests {
 
 
 		this.mockMvc.perform(
-						get("/user/todo/posts")
+						get("/api/v1/user/todo/posts")
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
@@ -406,7 +406,7 @@ class AuthApplicationTests {
 
 
 		this.mockMvc.perform(
-						get("/user/todo/comments")
+						get("/api/v1/user/todo/comments")
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
@@ -446,7 +446,7 @@ class AuthApplicationTests {
 		String updateJson = objectMapper.writeValueAsString(updateUserDto);
 
 		this.mockMvc.perform(
-						patch("/user")
+						patch("/api/v1/user")
 								.header("Authorization", "Bearer " + accessToken)
 								.cookie(refreshToken)
 								.contentType(MediaType.APPLICATION_JSON)
@@ -499,7 +499,7 @@ class AuthApplicationTests {
 		String deleteJson = objectMapper.writeValueAsString(deleteDTO);
 
 		this.mockMvc.perform(
-				delete("/user")
+				delete("/api/v1/user")
 						.header("Authorization", "Bearer " + accessToken)
 						.cookie(refreshToken)
 						.contentType(MediaType.APPLICATION_JSON)
