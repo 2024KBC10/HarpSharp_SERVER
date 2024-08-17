@@ -6,6 +6,8 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+RUN rm -rf node_modules
+
 # Copy lock files and package.json for dependency installation
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
