@@ -77,6 +77,8 @@ serviceDown gpt4o
 docker-compose up -d --build
 
 cd /home/ubuntu/deploy/front
+mv env.local .env.local
+mv next .next
 serviceDown front
 docker-compose up -d --build
 

@@ -61,7 +61,9 @@ jobs:
 
       - name: npm 빌드 (frontend)
         working-directory: ./frontend
-        run: npm run build
+        run: | 
+          npm run build
+          mv .next next
 
 #      - name: npm 테스트 (frontend)
 #        working-directory: ./frontend
@@ -196,6 +198,7 @@ jobs:
         working-directory: ./frontend
         run: |
           mkdir -p deploy-front
+          echo "${{ secrets.ENV }}" | base64 --decode >> ./deploy-front/env.local
           rsync -av --exclude='deploy-front' ./ deploy-front/
           cd ../ && mkdir -p deploy/front
           mv ./frontend/deploy-front/* deploy/front
