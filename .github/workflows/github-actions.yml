@@ -56,12 +56,15 @@ jobs:
           node-version: '18'
 
       - name: 의존성 설치 (frontend)
+        working-directory: ./frontend
         run: npm install
 
       - name: npm 빌드 (frontend)
+        working-directory: ./frontend
         run: npm run build
 
       - name: npm 테스트 (frontend)
+        working-directory: ./frontend
         run: npm test
 
       - name: YML 파일 생성
