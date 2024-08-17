@@ -7,6 +7,8 @@ services:
       - harpsharp
     expose:
       - "3000"
+    command:
+      node server.js
 
 networks:
   harpsharp:

@@ -59,7 +59,7 @@ export const POST = async (request: NextRequest) => {
         return new NextResponse(
             JSON.stringify(response),
             {
-                status: 200,
+                status: 201,
             }
         )
       
