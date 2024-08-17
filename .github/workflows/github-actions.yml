@@ -64,6 +64,7 @@ jobs:
         run: | 
           npm run build
           mv .next next
+          mv .eslintrc.json eslintrc.json
 
 #      - name: npm 테스트 (frontend)
 #        working-directory: ./frontend
