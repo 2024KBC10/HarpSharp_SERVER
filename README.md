@@ -36,12 +36,16 @@ AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
 #### 전체 구성도
 <img src = "https://github.com/user-attachments/assets/c8c87fbd-e93d-401e-a955-c5bbe9003c17" width = "80%" height = "80%">
 <br></br>
+
 1. 정적 페이지를 배포하는 프론트엔드 서버와 서비스 로직을 처리하는 API 서버로 구분되어 있습니다. <br>
 2. 모든 요청은 NGINX(리버스 프록시 서버)로 향하며 내부 설정에 따라 알맞는 서버로 라우팅 됩니다. 
+
 <br></br>
 
 #### 배포 구성도 (API 서버)
-<img src = "https://github.com/user-attachments/assets/11003ee2-1868-4fbe-a3d1-f2afdeae2753" width = "80%" height = "80%">
+<img src = "https://github.com/user-attachments/assets/11003ee2-1868-4fbe-a3d1-f2afdeae2753" width = "80%" height = "80%"></img>
+<br></br>
+
 #### 🏭 배포 절차
 1. main or dev 브랜치로 push 혹은 PR이 발생하면 CI 스크립트에 따라 Actions에서 빌드 및 테스트가 진행됩니다. 
 2. 배포에 필요한 파일들을 zip으로 압축해 S3에 업로드 합니다. 
