@@ -50,11 +50,6 @@ jobs:
           java-version: "17"
           distribution: "corretto"
 
-#      - name: Node.js 설정 (version:18)
-#        uses: actions/setup-node@v3
-#        with:
-#          node-version: '18'
-
       - name: YML 파일 생성
         run: |
           mkdir -p auth/src/main/resources

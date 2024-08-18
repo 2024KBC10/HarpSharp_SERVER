@@ -8,9 +8,7 @@ services:
     expose:
       - "3000"
     env_file:
-      - ./.env.local  # 기본 환경 변수 파일
-    volumes:
-      - .:/app
+      - ./.env.local
 
 networks:
   harpsharp:
