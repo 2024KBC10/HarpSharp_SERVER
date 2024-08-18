@@ -13,8 +13,8 @@
 게시글, 댓글 CRUD 기능을 가진 **Board/TODO** <br>
 ChatGPT API를 연결한 **생성형 AI 서버**로 구성되어 있습니다. <br>
 <br> 
-현재 https://harpsharp.com 으로 접근 가능하며 <br>
-AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
+현재 https://harpsharp.com/home 으로 접근 가능하며 <br>
+API 서버와 Frontend 서버 모두 AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 <br>
 
 ### 🛠️ 기술 스택
@@ -33,6 +33,9 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 <br>
 
 ### 🌏 시스템 아키텍처
+
+<img src = "https://github.com/user-attachments/assets/495a12aa-1a4e-4ee2-b082-0075abfe8533" width = "80%" height = "80%">
+<br>
 <img src = "https://github.com/user-attachments/assets/11003ee2-1868-4fbe-a3d1-f2afdeae2753" width = "80%" height = "80%">
 <br>
 
@@ -121,7 +124,7 @@ AWS EC2에서 개별 컨테이너로 배포 중입니다. <br>
 + [Response 컨벤션 통합 - 1](https://www.notion.so/Response-6baaebd19a264339906ae2ad38a1379b)
 + [Response 컨벤션 통합 - 2](https://www.notion.so/Response-1c8f497b693a4b1ba47e8d8d3770adbf)
 + [DB를 기존 네트워크와 분리](https://www.notion.so/DB-91d3d602e9bc452eba8b26e6fb25cecd)
-
++ 
 
 
 <br>
