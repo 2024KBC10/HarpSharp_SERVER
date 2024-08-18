@@ -50,18 +50,10 @@ jobs:
           java-version: "17"
           distribution: "corretto"
 
-      - name: Node.js 설정 (version:18)
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: 의존성 설치 (frontend)
-        working-directory: ./frontend
-        run: npm install
-
-#      - name: npm 테스트 (frontend)
-#        working-directory: ./frontend
-#        run: npm test
+#      - name: Node.js 설정 (version:18)
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: '18'
 
       - name: YML 파일 생성
         run: |
@@ -195,7 +187,7 @@ jobs:
           echo "${{ secrets.ENV }}" | base64 --decode >> ./deploy-front/env.local
           mv .dockerignore dockerignore
           mv .eslintrc.json eslintrc.json
-          rsync -av --exclude='deploy-front' ./ deploy-front/
+          rsync -av --exclude='deploy-front' --exclude='node_modules' ./ deploy-front/
           cd ../ && mkdir -p deploy/front
           mv ./frontend/deploy-front/* deploy/front
 
