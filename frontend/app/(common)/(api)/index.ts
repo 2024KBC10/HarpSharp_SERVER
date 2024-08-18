@@ -1,9 +1,14 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL
+const BASE_URL = process.env.NEXT_PROXY_URL
 
 interface RequestArgs {
     readonly route: string
     readonly headers?: HeadersInit
     readonly body?: object
+}
+
+const BASE_HEADERS = {
+    "Accept": "application/json;charset=UTF-8;",
+    "Content-Type": "application/json;charset=UTF-8"
 }
 
 export namespace APIManager {
@@ -35,11 +40,11 @@ export namespace APIManager {
         try {
             console.log(`${BASE_URL}${args.route}`);
             if(typeof BASE_URL === "undefined") throw new Error("<p>요청에 실패했습니다.<br/>브라우저를 종료하고 재 접속 후, 다시시도 해주세요.</p>")
-            const response = await fetch(`${BASE_URL}${args.route}`, {
+            const response = await fetch(`${BASE_URL}`, {
                 body: args.body ? JSON.stringify(args.body) : undefined,
                 method: "POST",
                 headers: {
-                    ...args.headers,
+                    ...BASE_HEADERS,
                     location: args.route,
                 },           
 

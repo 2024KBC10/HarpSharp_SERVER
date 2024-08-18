@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-        const BASE_URL = process.env.NEXT_PUBLIC_PROXY_URL
+        const BASE_URL = process.env.NEXT_PUBLIC_API_URL
         const BASE_HEADERS = {
             "Accept": "application/json;charset=UTF-8;",
-            "Content-Type": "application/json;charset=UTF-8;"
+            "Content-Type": "application/json;charset=UTF-8"
         }
 
         export const GET = async (request: NextRequest) => {
             const route = request.headers.get('location')
             try {
                 const signal = _onRequestTimeLimit()
+                console.log(BASE_HEADERS);
                 const response = await fetch(`${BASE_URL}${route}`, {
                     headers: {
                         ...BASE_HEADERS,
