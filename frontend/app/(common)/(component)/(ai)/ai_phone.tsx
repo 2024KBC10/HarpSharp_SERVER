@@ -18,7 +18,7 @@ export default function AIPhone({
     const onClick = async () => {
         try {
             const result = await APIManager.post({
-                route: "api/v1/gpt/chat",
+                route: "/api/v1/gpt/chat",
                 body: {
                     prompt: input,
                 }

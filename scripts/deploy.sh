@@ -80,7 +80,7 @@ cd /home/ubuntu/deploy/front
 mv env.local .env.local
 mv eslintrc.json .eslintrc.json
 mv dockerignore .dockerignore
-serviceDown "front-front-1"
+docker-compose down
 docker-compose up -d --build
 
 cd /home/ubuntu/deploy/swagger
