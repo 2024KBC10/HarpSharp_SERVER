@@ -43,6 +43,7 @@ export const POST = async (request: NextRequest) => {
     .then(JSON.stringify)
 
     try {
+        console.log(BASE_URL);
         const signal = _onRequestTimeLimit()
         const response = await fetch(`${BASE_URL}${route}`, {
             headers: {
