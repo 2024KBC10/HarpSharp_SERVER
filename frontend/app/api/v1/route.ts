@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-        const BASE_URL = process.env.NEXT_PUBLIC_API_URL
+        const BASE_URL = process.env.NEXT_PUBLIC_PROXY_URL
         const BASE_HEADERS = {
             "Accept": "application/json;charset=UTF-8;",
             "Content-Type": "application/json;charset=UTF-8;"

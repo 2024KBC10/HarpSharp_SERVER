@@ -9,17 +9,30 @@ import EnteredAIIcon from "../../../../public/image/AI_Icon_entered_phone.png"
 import SendIcon from "../../../../public/image/send.png"
 import ChatBubbleIcon from "../../../../public/image/chat_bubble.png"
 import styles from "./ai_phone.module.css"
+import {APIManager} from "@/app/(common)/(api)";
 
 export default function AIPhone({
-    isOpen
-}: AIPhoneProps) {
+                                    isOpen
+                                }: AIPhoneProps) {
     const [input, setInput] = useState<string>("")
+    const onClick = async () => {
+        try {
+            const result = await APIManager.post({
+                route: "api/v1/gpt/chat",
+                body: {
+                    prompt: input,
+                }
+            });
+            console.log(result);
+
+        } catch(e) { throw e }
+    }
     return (
         <div className={styles[`container_${isOpen ? "open" : "close"}`]}>
             <div className={styles.title_container}>
                 <Image
-                src={EnteredAIIcon}
-                alt="AI"
+                    src={EnteredAIIcon}
+                    alt="AI"
                 />
                 <Spacer spacing={5}/>
                 <span>AI_Shark</span>
@@ -29,16 +42,16 @@ export default function AIPhone({
             </ul>
             <div className={styles.input_container}>
                 <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="메시지를 입력해 주세요."
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="메시지를 입력해 주세요."
                 />
-                <div className={styles.send}><Image src={SendIcon} alt="전송 아이콘"/></div>
+                <div className={styles.send} onClick={onClick}><Image src={SendIcon} alt="전송 아이콘"/></div>
             </div>
             <div className={styles.tab_container}>
                 <Image
-                src={ChatBubbleIcon}
-                alt="탭 아이콘"
+                    src={ChatBubbleIcon}
+                    alt="탭 아이콘"
                 />
                 <Spacer spacing={2.5} direction="column"/>
                 <span>대화</span>
