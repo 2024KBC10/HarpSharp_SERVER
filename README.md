@@ -42,7 +42,7 @@ AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
 
 <br></br>
 
-#### 배포 구성도 (API 서버)
+#### API 서버 구성도
 <img src = "https://github.com/user-attachments/assets/11003ee2-1868-4fbe-a3d1-f2afdeae2753" width = "80%" height = "80%"></img>
 <br></br>
 
