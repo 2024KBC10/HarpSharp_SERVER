@@ -145,7 +145,8 @@ AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
 2024.07.24 ~ 2024.07.27
 #### API 테스트 (Postman / Swagger) 
 2024.08.09 ~ 2024.08.11
-![image](https://github.com/user-attachments/assets/b4163bb8-3a54-42f8-88ab-dddef16d4d82)
+<img src = "https://github.com/user-attachments/assets/b4163bb8-3a54-42f8-88ab-dddef16d4d82" width = "30%" height = "30%">
+
 #### 프론트 서버 배포 및 연결 테스트
 2024.08.09 ~ 
 
