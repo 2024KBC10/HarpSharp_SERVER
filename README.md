@@ -34,11 +34,7 @@ API 서버와 Frontend 서버 모두 AWS EC2에서 개별 컨테이너로 배포
 
 ### 🌏 시스템 아키텍처
 
-#### 전체 구성도
-<img src = "https://github.com/user-attachments/assets/2914bd9a-be6f-49d0-98e3-6feaa003c1f1" width = "80%" height = "80%">
-<br>
-- 현재 EC2 t3.medium에서 배포 중이며 프론트엔드 서버, API 서버(WAS), NGINX(웹 서버)로 구성되어 있습니다. <br>
-- 모든 서버는 컨테이너로 분리돼 배포 중이며 도커 bridge 네트워크에서 http 통신을 통해 API를 주고 받습니다. <br>
+로 API를 주고 받습니다. <br>
 
 <br>
 
