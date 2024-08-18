@@ -42,7 +42,6 @@ AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
 
 #### 배포 구성도 (API 서버)
 <img src = "https://github.com/user-attachments/assets/11003ee2-1868-4fbe-a3d1-f2afdeae2753" width = "80%" height = "80%">
-<br></br>
 #### 🏭 배포 절차
 1. main or dev 브랜치로 push 혹은 PR이 발생하면 CI 스크립트에 따라 Actions에서 빌드 및 테스트가 진행됩니다. 
 2. 배포에 필요한 파일들을 zip으로 압축해 S3에 업로드 합니다. 
