@@ -46,7 +46,7 @@ export const POST = async (request: NextRequest) => {
     try {
         console.log(BASE_URL);
         const signal = _onRequestTimeLimit()
-        const response = await fetch(`${BASE_URL}${route}`, {
+        const response = await fetch(`${BASE_URL}/api/v1/${route}`, {
             headers: {
                 ...BASE_HEADERS,
             },
