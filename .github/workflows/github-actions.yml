@@ -105,7 +105,7 @@ jobs:
         working-directory: ./ai
         run: |
           mkdir -p deploy-ai
-          echo "${{ secrets.ENV }}" | base64 --decode >> ./deploy-ai/env
+          echo "${{ secrets.ENV_PY }}" | base64 --decode >> ./deploy-ai/env
           ls deploy-ai -a
           cp ./app.py ./deploy-ai
           cp ./docker-compose.yml ./deploy-ai
