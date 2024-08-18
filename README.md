@@ -37,7 +37,8 @@ AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
 <img src = "https://github.com/user-attachments/assets/c8c87fbd-e93d-401e-a955-c5bbe9003c17" width = "80%" height = "80%">
 <br></br>
 1. 정적 페이지를 배포하는 프론트엔드 서버와 서비스 로직을 처리하는 API 서버로 구분되어 있습니다. <br>
-2. 모든 요청은 NGINX(리버스 프록시 서버)로 향하며 내부 설정에 따라 알맞는 서버로 라우팅 됩니다. <br>
+2. 모든 요청은 NGINX(리버스 프록시 서버)로 향하며 내부 설정에 따라 알맞는 서버로 라우팅 됩니다. 
+<br></br>
 
 #### 배포 구성도 (API 서버)
 <img src = "https://github.com/user-attachments/assets/11003ee2-1868-4fbe-a3d1-f2afdeae2753" width = "80%" height = "80%">
