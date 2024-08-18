@@ -15,14 +15,27 @@ export default function AIPhone({
                                     isOpen
                                 }: AIPhoneProps) {
     const [input, setInput] = useState<string>("")
+    const [messages, setMessages] = useState<Array<{role: string, content: string}>>([]); // 메시지 상태 관리
+
     const onClick = async () => {
+        console.log(input);
         try {
+            setMessages(prevMessages => [...prevMessages, { role: 'user', content: input }]);
             const result = await APIManager.post({
                 route: "gpt/chat",
                 body: {
-                    prompt: input,
+                    prompt: input
                 }
             });
+
+            if ("generated_text" in result) {
+                const aiResponse = result.generated_text as string;
+                setMessages(prevMessages => [...prevMessages, { role: 'ai', content: aiResponse }]);
+            } else {
+                console.error("Request failed:", result);
+                // 실패 처리 로직 추가 가능
+            }
+
             console.log(result);
 
         } catch(e) { throw e }
@@ -38,6 +51,11 @@ export default function AIPhone({
                 <span>AI_Shark</span>
             </div>
             <ul className={styles.chat_container}>
+                {messages.map((message, index) => (
+                    <li key={index} className={message.role === 'user' ? styles.user_message : styles.ai_message}>
+                        {message.content}
+                    </li>
+                ))}
 
             </ul>
             <div className={styles.input_container}>
