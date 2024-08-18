@@ -1,40 +1,12 @@
-# Install dependencies only when needed
-FROM node:alpine AS deps
-RUN apk add --no-cache libc6-compat python3 build-base
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
+FROM node:18-alpine
 
-# Rebuild the source code only when needed
-FROM node:alpine AS builder
+RUN mkdir -p /app
 WORKDIR /app
+
+# Install dependencies based on the preferred package manager
 COPY . .
-COPY --from=deps /app/node_modules ./node_modules
-RUN npm run build
-RUN npm ci --production
-RUN rm -rf ./.next/cache
 
-# Production image, copy all the files and run next
-FROM node:alpine AS runner
-WORKDIR /app
-
-# Set environment variables for local environment
-ENV NODE_ENV=local
-ENV SHOULD_PROFILE=true
-ENV SHOULD_TRACE=true
-
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
-
-COPY --from=builder /app/package-lock.json ./package-lock.json
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/tsconfig.json ./tsconfig.json
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.mjs ./next.config.mjs
-
-USER nextjs
+RUN npm install
 
 EXPOSE 3000
 
