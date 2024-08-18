@@ -3,9 +3,12 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-client = OpenAI(
-    api_key = os.getenv('OPENAI_API_KEY')
-)
+
+key = os.getenv('OPENAI_API_KEY')
+if not key:
+    raise ValueError("OPENAI_API_KEY is not set in the environment variables.")
+
+client = OpenAI(api_key=key)
 
 def generate_text(prompt, model_name='gpt-4o-mini'):
     response = client.chat.completions.create(
