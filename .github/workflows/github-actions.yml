@@ -59,13 +59,6 @@ jobs:
         working-directory: ./frontend
         run: npm install
 
-      - name: npm 빌드 (frontend)
-        working-directory: ./frontend
-        run: | 
-          npm run build
-          mv .next next
-          mv .eslintrc.json eslintrc.json
-
 #      - name: npm 테스트 (frontend)
 #        working-directory: ./frontend
 #        run: npm test
@@ -200,6 +193,8 @@ jobs:
         run: |
           mkdir -p deploy-front
           echo "${{ secrets.ENV }}" | base64 --decode >> ./deploy-front/env.local
+          mv .dockerignore dockerignore
+          mv .eslintrc.json eslintrc.json
           rsync -av --exclude='deploy-front' ./ deploy-front/
           cd ../ && mkdir -p deploy/front
           mv ./frontend/deploy-front/* deploy/front
