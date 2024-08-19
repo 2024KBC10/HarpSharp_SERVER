@@ -42,7 +42,7 @@ export default function AIPhone({ isOpen }: AIPhoneProps) {
         setInput("");
         try {
             const result = await APIManager.post({
-                route: "api/v1/gpt/chat",
+                route: "gpt/chat",
                 body: {
                     prompt: input
                 }
