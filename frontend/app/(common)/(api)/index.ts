@@ -47,6 +47,7 @@ export namespace APIManager {
             console.log(args.headers);
             const signal = _onRequestTimeLimit()
             const response = await fetch(url, {
+                body: args.body ? JSON.stringify(args.body) : undefined,
                 headers: {
                     ...BASE_HEADERS,
                 },
