@@ -13,6 +13,7 @@ import { APIManager } from "@/app/(common)/(api)";
 
 export default function AIPhone({ isOpen }: AIPhoneProps) {
     const [input, setInput] = useState<string>("")
+    const [isComposing, setIsComposing] = useState<boolean>(false); // IME 작동 여부 상태
     const [messages, setMessages] = useState<Array<{ role: string, content: string }>>([]);
     const chatContainerRef = useRef<HTMLUListElement>(null); // Ref for the chat container
     const [isAutoScroll, setIsAutoScroll] = useState(true); // 자동 스크롤 여부 상태
@@ -65,10 +66,11 @@ export default function AIPhone({ isOpen }: AIPhoneProps) {
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
+        if (!isComposing && e.key === "Enter") {
             onClick();
         }
-    }
+    };
+
 
     return (
         <div className={styles[`container_${isOpen ? "open" : "close"}`]}>
@@ -91,6 +93,8 @@ export default function AIPhone({ isOpen }: AIPhoneProps) {
                 <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    onCompositionStart={() => setIsComposing(true)}
+                    onCompositionEnd={() => setIsComposing(false)}
                     onKeyDown={handleKeyDown}
                     placeholder="메시지를 입력해 주세요."
                 />
