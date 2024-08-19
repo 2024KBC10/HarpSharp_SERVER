@@ -7,7 +7,7 @@ export default function IBKMainBottom() {
     const onClick = async () => {
         try {
             const result = await APIManager.post({
-                route: "join",
+                route: "api/v1/join",
                 body: {
                     password: "1234",
                     username: "asd",
