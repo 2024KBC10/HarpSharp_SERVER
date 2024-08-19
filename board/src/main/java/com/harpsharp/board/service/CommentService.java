@@ -62,6 +62,8 @@ public class CommentService {
                         .findByUsername(commentDTO.username())
                         .orElseThrow(()-> new IllegalArgumentException("USER_NOT_FOUND")))
                 .content(commentDTO.content())
+                .memoColor(commentDTO.memoColor())
+                .pinColor(commentDTO.pinColor())
                 .post(postRepository
                         .findById(commentDTO.postId())
                         .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND")))
@@ -83,6 +85,8 @@ public class CommentService {
         Comment updatedComment = existedCommnet
                 .toBuilder()
                 .content(commentDTO.content())
+                .memoColor(commentDTO.memoColor())
+                .pinColor(commentDTO.pinColor())
                 .build();
 
         commentRepository.save(updatedComment);
@@ -95,6 +99,7 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("COMMENT_NOT_FOUND"));
 
         Post post = comment.getPost();
+
         if (post != null) {
             post.getComments().remove(comment);
             comment.clearPost();

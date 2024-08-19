@@ -56,10 +56,7 @@ public class CommentController {
     @PostMapping("/api/v1/board/posts/comments")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> addComment(
             @RequestHeader("Authorization") String accessToken,
-            @RequestBody RequestCommentDTO commentDTO) throws IllegalAccessException {
-
-        if(!isValid(accessToken, commentDTO.username()))
-            throw new IllegalAccessException("INVALID_ACCESS");
+            @RequestBody RequestCommentDTO commentDTO) throws IllegalAccessException {;
 
         Map<Long, ResponseCommentDTO> object = commentService.save(commentDTO);
 

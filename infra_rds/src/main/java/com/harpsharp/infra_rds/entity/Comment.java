@@ -48,14 +48,4 @@ public class Comment extends BasePost {
     public void clearPost(){
         post = null;
     }
-
-    @PrePersist
-    public void prePersist() {
-        if (this.memoColor == null) {
-            this.memoColor = "yellow";
-        }
-        if (this.pinColor == null) {
-            this.pinColor = "brown";
-        }
-    }
 }
