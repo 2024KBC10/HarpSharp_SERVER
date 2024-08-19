@@ -17,10 +17,11 @@ export namespace APIManager {
     ) => {
         try {
             if(typeof BASE_URL === "undefined") throw new Error("<p>요청에 실패했습니다.<br/>브라우저를 종료하고 재 접속 후, 다시시도 해주세요.</p>")
-            const signal = _onRequestTimeLimit()
+            const signal = _onRequestTimeLimit();
             const response = await fetch(BASE_URL, {
                 headers: {
                     ...args.headers,
+                    location: args.route,
                 },
                 method: "GET",
                 mode: "cors",
@@ -48,6 +49,7 @@ export namespace APIManager {
             const response = await fetch(BASE_URL, {
                 headers: {
                     ...BASE_HEADERS,
+                    location: args.route,
                 },
                 method: "POST",
                 mode: "cors",
@@ -72,6 +74,7 @@ export namespace APIManager {
             const response = await fetch(BASE_URL, {
                 headers: {
                     ...BASE_HEADERS,
+                    location: args.route,
                 },
                 method: "PATCH",
                 mode: "cors",
@@ -96,6 +99,7 @@ export namespace APIManager {
             const response = await fetch(BASE_URL, {
                 headers: {
                     ...BASE_HEADERS,
+                    location: args.route,
                 },
                 method: "DELETE",
                 mode: "cors",
