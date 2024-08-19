@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_PROXY_URL
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
 interface RequestArgs {
     readonly route: string
@@ -17,12 +17,14 @@ export namespace APIManager {
     ) => {
         try {
             if(typeof BASE_URL === "undefined") throw new Error("<p>요청에 실패했습니다.<br/>브라우저를 종료하고 재 접속 후, 다시시도 해주세요.</p>")
+            const signal = _onRequestTimeLimit()
             const response = await fetch(BASE_URL, {
                 headers: {
                     ...args.headers,
-                    location: args.route,
                 },
                 method: "GET",
+                mode: "cors",
+                signal,
             })
                 .then(result => result.json())
 
@@ -42,14 +44,14 @@ export namespace APIManager {
             if(typeof BASE_URL === "undefined") throw new Error("<p>요청에 실패했습니다.<br/>브라우저를 종료하고 재 접속 후, 다시시도 해주세요.</p>")
             const url = `${BASE_URL}`;
             console.log(args.headers);
-            const response = await fetch(url, {
-                body: args.body ? JSON.stringify(args.body) : undefined,
-                method: "POST",
+            const signal = _onRequestTimeLimit()
+            const response = await fetch(BASE_URL, {
                 headers: {
                     ...BASE_HEADERS,
-                    location: args.route,
                 },
-
+                method: "POST",
+                mode: "cors",
+                signal,
             })
                 .then(result => result.json())
 
@@ -66,13 +68,14 @@ export namespace APIManager {
     ) => {
         try {
             if(typeof BASE_URL === "undefined") throw new Error("<p>요청에 실패했습니다.<br/>브라우저를 종료하고 재 접속 후, 다시시도 해주세요.</p>")
+            const signal = _onRequestTimeLimit()
             const response = await fetch(BASE_URL, {
-                body: args.body ? JSON.stringify(args.body) : undefined,
-                method: "PATCH",
                 headers: {
-                    ...args.headers,
-                    location: args.route,
+                    ...BASE_HEADERS,
                 },
+                method: "PATCH",
+                mode: "cors",
+                signal,
             })
                 .then(result => result.json())
 
@@ -84,25 +87,27 @@ export namespace APIManager {
             }
         } catch(e) { throw e }
     }
-    export const del = async (
+    export const del = async <T extends unknown> (
         args: RequestArgs,
     ) => {
         try {
             if(typeof BASE_URL === "undefined") throw new Error("<p>요청에 실패했습니다.<br/>브라우저를 종료하고 재 접속 후, 다시시도 해주세요.</p>")
+            const signal = _onRequestTimeLimit()
             const response = await fetch(BASE_URL, {
-                body: args.body ? JSON.stringify(args.body) : undefined,
-                method: "DELETE",
                 headers: {
-                    ...args.headers,
-                    location: args.route,
+                    ...BASE_HEADERS,
                 },
+                method: "DELETE",
+                mode: "cors",
+                signal,
             })
                 .then(result => result.json())
 
             if("error" in response) return _handleFailure(response as FailureReponse)
             else {
-                if(response.code === 200) return true
-                return false
+                const success = response as SuccessResponse<T>
+                if(success.code === 200) return success
+                return _handleFailure(response as FailureReponse)
             }
         } catch(e) { throw e }
     }
@@ -141,6 +146,14 @@ interface SuccessResponse<T> extends Response {
 interface FailureReponse extends Response {
     readonly error: string // 에러 내용
     readonly path: string // 요청 라우트
+}
+
+const _onRequestTimeLimit = () => {
+    const abortController = new AbortController()
+    const signal_ttl = parseInt(process.env.NEXT_PUBLIC_SIGNAL_TTL ?? "5000")
+    setTimeout(() => abortController.abort(), signal_ttl)
+
+    return abortController.signal
 }
 
 
