@@ -134,6 +134,10 @@ AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
 + [Response 컨벤션 통합 - 1](https://www.notion.so/Response-6baaebd19a264339906ae2ad38a1379b)
 + [Response 컨벤션 통합 - 2](https://www.notion.so/Response-1c8f497b693a4b1ba47e8d8d3770adbf)
 + [DB를 기존 네트워크와 분리](https://www.notion.so/DB-91d3d602e9bc452eba8b26e6fb25cecd)
++ [스프링 시큐리티 필터체인 리팩토링 - 1](https://www.notion.so/Auth-logout-update-46cbdfbe01f54e65a945ce54296f6226)
++ [스프링 시큐리티 필터체인 리팩토링 - 2](https://www.notion.so/7deebafd0aab4b4babe7474b6fa53ae9)
++ [스프링 시큐리티 필터체인 리팩토링 - 3](https://www.notion.so/b3a5346ff7464f90a5edaaf1c66bbe12)
++ [CORS + 프론트 서버 배포](https://www.notion.so/a81e178bafeb462085358c448ac347fa?v=d5768f826212401b9a504287b1836ad2&p=a30c1ff0fab74786a5d32a216bd9513e&pm=s)
 
 
 <br>
@@ -146,8 +150,11 @@ AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
 #### API 테스트 (Postman / Swagger) 
 2024.08.09 ~ 2024.08.11
 ![스크린샷 2024-08-19 002057](https://github.com/user-attachments/assets/1dd4cdd7-9abe-4b4d-be90-a94b94d704d1)
-#### 프론트 서버 배포 및 연결 테스트
+#### 프론트 서버 배포 및 API 서버와 연동 테스트
 2024.08.09 ~ 
+![1-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/994fa1d2-f9f8-40cc-8ccb-9a27a13b0044)
+
+
 
 <br>
 
