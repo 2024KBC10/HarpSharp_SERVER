@@ -42,14 +42,14 @@ export namespace APIManager {
     ) => {
         try {
             console.log(BASE_URL);
+            console.log(args.route);
             if(typeof BASE_URL === "undefined") throw new Error("<p>요청에 실패했습니다.<br/>브라우저를 종료하고 재 접속 후, 다시시도 해주세요.</p>")
-            const url = `${BASE_URL}`;
+            const url = `${BASE_URL}/api/v1/${args.route}`;
             console.log(args.headers);
             const signal = _onRequestTimeLimit()
             const response = await fetch(BASE_URL, {
                 headers: {
                     ...BASE_HEADERS,
-                    location: args.route,
                 },
                 method: "POST",
                 mode: "cors",
