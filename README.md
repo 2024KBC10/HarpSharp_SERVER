@@ -151,10 +151,8 @@ AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
 2024.08.09 ~ 2024.08.11
 ![스크린샷 2024-08-19 002057](https://github.com/user-attachments/assets/1dd4cdd7-9abe-4b4d-be90-a94b94d704d1)
 #### 프론트 서버 배포 및 API 서버와 연동 테스트
-2024.08.09 ~ 
-![1-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/994fa1d2-f9f8-40cc-8ccb-9a27a13b0044)
-
-
+2024.08.09 ~ <br>
+![2024-08-2000 32 13-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/8d7fd9ef-02cd-4042-b215-044e458b6194)
 
 <br>
 
