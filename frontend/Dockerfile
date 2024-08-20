@@ -1,4 +1,4 @@
-FROM node:20.14:LTS
+FROM node:20.14
 
 RUN mkdir -p /app
 WORKDIR /app
