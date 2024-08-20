@@ -28,17 +28,12 @@ export default function SignUp(){
         }
         try{
             const response = await APIManager.post({
-                route: "login",
+                route: "logout",
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json;charset=UTF-8",
-                    //"Authorization": `Bearer ${token}`,
-                },
-                body: {
-                    //email,
-                    password,
-                    username,
-                },
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InNzc3NzIiwiY2F0ZWdvcnkiOiJBdXRob3JpemF0aW9uIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTcyNDE4NTEyNywiZXhwIjoxNzI0MTg4NzI3fQ.zpNEGnWAPK4luTRmjlGQsIohh7NrA9uNQMiazWVmaMk"
+                }
             });
             console.log(response);
             if(typeof response === "boolean"){

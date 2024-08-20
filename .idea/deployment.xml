@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="harpsharp" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="harpsharp">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$/infra_rds/src/test" web="/" />
+            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="" local="$PROJECT_DIR$/../ssh" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
