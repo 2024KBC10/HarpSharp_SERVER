@@ -26,7 +26,7 @@ public class LogoutExceptionHandlerFilter extends OncePerRequestFilter {
             responseUtils.writeResponseEntity(response, HttpStatus.UNAUTHORIZED.value(), e.getMessage(), "유효하지 않은 접근입니다.");
         }
         catch(IllegalArgumentException e){
-            responseUtils.writeResponseEntity(response, HttpStatus.BAD_REQUEST.value(), e.getMessage(), e.getMessage());
+            responseUtils.writeResponseEntity(response, HttpStatus.BAD_REQUEST.value(), e.getMessage(), "잘못된 입력 값 입니다.");
         }
     }
 }
