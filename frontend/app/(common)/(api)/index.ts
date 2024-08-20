@@ -39,11 +39,12 @@ export namespace APIManager {
     ) => {
         try {
             if(typeof BASE_URL === "undefined") throw new Error("<p>요청에 실패했습니다.<br/>브라우저를 종료하고 재 접속 후, 다시시도 해주세요.</p>")
+            console.log(args.headers);
             const response = await fetch(`${BASE_URL}/api/v1/${args.route}`, {
                 body: args.body ? JSON.stringify(args.body) : undefined,
                 method: "POST",
                 headers: {
-                    ...BASE_HEADERS,
+                    ...args.headers,
                 },
 
             })

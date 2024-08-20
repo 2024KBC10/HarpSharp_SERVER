@@ -62,6 +62,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
         if(jwtUtil.isExpired(refresh)) throw new IllegalArgumentException("REFRESH_TOKEN_EXPIRED");
 
         String category = jwtUtil.getCategory(refresh);
+
+        if (accessToken == null) throw new IllegalArgumentException("ACCESS_TOKEN_IS_NULL");
         if (!category.equals("refresh")) throw new IllegalArgumentException("INVALID_REFRESH_TOKEN");
 
         accessToken = accessToken.replace("Bearer ", "");
