@@ -25,7 +25,7 @@ public class ReissueController {
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
 
-    @GetMapping(value = "/reissue")
+    @GetMapping(value = "/api/v1/reissue")
     public ResponseEntity<ApiResponse> reissue(HttpServletRequest request)
     {
         String refreshToken = null;

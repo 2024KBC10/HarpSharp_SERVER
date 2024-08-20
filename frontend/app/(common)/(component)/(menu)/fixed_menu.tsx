@@ -30,21 +30,21 @@ export default function FixedMenu() {
             <ul className={styles.tab_container}>
                 <MenuTab 
                 onClick={onClickTab}
-                isFocus={focusTab === "/home"}
+                isFocus={focusTab === "/"}
                 name="홈"
-                route="/home"
+                route="/"
                 />
                 <MenuTab 
                 onClick={onClickTab}
-                isFocus={focusTab === "/home/mytask"}
+                isFocus={focusTab === "/mytask"}
                 name="내 일정"
-                route="/home/mytask"
+                route="/mytask"
                 />
                 <MenuTab 
                 onClick={onClickTab}
-                isFocus={focusTab === "/home/icebreaking"}
+                isFocus={focusTab === "/icebreaking"}
                 name="아이스 브레이킹"
-                route="/home/icebreaking"
+                route="/icebreaking"
                 />
             </ul>
             <div className={styles.bottom_container}>

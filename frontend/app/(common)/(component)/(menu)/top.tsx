@@ -11,8 +11,7 @@ import styles from "./top.module.css"
 
 export default function MenuTop() {
     const router = useRouter()
-    const onClickSignature = () => router.push("/home")
-
+    const onClickSignature = () => router.push("/")
     return (
         <div className={styles.container}>
             <Spacer spacing={5} direction="column"/>

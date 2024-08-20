@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 
+import FixedMenu from "./(common)/(component)/(menu)/fixed_menu";
+import AIIcon from "./(common)/(component)/(ai)/ai_icon";
+
 import AppIcon from "../public/image/signature_icon.jpg"
 import "./globals.css";
 
@@ -42,6 +45,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <FixedMenu/>
+        <AIIcon/>
         {children}
       </body>
     </html>
