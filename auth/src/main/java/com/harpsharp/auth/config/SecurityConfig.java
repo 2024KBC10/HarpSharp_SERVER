@@ -50,6 +50,7 @@ public class SecurityConfig {
     private final ResponseUtils responseUtils;
     private final UserService userService;
 
+
     @Bean
     public CookieSameSiteSupplier applicationCookieSameSiteSupplier() {
         return CookieSameSiteSupplier.ofNone();
@@ -66,14 +67,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CustomOAuth2UserService customOAuth2UserService) throws Exception {
-
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-//                .oauth2Login((oauth2) -> oauth2
-//                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-//                                .userService(customOAuth2UserService)))
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/api/v1/", "/api/v1/join", "/api/v1/board/**", "/api/v1/todo/**", "/api/v1/user/board/**", "/api/v1/user/todo/**")
                         .permitAll()
@@ -87,6 +84,7 @@ public class SecurityConfig {
                         .authenticated())
                 .exceptionHandling((exceptions) -> exceptions
                                 .authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                .addFilterBefore(new ExceptionHandlerFilter(responseUtils), JwtFilter.class)
                 .addFilterBefore(new JwtFilter(jwtUtil, responseUtils), LoginFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, userService, responseUtils), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new ExceptionHandlerFilter(responseUtils), CustomLogoutFilter.class)
