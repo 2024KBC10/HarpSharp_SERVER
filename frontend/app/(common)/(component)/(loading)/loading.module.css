@@ -1,0 +1,17 @@
+.container {
+    background-color: white;
+}
+
+.spinner {
+    width: 100%;
+    height: 100%;
+    border: 4px solid #949dc12d;
+    box-sizing: border-box;
+    border-radius: 100%;
+
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(1turn); }
+}

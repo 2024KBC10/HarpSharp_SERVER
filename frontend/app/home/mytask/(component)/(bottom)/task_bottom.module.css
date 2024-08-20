@@ -1,0 +1,133 @@
+.container {
+    width: 79.33%;
+    height: 65%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.container span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.container .task_container {
+    width: 100%;
+    height: 70%;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: scroll;
+    scrollbar-width: none;
+    transition: .2s ease-out;
+}
+
+.task_container .task {
+    padding: 15px;
+    margin-bottom: 10px;
+    border: solid 1px #C6C6C7;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: .2s ease;
+}
+
+.task .task_wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.task_wrapper span { 
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.task_action_container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.task_action_container p { font-size: .9em; }
+
+.task .task_memo_container {
+    min-width: 500px;
+    max-width: 1080px;
+    height: 35%;
+    text-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    word-break: keep-all;
+    word-wrap: break-word;
+}
+
+.container .input_container {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.input_container input {
+    max-width: 1080px;
+    width: 85%;
+    height: 100%;
+    padding: 10px;
+    outline: none;
+    border: solid 1px #C6C6C7;
+    border-radius: 5px;
+    color: #6B6B6B;
+    font-weight: 500;
+}
+
+.task input[type=checkbox] {
+    display: none;
+}
+
+.task input[type=checkbox] + label {
+    width: 12px;
+    height: 12px;
+    border-radius: 10px;
+    border: 1px solid black;
+    cursor: pointer;
+    vertical-align: middle;
+    align-self: flex-end;
+    transition: .1s ease;
+}
+
+.task input[type="checkbox"]:checked + label {
+    background-color: #24E34D;
+    border: 1px solid #24E34D;
+}
+
+.delete {
+    border-radius: 999px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+    transition: .15s ease-in;
+
+    &:hover { background-color: #E5E2E1; }
+}
+
+.arrow_down {
+    border-radius: 999px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+    transition: .2s ease-in;
+}
+
+.arrow_up {
+    border-radius: 999px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transform: rotate(.5turn);
+    cursor: pointer;
+    transition: .2s ease-in;
+}

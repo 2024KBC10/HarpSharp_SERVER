@@ -1,0 +1,23 @@
+.container {
+    width: 83.33%;
+    height: 65%;
+    border-radius: 15px;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.container span {
+    margin-left: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.container .question_container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    align-items: center;
+    float: left;
+    scrollbar-width: none;
+    overflow: scroll;
+}

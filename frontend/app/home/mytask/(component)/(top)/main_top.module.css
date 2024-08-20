@@ -1,0 +1,27 @@
+.container {
+    width: 79.33%;
+    height: 15%;
+    margin-top: 40px;
+    border-bottom: solid 1px #C6C6C7;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.container span {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.feature_cotainer {
+    width: 100%;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.feature_cotainer .filter_container {
+    display: flex;
+    flex-direction: column;
+}
