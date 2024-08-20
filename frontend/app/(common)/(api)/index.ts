@@ -44,6 +44,7 @@ export namespace APIManager {
                 body: args.body ? JSON.stringify(args.body) : undefined,
                 method: "POST",
                 headers: {
+                    ...BASE_HEADERS,
                     ...args.headers,
                 },
 
