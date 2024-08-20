@@ -1,43 +1,25 @@
 package com.harpsharp.auth.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.jwt.*;
-import com.harpsharp.auth.oauth2.CustomSuccessHandler;
 import com.harpsharp.auth.service.CustomOAuth2UserService;
-import com.harpsharp.auth.service.RefreshTokenService;
 import com.harpsharp.auth.service.UserService;
-import com.harpsharp.infra_rds.entity.User;
-import com.harpsharp.infra_rds.mapper.UserMapper;
-import com.harpsharp.infra_rds.repository.UserRepository;
 import com.harpsharp.infra_rds.util.ResponseUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.filters.CorsFilter;
 import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -84,11 +66,11 @@ public class SecurityConfig {
                         .authenticated())
                 .exceptionHandling((exceptions) -> exceptions
                                 .authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                .addFilterBefore(new ExceptionHandlerFilter(responseUtils), JwtFilter.class)
                 .addFilterBefore(new JwtFilter(jwtUtil, responseUtils), LoginFilter.class)
+                .addFilterBefore(new JwtExceptionHandlerFilter(responseUtils), JwtFilter.class)
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, userService, responseUtils), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new ExceptionHandlerFilter(responseUtils), CustomLogoutFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, responseUtils), LogoutFilter.class)
+                .addFilterBefore(new LogoutExceptionHandlerFilter(responseUtils), CustomLogoutFilter.class)
                 .sessionManagement((session)->session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
