@@ -72,7 +72,7 @@ jobs:
           chmod +x ./gradlew
           ./gradlew clean build --warning-mode all
           ./gradlew openapi3 --warning-mode all
-          mv build/api-spec/auth.json ../swagger/
+          mv build/api-spec/auth.json ../infra/swagger/
 
       - name: 빌드 및 API 명세서 생성 (Board)
         working-directory: ./board
@@ -81,7 +81,7 @@ jobs:
           chmod +x ./gradlew
           ./gradlew clean build --warning-mode all
           ./gradlew openapi3 --warning-mode all
-          mv build/api-spec/board.json ../swagger/
+          mv build/api-spec/board.json ../infra/swagger/
 
       - name: 빌드 및 API 명세서 생성 (Todo)
         working-directory: ./todo
@@ -90,7 +90,7 @@ jobs:
           chmod +x ./gradlew
           ./gradlew clean build --warning-mode all
           ./gradlew openapi3 --warning-mode all
-          mv build/api-spec/todo.json ../swagger/
+          mv build/api-spec/todo.json ../infra/swagger/
 
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
