@@ -1,11 +1,8 @@
 package com.harpsharp.infra_rds.dto.todo;
 
-import com.harpsharp.infra_rds.util.TodoStatus;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 public record ResponseTodoPostDTO(

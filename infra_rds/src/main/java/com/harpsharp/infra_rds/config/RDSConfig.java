@@ -1,4 +1,4 @@
-package com.harpsharp.infra_rds.confg;
+package com.harpsharp.infra_rds.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

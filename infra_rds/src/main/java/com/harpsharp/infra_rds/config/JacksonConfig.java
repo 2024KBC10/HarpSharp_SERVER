@@ -1,4 +1,4 @@
-package com.harpsharp.infra_rds.confg;
+package com.harpsharp.infra_rds.config;
 
 
 import com.fasterxml.jackson.core.JsonFactory;

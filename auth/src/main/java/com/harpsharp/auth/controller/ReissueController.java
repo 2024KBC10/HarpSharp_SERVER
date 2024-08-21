@@ -55,9 +55,9 @@ public class ReissueController {
 
         try{
             if(jwtUtil.isExpired(refreshToken))
-                throw new JwtException("INVALID REFRESH_TOKEN");
+                throw new JwtException("INVALID_REFRESH_TOKEN");
         }catch(JwtException e){
-            throw new IllegalArgumentException("INVALID REFRESH_TOKEN");
+            throw new IllegalArgumentException("INVALID_REFRESH_TOKEN");
         }
 
 

@@ -10,8 +10,8 @@ openapi3 {
 	servers = [
 			{ url = "http://harpsharp.com" }
 	]
-	title = "Harp Sharp Todo API"
-	description = "Harp Sharp Todo List API입니다."
+	title = "HarpSharp Todo API"
+	description = "HarpSharp Todo List API입니다."
 	version = "1.0.0"
 	format = 'json'
 	outputFileNamePrefix = 'todo'

@@ -1,4 +1,4 @@
-package com.harpsharp.infra_rds.util;
+package com.harpsharp.infra_rds.dto.todo;
 
 
 import lombok.Getter;

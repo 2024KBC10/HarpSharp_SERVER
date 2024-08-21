@@ -1,7 +1,7 @@
 package com.harpsharp.infra_rds.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.harpsharp.infra_rds.util.TodoStatus;
+import com.harpsharp.infra_rds.dto.todo.TodoStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
