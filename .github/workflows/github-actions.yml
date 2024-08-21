@@ -126,12 +126,12 @@ jobs:
 
       - name: 배포 Dir 생성(Swagger)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
-        working-directory: ./swagger
+        working-directory: ./infra/swagger
         run: |
           mkdir -p deploy-swagger
           cp *.json deploy-swagger/
           cp docker-compose.yml deploy-swagger/
-          cd ../ && mkdir -p deploy/swagger
+          cd ../../ && mkdir -p deploy/swagger
           mv ./swagger/deploy-swagger/* deploy/swagger
 
       - name: 배포 Dir 생성(Auth)
@@ -172,7 +172,7 @@ jobs:
         working-directory: ./
         run : |
           mkdir -p deploy/nginx
-          mv ./nginx/* deploy/nginx
+          mv ./infra/nginx/* deploy/nginx
 
       - name: 배포 Dir 생성(frontend)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
@@ -190,8 +190,8 @@ jobs:
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         working-directory: ./
         run: |
-          cp scripts/*.sh deploy
-          cp appspec.yml deploy
+          cp utils/*.sh deploy
+          cp utils/appspec.yml deploy
           ls deploy -a
           cd deploy && zip -r deploy *
           aws s3 cp deploy.zip s3://${{ secrets.AWS_BUCKET_NAME }}/deploy.zip

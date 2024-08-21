@@ -6,11 +6,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-sizing: border-box;
-    padding: 20px;
 }
 
-.headimage{
+.headtext{
+    font-size: 30px;
     margin-bottom: 30px;
 }
 
@@ -18,42 +17,43 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 300px;
+    width: 50%;
+    box-sizing: content-box;
 }
 
 .input{
-    width : 100%;
+    width : 60%;
     height: 50px;
     margin-bottom: 10px;
     padding-left: 10px;
     font-size: large;
-    box-sizing: border-box;
 }
 
 .loginbutton{
-    width: 100%;
+    width: 63%;
     height: 50px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     background-color: #5686E1;
     color: #ffffff;
-    border: none;
-    cursor: pointer;
+    border: #5686E1;
 }
 .loginbutton:hover{
     background-color: #5A77F6;
+    color: #ffffff;
+    border: #5A77F6;
 }
 .loginbutton:active{
     border: 2px solid #9d9d9d;
 }
 
 .text{
-    margin: 0;
-    font-size: 14px;
+    margin-left: 20px;
+    margin-top: 6px;
 }
 .optiontext{
+    margin-left: 20px;
     color: #5A77F6;
     text-decoration: none;
-    font-size: 14px;
 }
 .optiontext:hover{
     text-decoration: underline;
@@ -61,28 +61,30 @@
 }
 
 .subitems{
-    width: 300px;
+    width: 38%;
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
     align-items: center;
-    margin-bottom: 10px;
-    padding: 0 10px;
+    justify-content: center;
 }
 
 .staylogin{
+    width: 100%;
     display: flex;
-    align-items: center;
-    padding-left: 0;
-    margin-left: -5px;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-left: 35px;
+    margin-right: 39px;
 }
 
 .extraoption{
+    width: 50%;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: row;
+    align-items:flex-end;
 }
 
 .staybutton{
     width: 20px;
     height: 20px;
-    margin-right: 8px;
 }
