@@ -137,7 +137,8 @@ AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
 + [스프링 시큐리티 필터체인 리팩토링 - 1](https://www.notion.so/Auth-logout-update-46cbdfbe01f54e65a945ce54296f6226)
 + [스프링 시큐리티 필터체인 리팩토링 - 2](https://www.notion.so/7deebafd0aab4b4babe7474b6fa53ae9)
 + [스프링 시큐리티 필터체인 리팩토링 - 3](https://www.notion.so/b3a5346ff7464f90a5edaaf1c66bbe12)
-+ [CORS + 프론트 서버 배포](https://www.notion.so/a81e178bafeb462085358c448ac347fa?v=d5768f826212401b9a504287b1836ad2&p=a30c1ff0fab74786a5d32a216bd9513e&pm=s)
++ [CORS 우회 + 프론트 서버 배포](https://www.notion.so/CORS-a30c1ff0fab74786a5d32a216bd9513e)
++ [CORS 적용 + 프론트 로컬 환경 정상화](https://www.notion.so/CORS-Cookie-5efe82a5e13445ef924ee7e72ebf12c9)
 
 
 <br>
