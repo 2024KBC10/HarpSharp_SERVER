@@ -105,7 +105,7 @@ public class UserController {
         headers.set("Authorization", "Bearer " + newAccess);
 
         Cookie refreshCookie = jwtUtil.createCookie("refresh", newRefresh);
-        String cookieHeader = String.format("%s=%s; Path=%s; HttpOnly; Max-Age=%d; SameSite=None",
+        String cookieHeader = String.format("%s=%s; Path=%s; HttpOnly; Max-Age=%d; SameSite=None; Secure ",
                 refreshCookie.getName(),
                 refreshCookie.getValue(),
                 refreshCookie.getPath(),

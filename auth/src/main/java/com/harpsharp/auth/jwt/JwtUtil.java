@@ -163,7 +163,7 @@ public class JwtUtil {
         headers.set("Authorization", "Bearer " + newAccessToken);
 
         Cookie refreshCookie = createCookie("refresh", newRefreshToken);
-        String cookieHeader = String.format("%s=%s; Path=%s; HttpOnly; Max-Age=%d; SameSite=None",
+        String cookieHeader = String.format("%s=%s; Path=%s; HttpOnly; Max-Age=%d; SameSite=None; Secure",
                 refreshCookie.getName(),
                 refreshCookie.getValue(),
                 refreshCookie.getPath(),
