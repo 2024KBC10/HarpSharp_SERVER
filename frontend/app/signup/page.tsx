@@ -32,7 +32,7 @@ export default function SignUp(){
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json;charset=UTF-8",
-                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InNzc3NzIiwiY2F0ZWdvcnkiOiJBdXRob3JpemF0aW9uIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTcyNDE4NTEyNywiZXhwIjoxNzI0MTg4NzI3fQ.zpNEGnWAPK4luTRmjlGQsIohh7NrA9uNQMiazWVmaMk"
+                    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InNzc3NzIiwiY2F0ZWdvcnkiOiJBdXRob3JpemF0aW9uIiwicm9sZSI6IlJPTEVfVVNFUiIsImlhdCI6MTcyNDIyMTg5NSwiZXhwIjoxNzI0MjI1NDk1fQ.3jsA70RQtEwF7LF1EylRVqMMvRS4oNzE3IIoW3u8AN4"
                 }
             });
             console.log(response);
