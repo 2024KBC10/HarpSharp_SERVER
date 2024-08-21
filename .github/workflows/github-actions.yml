@@ -132,7 +132,7 @@ jobs:
           cp *.json deploy-swagger/
           cp docker-compose.yml deploy-swagger/
           cd ../../ && mkdir -p deploy/swagger
-          mv ./swagger/deploy-swagger/* deploy/swagger
+          mv ./infra/swagger/deploy-swagger/* deploy/swagger
 
       - name: 배포 Dir 생성(Auth)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
