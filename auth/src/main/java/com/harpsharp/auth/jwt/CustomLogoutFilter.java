@@ -78,6 +78,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
         cookie.setMaxAge(0);
         cookie.setPath("/");
 
-        responseUtils.writeResponseEntity(response, HttpStatus.OK.value(), "LOGOUT_SUCCESS", "정상적으로 로그아웃 되었습니다.");
+        responseUtils.writeResponseEntity(response, HttpStatus.CREATED.value(), "LOGOUT_SUCCESS", "정상적으로 로그아웃 되었습니다.");
     }
 }
