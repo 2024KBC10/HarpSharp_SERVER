@@ -56,7 +56,7 @@ jobs:
           gradle-version: '8.5'
 
       - name: YML 파일 생성
-        working-directory: ./
+        working-directory: .
         run: |
           mkdir -p auth/src/main/resources/
           echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > auth/src/main/resources/application.yml

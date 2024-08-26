@@ -46,7 +46,7 @@ public class ProfileImageController {
                 = profileImageInputPort.confirmProfileUrl(requestProfileIamgeDTO);
 
         ResponseWithData<ResponseProfileImageDTO> response =
-                new ResponseWithData<>(
+                new ResponseWithData<ResponseProfileImageDTO>(
                         LocalDateTime.now(),
                         HttpStatus.CREATED.value(),
                         "CONFIRM_PROFILE",
