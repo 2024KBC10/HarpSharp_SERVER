@@ -19,6 +19,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -69,7 +71,7 @@ class AlbumApplicationTests {
     @Test
     @Transactional
     public void postConfirm() throws Exception {
-        RequestProfileImageDTO requestProfileImageDTO = new RequestProfileImageDTO("testUUID.png");
+        RequestProfileImageDTO requestProfileImageDTO = new RequestProfileImageDTO(UUID.randomUUID() + ".png");
         String profileJson = objectMapper.writeValueAsString(requestProfileImageDTO);
         this.mockMvc.perform(post("/api/v1/profile/confirm")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -89,7 +91,7 @@ class AlbumApplicationTests {
                                 fieldWithPath("details")
                                         .type(JsonFieldType.STRING)
                                         .description("상세 메세지"),
-                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("presignedURL과 S3에 저장될 파일명(UUID)"),
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("프로필 이미지 메타데이터"),
                                 fieldWithPath("data.url").type(JsonFieldType.STRING).description("실제 정적 URL"),
                                 fieldWithPath("data.uuid").type(JsonFieldType.STRING).description("UUID"),
                                 fieldWithPath("data.type").type(JsonFieldType.STRING).description("type"),
