@@ -1,12 +1,9 @@
 package com.harpsharp.auth.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.utils.CustomUserDetails;
-import com.harpsharp.infra_rds.dto.response.ApiResponse;
-import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.auth.exceptions.JwtAuthenticationException;
 import com.harpsharp.infra_rds.util.ResponseUtils;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -21,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @Slf4j
 @RequiredArgsConstructor

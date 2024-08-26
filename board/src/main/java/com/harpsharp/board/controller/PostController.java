@@ -92,14 +92,8 @@ public class PostController {
         if(!isValid(accessToken, requestPostDTO.username()))
             throw new IllegalArgumentException("INVALID_ACCESS");
 
-        RequestUpdatePostDTO updated =
-                new RequestUpdatePostDTO(
-                        requestPostDTO.postId(),
-                        requestPostDTO.username(),
-                        requestPostDTO.title(),
-                        requestPostDTO.content());
 
-        Map<Long, ResponsePostDTO> object = postService.updatePost(updated);
+        Map<Long, ResponsePostDTO> object = postService.updatePost(requestPostDTO);
 
         ResponseWithData<Map<Long,ResponsePostDTO>> apiResponse
                 = new ResponseWithData<>(

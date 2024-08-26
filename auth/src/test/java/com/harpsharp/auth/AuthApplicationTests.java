@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.infra_rds.dto.user.*;
 import com.harpsharp.auth.service.RefreshTokenService;
 import com.harpsharp.auth.service.UserService;
+import com.harpsharp.infra_rds.entity.album.ProfileImage;
+import com.harpsharp.infra_rds.repository.ProfileImageJpaRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,11 +25,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.UUID;
+
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.restdocs.cookies.CookieDocumentation.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
@@ -44,11 +50,13 @@ class AuthApplicationTests {
 	private  RefreshTokenService refreshTokenService;
 	@Autowired
 	private  UserService userService;
-
+	@Autowired
+	private ProfileImageJpaRepository profileImageJpaRepository;
 
 	private final String username = "admin";
 	private final String password = "HeisPassWord!15";
 	private final String email    = "admin@gmail.com";
+	private final String url 	  = "https://d2165tdwy08x2f.cloudfront.net/profile/7a185c8f-611d-49df-b829-7e8e66943385.jpg";
 	private String accessToken    = "EMPTY";
 	private Cookie refreshToken   = null;
 
@@ -59,13 +67,20 @@ class AuthApplicationTests {
 	public void setUp() {
 		userService.clear();
 		refreshTokenService.clear();
+		profileImageJpaRepository.deleteAll();
 	}
 
 	public void init() throws Exception{
-		JoinTestDTO joinDTO = new JoinTestDTO(username, password, email);
+		JoinDTO joinDTO = new JoinDTO(username, password, email, url);
 
 		String joinJson = objectMapper.writeValueAsString(joinDTO);
+		ProfileImage profileImage = ProfileImage
+				.builder()
+				.url(url)
+				.uuid(UUID.randomUUID().toString())
+				.build();
 
+		profileImageJpaRepository.save(profileImage);
 
 		this.mockMvc.perform(
 				post("/api/v1/join")
@@ -92,37 +107,13 @@ class AuthApplicationTests {
 		refreshToken = result.getResponse().getCookie("refresh");
 	}
 
-	@DisplayName("Auth 서버 루트 페이지")
-	@Test
-	@Transactional
-	public void rootPage() throws Exception {
-		this.mockMvc.perform(get("/api/v1/"))
-				.andExpect(status().isOk())
-				.andDo(document("Root Page", // 문서화할 때 사용할 경로와 이름
-						responseFields(
-								fieldWithPath("timeStamp")
-										.type(JsonFieldType.STRING)
-										.description("응답 시간"),
-								fieldWithPath("code")
-										.type(JsonFieldType.VARIES)
-										.description("상태 코드"),
-								fieldWithPath("message")
-										.type(JsonFieldType.STRING)
-										.description("접속 성공 여부"),
-								fieldWithPath("details")
-										.type(JsonFieldType.STRING)
-										.description("상세 메세지")
-						)));
-	}
-
 	@DisplayName("회원가입 테스트")
 	@Test
 	@Transactional
 	public void joinTest() throws Exception{
-		JoinTestDTO user = new JoinTestDTO(username, password, email);
+		JoinDTO user = new JoinDTO(username, password, email, url);
 
 		String json = objectMapper.writeValueAsString(user);
-
 
 		this.mockMvc.perform(
 				post("/api/v1/join")
@@ -133,7 +124,8 @@ class AuthApplicationTests {
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("닉네임"),
 								fieldWithPath("password").description("비밀번호"),
-								fieldWithPath("email").description("이메일 주소")
+								fieldWithPath("email").description("이메일 주소"),
+								fieldWithPath("url").description("프로필 이미지 URL")
 						),
 						responseFields(
 								fieldWithPath("timeStamp")
@@ -189,6 +181,7 @@ class AuthApplicationTests {
 								fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성자 정보"),
 								fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("닉네임"),
 								fieldWithPath("data.*.email").type(JsonFieldType.STRING).description("이메일"),
+								fieldWithPath("data.*.url").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("가입 날짜"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 날짜"),
 								fieldWithPath("data.*.socialType").type(JsonFieldType.STRING).description("소셜 계정 가입 타입"),
@@ -196,9 +189,7 @@ class AuthApplicationTests {
 								fieldWithPath("data.*.posts").type(JsonFieldType.OBJECT).description("작성글"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("작성 댓글"),
 								fieldWithPath("data.*.todoPosts").type(JsonFieldType.OBJECT).description("작성글(TODO)"),
-								fieldWithPath("data.*.todoComments").type(JsonFieldType.OBJECT).description("작성 댓글(TODO)")
-
-						),
+								fieldWithPath("data.*.todoComments").type(JsonFieldType.OBJECT).description("작성 댓글(TODO)")),
 						responseHeaders(headerWithName("Authorization").description("발급된 access token"))
 				));
 	}
@@ -245,15 +236,12 @@ class AuthApplicationTests {
 
 
 		this.mockMvc.perform(
-						get("/api/v1/user")
+						get("/api/v1/user/{username}", username)
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
 				.andDo(document("Get User Data", // 문서화할 때 사용할 경로와 이름
-						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("username").description("닉네임"),
-								fieldWithPath("role").description("권한")
-						),
+						pathParameters(parameterWithName("username").description("유저명")),
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -270,6 +258,7 @@ class AuthApplicationTests {
 								fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성자 정보"),
 								fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("닉네임"),
 								fieldWithPath("data.*.email").type(JsonFieldType.STRING).description("이메일"),
+								fieldWithPath("data.*.url").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("가입 날짜"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 날짜"),
 								fieldWithPath("data.*.socialType").type(JsonFieldType.STRING).description("소셜 계정 가입 타입"),
@@ -292,15 +281,12 @@ class AuthApplicationTests {
 
 
 		this.mockMvc.perform(
-						get("/api/v1/user/board/posts")
+						get("/api/v1/user/board/posts/{username}", username)
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
 				.andDo(document("Get User's Posts", // 문서화할 때 사용할 경로와 이름
-						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("username").description("닉네임"),
-								fieldWithPath("role").description("권한")
-						),
+						pathParameters(parameterWithName("username").description("유저명")),
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -330,15 +316,12 @@ class AuthApplicationTests {
 
 
 		this.mockMvc.perform(
-						get("/api/v1/user/board/comments")
+						get("/api/v1/user/board/comments/{username}", username)
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
 				.andDo(document("Get User's Comments", // 문서화할 때 사용할 경로와 이름
-						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("username").description("닉네임"),
-								fieldWithPath("role").description("권한")
-						),
+						pathParameters(parameterWithName("username").description("유저명")),
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -368,15 +351,12 @@ class AuthApplicationTests {
 
 
 		this.mockMvc.perform(
-						get("/api/v1/user/todo/posts")
+						get("/api/v1/user/todo/posts/{username}", username)
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
 				.andDo(document("Get User's Todo Posts", // 문서화할 때 사용할 경로와 이름
-						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("username").description("닉네임"),
-								fieldWithPath("role").description("권한")
-						),
+						pathParameters(parameterWithName("username").description("유저명")),
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -406,15 +386,12 @@ class AuthApplicationTests {
 
 
 		this.mockMvc.perform(
-						get("/api/v1/user/todo/comments")
+						get("/api/v1/user/todo/comments/{username}", username)
 								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
 								.content(infoJson))
 				.andExpect(status().isOk())
 				.andDo(document("Get Users Todo Comments", // 문서화할 때 사용할 경로와 이름
-						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("username").description("닉네임"),
-								fieldWithPath("role").description("권한")
-						),
+						pathParameters(parameterWithName("username").description("유저명")),
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -441,7 +418,7 @@ class AuthApplicationTests {
 		login();
 
 		UpdateUserDTO updateUserDto =
-				new UpdateUserDTO(password,"update!", "UpdatePassword15!", "update@gmail.com");
+				new UpdateUserDTO(password,"update!", "UpdatePassword15!", "update@gmail.com", null);
 
 		String updateJson = objectMapper.writeValueAsString(updateUserDto);
 
@@ -457,7 +434,8 @@ class AuthApplicationTests {
 								fieldWithPath("password").description("기존 비밀번호"),
 								fieldWithPath("updatedUsername").description("새 닉네임 (if null: 변경 X)"),
 								fieldWithPath("updatedPassword").description("새 비밀번호 (if null: 변경 X)"),
-								fieldWithPath("updatedEmail").description("새 이메일 (if null: 변경 X)")
+								fieldWithPath("updatedEmail").description("새 이메일 (if null: 변경 X)"),
+								fieldWithPath("updatedURL").description("새 프로필 이미지 URL")
 						),
 						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						requestCookies(cookieWithName("refresh").description("유효한 refresh token")),
@@ -478,6 +456,7 @@ class AuthApplicationTests {
 								fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성자 정보"),
 								fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("닉네임"),
 								fieldWithPath("data.*.email").type(JsonFieldType.STRING).description("이메일"),
+								fieldWithPath("data.*.url").type(JsonFieldType.STRING).description("프로필 이미지 URL"),
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("가입 날짜"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 날짜"),
 								fieldWithPath("data.*.socialType").type(JsonFieldType.STRING).description("소셜 계정 가입 타입"),
@@ -526,5 +505,64 @@ class AuthApplicationTests {
 										.description("상세 메세지")
 						)
 				));
+	}
+
+	@DisplayName("토큰 재발급 테스트")
+	@Test
+	@Transactional
+	public void reissue() throws Exception{
+		String prevAccess = accessToken;
+		login();
+
+		this.mockMvc.perform(
+				get("/api/v1/reissue")
+						.header("Authorization", "Bearer " + prevAccess)
+						.cookie(refreshToken))
+						.andExpect(status().isOk())
+				.andDo(document("Reissue",
+						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
+						requestCookies(cookieWithName("refresh").description("유효한 refresh token")),
+						responseFields(
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.VARIES)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("회원 탈퇴 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지")
+								)));
+	}
+
+	@DisplayName("Profile Image URL 테스트")
+	@Test
+	@Transactional
+	public void getProfileImageURL() throws Exception{
+		login();
+
+		this.mockMvc.perform(
+						get("/api/v1/user/profile/{username}", username))
+				.andExpect(status().isOk())
+				.andDo(document("GetProfileImageURL",
+						responseFields(
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.VARIES)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("회원 탈퇴 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지"),
+								fieldWithPath("data").type(JsonFieldType.OBJECT).description("프로필 이미지 URL 정보"),
+								fieldWithPath("data.url").type(JsonFieldType.STRING).description("프로필 이미지 URL")
+						)));
 	}
 }

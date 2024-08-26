@@ -1,9 +1,7 @@
 package com.harpsharp.infra_rds.mapper;
 
 import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
-import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
-import com.harpsharp.infra_rds.entity.Comment;
-import com.harpsharp.infra_rds.entity.Post;
+import com.harpsharp.infra_rds.entity.board.Comment;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

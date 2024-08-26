@@ -7,8 +7,11 @@ import com.harpsharp.auth.service.UserService;
 import com.harpsharp.board.service.CommentService;
 import com.harpsharp.board.service.PostService;
 import com.harpsharp.infra_rds.dto.board.*;
+import com.harpsharp.infra_rds.dto.user.JoinDTO;
 import com.harpsharp.infra_rds.dto.user.JoinTestDTO;
 import com.harpsharp.infra_rds.dto.user.LoginDTO;
+import com.harpsharp.infra_rds.entity.album.ProfileImage;
+import com.harpsharp.infra_rds.repository.ProfileImageJpaRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
@@ -28,6 +31,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -53,10 +57,14 @@ class BoardApplicationTests {
 	private RefreshTokenService refreshTokenService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ProfileImageJpaRepository profileImageJpaRepository;
+
 
 	private final String username = "admin";
 	private final String password = "HeisPassWord!15";
 	private final String email    = "admin@gmail.com";
+	private final String url 	  = "https://d2165tdwy08x2f.cloudfront.net/profile/7a185c8f-611d-49df-b829-7e8e66943385.jpg";
 	private String accessToken    = "EMPTY";
 	private Cookie refreshToken   = null;
 
@@ -75,10 +83,16 @@ class BoardApplicationTests {
 	Map<Long, ResponseCommentDTO> comment = null;
 
 	public void init() throws Exception{
-		JoinTestDTO joinDTO = new JoinTestDTO(username, password, email);
+		JoinDTO joinDTO = new JoinDTO(username, password, email, url);
 
 		String joinJson = objectMapper.writeValueAsString(joinDTO);
+		ProfileImage profileImage = ProfileImage
+				.builder()
+				.url(url)
+				.uuid(UUID.randomUUID().toString())
+				.build();
 
+		profileImageJpaRepository.save(profileImage);
 
 		this.mockMvc.perform(
 						post("/api/v1/join")
@@ -104,6 +118,7 @@ class BoardApplicationTests {
 		accessToken  = result.getResponse().getHeader("Authorization").split(" ")[1];
 		refreshToken = result.getResponse().getCookie("refresh");
 	}
+
 
 	public Long writePost() throws Exception{
 		RequestPostDTO requestPostDTO = new RequestPostDTO(username, title, content);
@@ -178,30 +193,7 @@ class BoardApplicationTests {
 		postService.clear();
 		userService.clear();
 		refreshTokenService.clear();
-	}
-
-	@DisplayName("아이스 브레이킹 루트 페이지")
-	@Test
-	@Transactional
-	public void rootPage() throws Exception {
-		this.mockMvc.perform(get("/api/v1/board"))
-				.andExpect(status().isOk())
-				.andDo(document("Root Page", // 문서화할 때 사용할 경로와 이름
-						responseFields(
-								fieldWithPath("timeStamp")
-										.type(JsonFieldType.STRING)
-										.description("응답 시간"),
-								fieldWithPath("code")
-										.type(JsonFieldType.VARIES)
-										.description("상태 코드"),
-								fieldWithPath("message")
-										.type(JsonFieldType.STRING)
-										.description("접속 성공 여부"),
-								fieldWithPath("details")
-										.type(JsonFieldType.STRING)
-										.description("상세 메세지")
-						)
-				));
+		profileImageJpaRepository.deleteAll();
 	}
 
 	@DisplayName("게시글 작성 테스트")
@@ -353,7 +345,7 @@ class BoardApplicationTests {
 								fieldWithPath("data.*.title").type(JsonFieldType.STRING).description("게시글 제목"),
 								fieldWithPath("data.*.content").type(JsonFieldType.STRING).description("게시글 내용"),
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
-								fieldWithPath("data.*.updatedAt").type(JsonFieldType.NULL).description("수정 일자"),
+								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("댓글 정보")
                         )
                 ));

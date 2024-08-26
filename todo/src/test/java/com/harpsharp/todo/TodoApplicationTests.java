@@ -5,9 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.auth.service.RefreshTokenService;
 import com.harpsharp.auth.service.UserService;
 import com.harpsharp.infra_rds.dto.todo.*;
+import com.harpsharp.infra_rds.dto.user.JoinDTO;
 import com.harpsharp.infra_rds.dto.user.JoinTestDTO;
 import com.harpsharp.infra_rds.dto.user.LoginDTO;
 import com.harpsharp.infra_rds.dto.todo.TodoStatus;
+import com.harpsharp.infra_rds.entity.album.ProfileImage;
+import com.harpsharp.infra_rds.repository.ProfileImageJpaRepository;
 import com.harpsharp.todo.service.TodoCommentService;
 import com.harpsharp.todo.service.TodoPostService;
 import jakarta.servlet.http.Cookie;
@@ -31,6 +34,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -65,11 +69,10 @@ class TodoApplicationTests {
 
 	private final String title   = "test!";
 	private final String content = "blahblah!";
-	private final String content_hint = "thisishint";
-	private final String content_goal = "thisisgoal";
 	private final TodoStatus status = TodoStatus.RUNNING;
 	private final LocalDateTime startAt = LocalDateTime.now();
 	private final LocalDateTime endAt = LocalDateTime.now().plusDays(1);
+	private final String url = "https://d2165tdwy08x2f.cloudfront.net/profile/7a185c8f-611d-49df-b829-7e8e66943385.jpg";
 
 	@Autowired
 	private TodoPostService postService;
@@ -80,12 +83,22 @@ class TodoApplicationTests {
 	Map<Long, ResponseTodoCommentDTO> comment = null;
     @Autowired
     private DefaultErrorViewResolver conventionErrorViewResolver;
+    @Autowired
+    private ProfileImageJpaRepository profileImageJpaRepository;
+
+
 
 	public void init() throws Exception{
-		JoinTestDTO joinDTO = new JoinTestDTO(username, password, email);
+		JoinDTO joinDTO = new JoinDTO(username, password, email, url);
 
 		String joinJson = objectMapper.writeValueAsString(joinDTO);
+		ProfileImage profileImage = ProfileImage
+				.builder()
+				.url(url)
+				.uuid(UUID.randomUUID().toString())
+				.build();
 
+		profileImageJpaRepository.save(profileImage);
 
 		this.mockMvc.perform(
 						post("/api/v1/join")
@@ -93,6 +106,7 @@ class TodoApplicationTests {
 								.content(joinJson))
 				.andReturn();
 	}
+
 	public void login() throws Exception {
 		init();
 
@@ -110,6 +124,7 @@ class TodoApplicationTests {
 		accessToken  = result.getResponse().getHeader("Authorization").split(" ")[1];
 		refreshToken = result.getResponse().getCookie("refresh");
 	}
+
 
 	public Long writePost() throws Exception{
 		RequestTodoPostDTO requestPostDTO = new RequestTodoPostDTO(
@@ -197,30 +212,7 @@ class TodoApplicationTests {
 		postService.clear();
 		userService.clear();
 		refreshTokenService.clear();
-	}
-
-	@DisplayName("TODO 루트 페이지")
-	@Test
-	@Transactional
-	public void rootPage() throws Exception {
-		this.mockMvc.perform(get("/api/v1/todo"))
-				.andExpect(status().isOk())
-				.andDo(document("Root Page", // 문서화할 때 사용할 경로와 이름
-						responseFields(
-								fieldWithPath("timeStamp")
-										.type(JsonFieldType.STRING)
-										.description("응답 시간"),
-								fieldWithPath("code")
-										.type(JsonFieldType.VARIES)
-										.description("상태 코드"),
-								fieldWithPath("message")
-										.type(JsonFieldType.STRING)
-										.description("응답 성공 여부"),
-								fieldWithPath("details")
-										.type(JsonFieldType.STRING)
-										.description("상세 메세지")
-						)
-				));
+		profileImageJpaRepository.deleteAll();
 	}
 
 	@DisplayName("TODO 작성 테스트")

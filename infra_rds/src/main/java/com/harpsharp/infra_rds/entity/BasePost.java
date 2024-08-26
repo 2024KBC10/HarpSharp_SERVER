@@ -1,6 +1,7 @@
 package com.harpsharp.infra_rds.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.harpsharp.infra_rds.entity.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;

@@ -18,6 +18,7 @@ public record ResponseUserDTO(
         LocalDateTime updatedAt,
         String socialType,
         String role,
+        String url,
         Map<Long, ResponsePostDTO> posts,
         Map<Long, ResponseCommentDTO> comments,
         Map<Long, ResponseTodoPostDTO> todoPosts,

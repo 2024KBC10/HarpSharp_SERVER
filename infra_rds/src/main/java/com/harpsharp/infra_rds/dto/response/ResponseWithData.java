@@ -19,7 +19,7 @@ public record ResponseWithData<T>(
     code: HttpStatus,
     message: 압축한 안내문 (etc. INVALID_TOKEN)
     details: 상세 설명(한글),
-    data: DTO(post, comment, user...)
+    data: dto(post, comment, user...)
 }
  */
 

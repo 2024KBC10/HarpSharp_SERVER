@@ -2,19 +2,20 @@ package com.harpsharp.auth.service;
 
 import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
 import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
+import com.harpsharp.infra_rds.dto.image.ResponseProfileImageURLDTO;
 import com.harpsharp.infra_rds.dto.todo.ResponseTodoCommentDTO;
 import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.dto.user.JoinDTO;
 import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
-import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.entity.album.ProfileImage;
+import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
 import com.harpsharp.infra_rds.mapper.*;
+import com.harpsharp.infra_rds.repository.ProfileImageJpaRepository;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final ProfileImageJpaRepository profileImageRepository;
+
     private final PasswordEncoder passwordEncoder;
+    private final ProfileImageJpaRepository profileImageJpaRepository;
 
     private final UserMapper userMapper;
     private final PostMapper postMapper;
@@ -37,6 +41,7 @@ public class UserService {
         String username = joinDTO.username();
         String password = joinDTO.password();
         String email = joinDTO.email();
+        String url   = joinDTO.url();
 
         if (userRepository.existsByEmail(email)) {
             throw UserAlreadyExistsException.builder()
@@ -54,16 +59,23 @@ public class UserService {
                     .build();
         }
 
+        ProfileImage profileImage = null;
+
+        if(url != null && !url.isEmpty()) {
+            profileImage = profileImageJpaRepository
+                    .findByUrl(url)
+                    .orElseThrow(() -> new IllegalArgumentException("PROFILE_IMAGE_NOT_FOUND"));
+        }
+
+
         User user = User.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .email(email)
                 .role(role)
+                .profileImage(profileImage)
                 .socialType("harp")
                 .build();
-        
-        ;
-        
         
         userRepository.save(user);
         System.out.println("userMapper.toMap(user) = " + userMapper.toMap(user));
@@ -79,6 +91,7 @@ public class UserService {
         String updatedUsername = updatedDTO.updatedUsername();
         String updatedPassword = updatedDTO.updatedPassword();
         String updatedEmail = updatedDTO.updatedEmail();
+        String updatedUrl   = updatedDTO.updatedURL();
 
         User existUser = userRepository
                 .findByUsername(username)
@@ -115,16 +128,20 @@ public class UserService {
         if(updatedEmail == null){
             updatedEmail = existUser.getEmail();
         }
+        if(updatedUrl == null){
+            updatedUrl = existUser.getProfileImage().getUrl();
+        }
+
+        ProfileImage profileImage = profileImageJpaRepository
+                .findByUrl(updatedUrl)
+                .orElseThrow(() -> new IllegalArgumentException("PROFILE_IMAGE_NOT_FOUND"));
 
         existUser.setUsername(updatedUsername);
         existUser.setPassword(passwordEncoder.encode(updatedPassword));
         existUser.setEmail(updatedEmail);
-
-        System.out.println("updatedUser.getUserId() = " + existUser.getUserId());
+        existUser.setProfileImage(profileImage);
 
         userRepository.save(existUser);
-
-        System.out.println("existUser = " + existUser);
 
         return userMapper.toMap(existUser);
     }
@@ -186,5 +203,12 @@ public class UserService {
                 .findByUsername(username)
                 .orElseThrow(()-> new IllegalArgumentException("USER_NOT_FOUND"));
         return todoCommentMapper.toMap(user.getTodoComments());
+    }
+
+    public ResponseProfileImageURLDTO findProfileUrlByUsername(String username){
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("USER_NOT_FOUND"));
+        return new ResponseProfileImageURLDTO(user.getProfileImage().getUrl());
     }
 }

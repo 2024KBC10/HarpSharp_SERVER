@@ -5,6 +5,7 @@ import com.harpsharp.auth.entity.RefreshToken;
 import com.harpsharp.auth.service.RefreshTokenService;
 import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
 import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
+import com.harpsharp.infra_rds.dto.image.ResponseProfileImageURLDTO;
 import com.harpsharp.infra_rds.dto.response.ResponseWithData;
 import com.harpsharp.infra_rds.dto.todo.ResponseTodoCommentDTO;
 import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
@@ -39,14 +40,10 @@ public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
-    private final UserMapper userMapper;
 
 
-    @GetMapping("/api/v1/user")
-    public ResponseEntity<ResponseWithData<Map<Long, ResponseUserDTO>>> getUserDataById
-            (@RequestBody InfoDTO info) {
-
-        String username = info.username();
+    @GetMapping("/api/v1/user/{username}")
+    public ResponseEntity<ResponseWithData<Map<Long, ResponseUserDTO>>> getUserDataById(@PathVariable String username) {
         Map<Long, ResponseUserDTO> user = userService.findByUsername(username);
 
 
@@ -89,7 +86,6 @@ public class UserController {
 
         refreshTokenService.deleteByToken(accessToken);
 
-        System.out.println("ok");
         RefreshToken refreshEntity = RefreshToken
                 .builder()
                 .accessToken(newAccess)
@@ -99,7 +95,6 @@ public class UserController {
         refreshTokenService.save(refreshEntity);
 
 
-        System.out.println("ok delete");
         HttpHeaders headers = new HttpHeaders();
 
         headers.set("Authorization", "Bearer " + newAccess);
@@ -111,8 +106,6 @@ public class UserController {
                 refreshCookie.getPath(),
                 refreshCookie.getMaxAge());
 
-        System.out.println("ok cookie = " + cookieHeader);
-
         headers.add(HttpHeaders.SET_COOKIE, cookieHeader);
 
 
@@ -123,8 +116,6 @@ public class UserController {
                 "USER_UPDATED_SUCCESSFULLY",
                 "유저 정보가 성공적으로 수정되었습니다.",
                         object);
-        System.out.println("object = " + object);
-        System.out.println("apiResponse = " + apiResponse);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -138,8 +129,7 @@ public class UserController {
             @RequestBody DeleteDTO deleteDTO) throws IOException {
 
         if (accessToken == null || !accessToken.startsWith("Bearer ")) {
-            System.out.println("invalid access");
-            throw new IllegalArgumentException("Invalid access");
+            throw new IllegalArgumentException("INVALID_ACCESS_TOKEN");
         }
 
         accessToken = accessToken.substring("Bearer ".length());
@@ -163,73 +153,73 @@ public class UserController {
                 .body(apiResponse);
     }
 
-    @GetMapping("/api/v1/user/board/posts")
-    public ResponseWithData<Map<Long, ResponsePostDTO>> getPostsByUserInfo(@RequestBody InfoDTO info){
+    @GetMapping("/api/v1/user/board/posts/{username}")
+    public ResponseWithData<Map<Long, ResponsePostDTO>> getPostsByUserInfo(@PathVariable String username){
+        Map<Long, ResponsePostDTO> data = userService.findPostsByUsername(username);
+
+        return new ResponseWithData<>(
+                LocalDateTime.now(),
+                HttpStatus.OK.value(),
+                "SELECT_POSTS_BY_INFO_SUCCESSFULLY",
+                username + "님이 작성한 게시글입니다",
+                data);
+    }
+
+    @GetMapping("/api/v1/user/board/comments/{username}")
+    public ResponseWithData<Map<Long, ResponseCommentDTO>> getCommentsByUserInfo(@PathVariable String username){
+        Map<Long, ResponseCommentDTO> data = userService.findCommentsByUsername(username);
+
+        return new ResponseWithData<>(
+                LocalDateTime.now(),
+                HttpStatus.OK.value(),
+                "SELECT_POSTS_BY_INFO_SUCCESSFULLY",
+                username + "님이 작성한 댓글입니다",
+                data);
+    }
+
+    @GetMapping("/api/v1/user/todo/posts/{username}")
+    public ResponseWithData<Map<Long, ResponseTodoPostDTO>> getTodoPostsByUserInfo(@PathVariable String username){
         ResponseUserDTO user = userService
-                .findByUsername(info.username())
+                .findByUsername(username)
                 .values()
                 .stream()
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("INVALID_INFO"));
+                .orElseThrow(() -> new IllegalArgumentException("USER_NOT_FOUND"));
+
+        Map<Long, ResponseTodoPostDTO> data = userService.findTodoPostsByUsername(username);
+
 
         return new ResponseWithData<>(
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
                 "SELECT_POSTS_BY_INFO_SUCCESSFULLY",
-                user.username() + "님이 작성한 게시글 입니다",
-                user.posts());
+                username + "님이 작성한 Todo 게시글입니다",
+                data);
     }
 
-    @GetMapping("/api/v1/user/board/comments")
-    public ResponseWithData<Map<Long, ResponseCommentDTO>> getCommentsByUserInfo(@RequestBody InfoDTO info){
-        ResponseUserDTO user = userService
-                        .findByUsername(info.username())
-                        .values()
-                        .stream()
-                        .findAny()
-                        .orElseThrow(() -> new IllegalArgumentException("INVALID_INFO"));
-
+    @GetMapping("/api/v1/user/todo/comments/{username}")
+    public ResponseWithData<Map<Long, ResponseTodoCommentDTO>> getTodoCommentsByUserInfo(@PathVariable String username){
+        Map<Long, ResponseTodoCommentDTO> data = userService.findTodoCommentsByUsername(username);
 
         return new ResponseWithData<>(
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
                 "SELECT_POSTS_BY_INFO_SUCCESSFULLY",
-                user.username() + "님이 작성한 댓글 입니다",
-                user.comments());
+                username + "님이 작성한 Todo 댓글입니다",
+                data);
     }
 
-    @GetMapping("/api/v1/user/todo/posts")
-    public ResponseWithData<Map<Long, ResponseTodoPostDTO>> getTodoPostsByUserInfo(@RequestBody InfoDTO info){
-        ResponseUserDTO user = userService
-                .findByUsername(info.username())
-                .values()
-                .stream()
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("INVALID_INFO"));
+    @GetMapping("/api/v1/user/profile/{username}")
+    public ResponseWithData<ResponseProfileImageURLDTO> getUserProfileImage(@PathVariable String username){
+        ResponseProfileImageURLDTO data = userService.findProfileUrlByUsername(username);
 
         return new ResponseWithData<>(
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
-                "SELECT_POSTS_BY_INFO_SUCCESSFULLY",
-                user.username() + "님이 작성한 Todo 게시글 입니다",
-                user.todoPosts());
-    }
-
-    @GetMapping("/api/v1/user/todo/comments")
-    public ResponseWithData<Map<Long, ResponseTodoCommentDTO>> getTodoCommentsByUserInfo(@RequestBody InfoDTO info){
-        ResponseUserDTO user = userService
-                .findByUsername(info.username())
-                .values()
-                .stream()
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("INVALID_INFO"));
-
-        return new ResponseWithData<>(
-                LocalDateTime.now(),
-                HttpStatus.OK.value(),
-                "SELECT_POSTS_BY_INFO_SUCCESSFULLY",
-                user.username() + "님이 작성한 Todo 댓글 입니다",
-                user.todoComments());
+                "SELECT_URL_BY_USERNAME_SUCCESSFULLY",
+                username + "님의 프로필 이미지 URL입니다.",
+                data
+        );
     }
 
 }

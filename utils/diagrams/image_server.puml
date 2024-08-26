@@ -3,25 +3,43 @@
 actor Client
 participant "NGINX (Reverse Proxy)" as NGINX
 participant "Auth Server" as Auth
-participant "API Server (Producer)" as API
 participant "Kafka Cluster" as Kafka
-participant "Image Server (Consumer)" as ImageServer
+participant "Image Server" as ImageServer
 participant "AWS S3" as S3
-participant "Database" as DB
+participant "ImageDB" as ImageDB
+participant "UserDB" as UserDB
 
-Client -> NGINX: 요청 (Create/Update/Delete 프로필 이미지)
-NGINX -> Auth: JWT 토큰 검증 요청
-Auth -> NGINX: 검증 결과 반환 (유효/무효)
-NGINX -> API: 유효한 경우, API 서버로 요청 전달
-API -> Kafka: 이벤트 발행 (profile-image-events)
-Kafka -> ImageServer: 이벤트 전달
+alt 회원가입 요청
+    Client -> NGINX: 회원가입 요청 (회원 정보 + 프로필 임시 저장 URL)
+    NGINX -> Auth: Auth 서버로 요청 전달
+    Auth -> UserDB: 회원 데이터 저장 (임시 저장 URL 포함)
+    Auth -> NGINX: 회원가입 완료 응답 (201 OK)
+    Auth -> Kafka: 회원가입 완료 이벤트 발행
+    NGINX -> Client: 회원가입 완료 응답 전달
+end
 
-ImageServer -> ImageServer: 이벤트 처리 (생성/수정/삭제)
-ImageServer -> S3: 이미지 업로드/수정/삭제
-ImageServer -> DB: 메타데이터 업데이트
+alt 프로필 이미지 업로드 요청
+    Client -> NGINX: Presigned URL(PUT) 생성 요청
+    NGINX -> ImageServer: 요청 전달
+    ImageServer -> ImageServer: Presigned URL 생성
+    ImageServer -> NGINX: Presigned URL + 임시 저장 URL 반환
+    NGINX -> Client: URL 전달
 
-ImageServer -> API: 처리 완료 응답
-API -> NGINX: 최종 처리 결과 반환
-NGINX -> Client: 결과 반환
+    Client -> S3: Presigned URL로 이미지 업로드 (임시 저장소)
+    S3 -> Client: 요청 성공 응답 전달
+    Client -> NGINX: 이미지 업로드 성공 알림
+    NGINX -> ImageServer: 이미지 업로드 성공 알림 전달
+    ImageServer -> NGINX: 수신 완료 응답 (200 OK)
+    NGINX -> Client: 수신 완료 응답 전달
+end
 
+alt 회원가입 확정
+    Kafka -> ImageServer: 회원가입 완료 이벤트 전달
+    ImageServer -> S3: 임시 저장소의 이미지를 실제 저장소로 이동
+    S3 -> ImageServer: 요청 성공 응답
+    ImageServer -> ImageDB: 이미지 메타데이터 저장 및 임시 URL을 본 저장소 URL로 업데이트
+    ImageServer -> Kafka: 프로필 이미지 확정 이벤트 발행
+    Kafka -> Auth: 프로필 이미지 확정 이벤트 수신
+    Auth -> UserDB: 임시 저장 URL을 확정 이미지 URL로 업데이트
+end
 @enduml

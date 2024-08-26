@@ -64,6 +64,10 @@ jobs:
           echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > todo/src/main/resources/application.yaml
           echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > todo/src/main/resources/application-local.yaml
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > todo/src/main/resources/application-prod.yaml
+          
+          echo "${{ secrets.APPLICATION_ALBUM_DEFAULT }}" | base64 --decode > album/src/main/resources/application.yaml
+          echo "${{ secrets.APPLICATION_ALBUM_LOCAL }}" | base64 --decode > album/src/main/resources/application-local.yaml
+          echo "${{ secrets.APPLICATION_ALBUM_PROD  }}" | base64 --decode > album/src/main/resources/application-prod.yaml
 
       - name: 빌드 및 API 명세서 생성 (Auth)
         working-directory: ./auth
@@ -91,6 +95,15 @@ jobs:
           ./gradlew clean build --warning-mode all
           ./gradlew openapi3 --warning-mode all
           mv build/api-spec/todo.json ../infra/swagger/
+
+      - name: 빌드 및 API 명세서 생성 (Album)
+        working-directory: ./album
+        run: |
+          mkdir -p build/api-spec
+          chmod +x ./gradlew
+          ./gradlew clean build --warning-mode all
+          ./gradlew openapi3 --warning-mode all
+          mv build/api-spec/album.json ../infra/swagger/
 
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
@@ -166,6 +179,17 @@ jobs:
           cp docker-compose.yml deploy-todo/
           cd ../ && mkdir -p deploy/todo
           mv ./todo/deploy-todo/* deploy/todo 
+
+      - name: 배포 Dir 생성(Album)
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
+        working-directory: ./album
+        run: |
+          mkdir -p deploy-album
+          cp build/libs/album-*.jar deploy-album/
+          cp Dockerfile deploy-album/
+          cp docker-compose.yml deploy-album/
+          cd ../ && mkdir -p deploy/album
+          mv ./album/deploy-album/* deploy/album 
 
       - name: 배포 Dir 생성(Nginx)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}

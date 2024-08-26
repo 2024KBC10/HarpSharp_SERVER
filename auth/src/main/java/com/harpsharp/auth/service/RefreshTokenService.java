@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class RefreshTokenService {
 
     private final RedisTemplate<String, RefreshToken> redisTemplate;
@@ -19,23 +20,19 @@ public class RefreshTokenService {
         this.redisTemplate = redisTemplate;
     }
 
-    @Transactional
     public boolean existsByToken(String accessToken) {
         return redisTemplate.opsForHash().hasKey(HASH_KEY, accessToken);
     }
 
-    @Transactional
     public void deleteByToken(String accessToken) {
         redisTemplate.opsForHash().delete(HASH_KEY, accessToken);
     }
 
-    @Transactional
     public Optional<RefreshToken> findByToken(String accessToken) {
         RefreshToken refreshToken = (RefreshToken) redisTemplate.opsForHash().get(HASH_KEY, accessToken);
         return Optional.ofNullable(refreshToken);
     }
 
-    @Transactional
     public void save(RefreshToken refreshToken) {
         String accessToken = refreshToken.getAccess();
         redisTemplate.opsForHash().put(HASH_KEY, accessToken, refreshToken);

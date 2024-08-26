@@ -8,5 +8,6 @@ public record UpdateUserDTO(
         String password,
         String updatedUsername,
         String updatedPassword,
-        String updatedEmail) {
+        String updatedEmail,
+        String updatedURL) {
 }

@@ -137,6 +137,7 @@ public class TodoCommentController {
 
         if(!isValid(accessToken, commentDTO.username()))
             throw new IllegalAccessException("INVALID_ACCESS");
+
         Long commentId = commentDTO.commentId();
 
         todoCommentService.deleteComment(commentId);

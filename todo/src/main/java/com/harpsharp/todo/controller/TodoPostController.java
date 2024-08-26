@@ -85,7 +85,6 @@ public class TodoPostController {
         if(!isValid(accessToken, postDTO.username()))
             throw new IllegalArgumentException("INVALID_ACCESS");
 
-
         Map<Long, ResponseTodoPostDTO> todoPost = todoPostService.updateTodoPost(postDTO);
         ResponseWithData<Map<Long, ResponseTodoPostDTO>> apiResponse =
                 new ResponseWithData<>(

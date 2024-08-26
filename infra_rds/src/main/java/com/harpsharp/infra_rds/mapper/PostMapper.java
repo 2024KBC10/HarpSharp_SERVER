@@ -2,8 +2,8 @@ package com.harpsharp.infra_rds.mapper;
 
 import com.harpsharp.infra_rds.dto.board.RequestPostDTO;
 import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
-import com.harpsharp.infra_rds.entity.Post;
-import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.entity.board.Post;
+import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
