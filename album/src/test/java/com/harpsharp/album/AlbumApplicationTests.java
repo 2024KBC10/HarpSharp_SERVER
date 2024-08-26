@@ -42,8 +42,8 @@ class AlbumApplicationTests {
         String filename = "test.png";
         this.mockMvc.perform(get("/api/v1/profile/presigned/{filename}", filename))
                 .andExpect(status().isOk())
-                .andDo(document("PresignedURL", // 문서화할 때 사용할 경로와 이름
-                        pathParameters(parameterWithName("filename").description("업로드할 파일명 (확장자 포함)")),
+                .andDo(document("presigned", // 문서화할 때 사용할 경로와 이름
+                        pathParameters(parameterWithName("filename").description("업로드 할 파일명")),
                         responseFields(
                                 fieldWithPath("timeStamp")
                                         .type(JsonFieldType.STRING)
