@@ -8,8 +8,7 @@ plugins {
 
 openapi3 {
 	servers = [
-			{ url = "https://harpsharp.com"},
-			{ url = "http://harpsharp.com"}
+			{ url = "https://harpsharp.com"}
 	]
 	title = "HarpSharp Auth API"
 	description = "HarpSharp 회원가입, 회원 정보 수정, JWT 인증/인가와 관련된 API입니다."
