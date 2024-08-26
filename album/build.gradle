@@ -33,7 +33,6 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	testImplementation "org.springframework.security:spring-security-test"
 	testImplementation "com.epages:restdocs-api-spec-mockmvc:${restdocsApiSpecVersion}"
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }

@@ -16,8 +16,8 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @SpringBootTest
+@ActiveProfiles("local")
 @ComponentScan(basePackages = {"com.harpsharp.album", "com.harpsharp.infra_rds"})
 class AlbumApplicationTests {
     @Autowired
@@ -39,11 +40,11 @@ class AlbumApplicationTests {
     @Test
     @Transactional
     public void getPresignedURL() throws Exception {
-        String filename = "test.png";
+        String filename = "test.jpg";
         this.mockMvc.perform(get("/api/v1/profile/presigned/{filename}", filename))
                 .andExpect(status().isOk())
                 .andDo(document("presigned", // 문서화할 때 사용할 경로와 이름
-                        pathParameters(parameterWithName("filename").description("업로드 할 파일명")),
+                        pathParameters(parameterWithName("filename").description("업로드 할 파일명 !!확장자 포함!!")),
                         responseFields(
                                 fieldWithPath("timeStamp")
                                         .type(JsonFieldType.STRING)
