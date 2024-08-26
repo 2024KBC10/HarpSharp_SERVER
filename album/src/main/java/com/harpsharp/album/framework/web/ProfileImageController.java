@@ -43,9 +43,6 @@ public class ProfileImageController {
 
     @PostMapping("/confirm")
     public ResponseEntity<ResponseWithData<ResponseProfileImageDTO>> ConfirmProfileImage(@RequestBody RequestProfileImageDTO requestProfileIamgeDTO) throws MalformedURLException {
-
-        System.out.println("requestProfileIamgeDTO.uuid() = " + requestProfileIamgeDTO.uuid());
-
         ResponseProfileImageDTO data
                 = profileImageInputPort.confirmProfileUrl(requestProfileIamgeDTO);
 
