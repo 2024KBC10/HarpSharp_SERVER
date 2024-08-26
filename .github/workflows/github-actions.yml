@@ -51,6 +51,7 @@ jobs:
           distribution: "corretto"
 
       - name: YML 파일 생성
+        working-directory: ./
         run: |
           mkdir -p auth/src/main/resources/
           echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > auth/src/main/resources/application.yml
