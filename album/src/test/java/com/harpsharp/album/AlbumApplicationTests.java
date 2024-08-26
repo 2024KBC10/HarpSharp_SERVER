@@ -28,8 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @SpringBootTest
-@ActiveProfiles("local")
 @ComponentScan(basePackages = {"com.harpsharp.album", "com.harpsharp.infra_rds"})
+@ActiveProfiles("local")
 class AlbumApplicationTests {
     @Autowired
     private MockMvc mockMvc;
@@ -43,7 +43,7 @@ class AlbumApplicationTests {
         String filename = "test.jpg";
         this.mockMvc.perform(get("/api/v1/profile/presigned/{filename}", filename))
                 .andExpect(status().isOk())
-                .andDo(document("presigned", // 문서화할 때 사용할 경로와 이름
+                .andDo(document("get", // 문서화할 때 사용할 경로와 이름
                         pathParameters(parameterWithName("filename").description("업로드 할 파일명 !!확장자 포함!!")),
                         responseFields(
                                 fieldWithPath("timeStamp")
@@ -75,7 +75,7 @@ class AlbumApplicationTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(profileJson))
                 .andExpect(status().isOk())
-                .andDo(document("Confirm",
+                .andDo(document("post",
                         responseFields(
                                 fieldWithPath("timeStamp")
                                         .type(JsonFieldType.STRING)
