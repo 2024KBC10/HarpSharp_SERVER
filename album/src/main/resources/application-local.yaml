@@ -28,13 +28,6 @@ spring:
   logging.level:
     org.hibernate.SQL: debug
 
-  data:
-    redis:
-      repositories:
-        enabled:
-          false
-      host: 127.0.0.1
-      port: 6380
   cloud:
     aws:
       s3:
