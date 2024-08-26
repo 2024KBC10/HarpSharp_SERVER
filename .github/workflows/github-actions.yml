@@ -64,9 +64,9 @@ jobs:
           echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > todo/src/main/resources/application-local.yaml
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > todo/src/main/resources/application-prod.yaml
           
-          echo "${{ secrets.APPLICATION_ALBUM_DEFAULT }}" | base64 --decode > album/src/main/resources/application.yaml
-          echo "${{ secrets.APPLICATION_ALBUM_LOCAL }}" | base64 --decode > album/src/main/resources/application-local.yaml
-          echo "${{ secrets.APPLICATION_ALBUM_PROD  }}" | base64 --decode > album/src/main/resources/application-prod.yaml
+          echo "${{ secrets.APPLICATION_ALBUM_DEFAULT }}" | base64 --decode > album/src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_ALBUM_LOCAL }}" | base64 --decode > album/src/main/resources/application-local.yml
+          echo "${{ secrets.APPLICATION_ALBUM_PROD  }}" | base64 --decode > album/src/main/resources/application-prod.yml
 
       - name: 빌드 및 API 명세서 생성 (Auth)
         working-directory: ./auth

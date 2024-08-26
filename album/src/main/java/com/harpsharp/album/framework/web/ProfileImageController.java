@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 public class ProfileImageController {
     private final ProfilePresignedUrlInputPort presignedUrlInputPort;
     private final ProfileImageInputPort profileImageInputPort;
-    private final ImageMapper imageMapper;
 
     @GetMapping("/presigned/{filename}")
     public ResponseEntity<ResponseWithData<ResponseProfilePresignedUrlDTO>> GenerateProfilePresignedUrl(@PathVariable String filename){
