@@ -64,14 +64,14 @@ jobs:
           echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > auth/src/main/resources/application-prod.yml
           
           mkdir -p board/src/main/resources/
-          echo "${{ secrets.APPLICATION_CRUD_DEFAULT }}" | base64 --decode > board/src/main/resources/application.yml
-          echo "${{ secrets.APPLICATION_CRUD_LOCAL }}" | base64 --decode > board/src/main/resources/application-local.yml
-          echo "${{ secrets.APPLICATION_CRUD_PROD  }}" | base64 --decode > board/src/main/resources/application-prod.yml
+          echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > board/src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > board/src/main/resources/application-local.yml
+          echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > board/src/main/resources/application-prod.yml
           
           mkdir -p todo/src/main/resources/
-          echo "${{ secrets.APPLICATION_CRUD_DEFAULT }}" | base64 --decode > todo/src/main/resources/application.yml
-          echo "${{ secrets.APPLICATION_CRUD_LOCAL }}" | base64 --decode > todo/src/main/resources/application-local.yml
-          echo "${{ secrets.APPLICATION_CRUD_PROD  }}" | base64 --decode > todo/src/main/resources/application-prod.yml
+          echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > todo/src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > todo/src/main/resources/application-local.yml
+          echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > todo/src/main/resources/application-prod.yml
           
           mkdir -p album/src/main/resources/
           echo "${{ secrets.APPLICATION_ALBUM_DEFAULT }}" | base64 --decode > album/src/main/resources/application.yml

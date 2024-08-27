@@ -76,6 +76,11 @@ mv env .env
 serviceDown gpt4o
 docker-compose up -d --build
 
+cd /home/ubuntu/deploy/dalle
+mv env .env
+serviceDown dalle
+docker-compose up -d --build
+
 cd /home/ubuntu/deploy/front
 mv env.local .env.local
 mv eslintrc.json .eslintrc.json

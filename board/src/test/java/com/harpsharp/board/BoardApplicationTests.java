@@ -353,7 +353,7 @@ class BoardApplicationTests {
 								fieldWithPath("data.*.title").type(JsonFieldType.STRING).description("게시글 제목"),
 								fieldWithPath("data.*.content").type(JsonFieldType.STRING).description("게시글 내용"),
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
-								fieldWithPath("data.*.updatedAt").type(JsonFieldType.NULL).description("수정 일자"),
+								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("댓글 정보")
                         )
                 ));
