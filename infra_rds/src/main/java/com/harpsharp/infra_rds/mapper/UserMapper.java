@@ -6,7 +6,7 @@ import com.harpsharp.infra_rds.dto.todo.ResponseTodoCommentDTO;
 import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.RequestUserDTO;
-import com.harpsharp.infra_rds.entity.User;
+import com.harpsharp.infra_rds.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

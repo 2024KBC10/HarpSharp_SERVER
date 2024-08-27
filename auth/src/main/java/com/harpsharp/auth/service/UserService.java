@@ -7,14 +7,11 @@ import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.dto.user.JoinDTO;
 import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
-import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
 import com.harpsharp.infra_rds.mapper.*;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

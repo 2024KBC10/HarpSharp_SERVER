@@ -3,8 +3,6 @@ package com.harpsharp.todo.service;
 import com.harpsharp.infra_rds.dto.todo.RequestTodoPostDTO;
 import com.harpsharp.infra_rds.dto.todo.RequestUpdateTodoPostDTO;
 import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
-import com.harpsharp.infra_rds.entity.TodoPost;
-import com.harpsharp.infra_rds.entity.User;
 import com.harpsharp.infra_rds.mapper.TodoPostMapper;
 import com.harpsharp.infra_rds.repository.TodoCommentRepository;
 import com.harpsharp.infra_rds.repository.TodoPostRepository;

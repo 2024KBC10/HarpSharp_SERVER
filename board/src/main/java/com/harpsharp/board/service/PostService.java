@@ -3,7 +3,6 @@ package com.harpsharp.board.service;
 import com.harpsharp.infra_rds.dto.board.RequestPostDTO;
 import com.harpsharp.infra_rds.dto.board.RequestUpdatePostDTO;
 import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
-import com.harpsharp.infra_rds.entity.Post;
 import com.harpsharp.infra_rds.mapper.PostMapper;
 import com.harpsharp.infra_rds.repository.CommentRepository;
 import com.harpsharp.infra_rds.repository.PostRepository;
@@ -11,7 +10,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

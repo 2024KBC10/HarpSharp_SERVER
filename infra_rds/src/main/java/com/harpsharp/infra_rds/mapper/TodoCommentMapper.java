@@ -2,8 +2,8 @@ package com.harpsharp.infra_rds.mapper;
 
 import com.harpsharp.infra_rds.dto.todo.RequestTodoCommentDTO;
 import com.harpsharp.infra_rds.dto.todo.ResponseTodoCommentDTO;
-import com.harpsharp.infra_rds.entity.TodoComment;
-import com.harpsharp.infra_rds.entity.TodoPost;
+import com.harpsharp.infra_rds.entity.todo.TodoComment;
+import com.harpsharp.infra_rds.entity.todo.TodoPost;
 import com.harpsharp.infra_rds.repository.TodoPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

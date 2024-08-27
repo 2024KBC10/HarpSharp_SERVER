@@ -40,7 +40,6 @@ public class ProfileImageInputPort implements UploadProfileImageUsecase {
         
         ProfileImage profile = profileImageOutputPort.save(profileImage);
 
-        System.out.println("profile = " + profile);
         return imageMapper.profileToResponseDTO(profile);
     }
 }
