@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -44,9 +45,6 @@ public class User {
     //@NotNull
     @Column(name = "social_type")
     private String socialType;
-
-    @Column(name = "profile_image")
-    private String profileImage;
 
     @NotNull
     @CreatedDate
