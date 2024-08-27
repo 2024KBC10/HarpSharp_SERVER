@@ -134,6 +134,21 @@ jobs:
           cd ../ && mkdir -p deploy/ai
           mv ./ai/deploy-ai/* deploy/ai
 
+      - name: 배포 Dir 생성 (Dall-e)
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
+        working-directory: ./dalle
+        run: |
+          mkdir -p deploy-dalle
+          echo "${{ secrets.ENV_PY }}" | base64 --decode >> ./deploy-dalle/env
+          ls deploy-dalle -a
+          cp ./app.py ./deploy-dalle
+          cp ./docker-compose.yml ./deploy-dalle
+          cp ./Dockerfile ./deploy-dalle
+          cp ./openai_api.py ./deploy-dalle
+          cp ./requirements.txt ./deploy-dalle
+          cd ../ && mkdir -p deploy/dalle
+          mv ./dalle/deploy-dalle/* deploy/dalle
+
       - name: 배포 Dir 생성(DB)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         working-directory: ./infra_rds

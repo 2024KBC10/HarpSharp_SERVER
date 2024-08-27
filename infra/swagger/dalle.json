@@ -1,0 +1,36 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "HarpSharp Dalle-e API",
+    "description" : "HarpSharp Dall-e API입니다.",
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "https://harpsharp.com"
+  } ],
+  "tags" : [ ],
+  "paths" : {
+    "/api/v2/gpt/chat/": {
+      "post": {
+        "tags": [
+          "api"
+        ],
+        "operationId": "post-generated",
+        "responses": {
+          "200": {
+            "description": "200",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "post-confirm": {
+                    "value": "{\"timeStamp\":\"2024-08-27 09:31:30\",\"code\":201,\"message\":\"GENERATED_SUCCESSFULLY\",\"details\":\"gpt4-o가 생성한 답변입니다.\",\"data\":{\"generated_text\":\"blahblah\"}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

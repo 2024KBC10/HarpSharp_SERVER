@@ -1,0 +1,20 @@
+# docker-compose.yml
+version: '3'
+
+services:
+  dalle:
+    expose:
+      - "5001"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: dalle
+    networks:
+      - harpsharp
+    restart: always
+    env_file:
+      - .env
+
+networks:
+  harpsharp:
+    external: true
