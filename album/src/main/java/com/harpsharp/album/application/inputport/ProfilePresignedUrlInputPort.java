@@ -47,7 +47,7 @@ public class ProfilePresignedUrlInputPort implements ProfilePresignedUrlUsecase 
     public ResponseProfilePresignedUrlDTO putPresignedUrl(InProfilePresignedUrlDTO presignedUrlDTO) {
         String extension = FilenameUtils.getExtension(presignedUrlDTO.filename());
 
-        if(!extension.equals("png") && !extension.equals("jpeg") && !extension.equals("webp") && !extension.equals("jpg") && !extension.equals("gif"))
+        if(!extension.equals("png") && !extension.equals("jpeg") && !extension.equals("jpg") && !extension.equals("gif"))
             throw new IllegalArgumentException("INVALID_EXTENSION");
 
         String uuid = UUID.randomUUID() + "." + extension;
