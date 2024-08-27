@@ -8,6 +8,7 @@ import com.harpsharp.infra_rds.dto.user.JoinDTO;
 import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
 import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
+import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.mapper.*;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;

@@ -1,5 +1,6 @@
 package com.harpsharp.auth.utils;
 
+import com.harpsharp.infra_rds.entity.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

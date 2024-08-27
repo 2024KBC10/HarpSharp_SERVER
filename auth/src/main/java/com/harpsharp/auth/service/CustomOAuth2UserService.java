@@ -7,6 +7,7 @@ import com.harpsharp.infra_rds.dto.oauth2.NaverResponse;
 import com.harpsharp.auth.oauth2.*;
 import com.harpsharp.infra_rds.dto.oauth2.OAuth2Response;
 import com.harpsharp.infra_rds.dto.user.RequestUserDTO;
+import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.mapper.UserMapper;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

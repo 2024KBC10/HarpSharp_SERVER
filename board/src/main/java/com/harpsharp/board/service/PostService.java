@@ -3,6 +3,7 @@ package com.harpsharp.board.service;
 import com.harpsharp.infra_rds.dto.board.RequestPostDTO;
 import com.harpsharp.infra_rds.dto.board.RequestUpdatePostDTO;
 import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
+import com.harpsharp.infra_rds.entity.board.Post;
 import com.harpsharp.infra_rds.mapper.PostMapper;
 import com.harpsharp.infra_rds.repository.CommentRepository;
 import com.harpsharp.infra_rds.repository.PostRepository;

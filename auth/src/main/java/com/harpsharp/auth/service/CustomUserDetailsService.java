@@ -1,6 +1,7 @@
 package com.harpsharp.auth.service;
 
 import com.harpsharp.auth.utils.CustomUserDetails;
+import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
