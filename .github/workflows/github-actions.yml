@@ -111,7 +111,6 @@ jobs:
           mkdir -p build/api-spec
           chmod +x ./gradlew
           ./gradlew clean build --warning-mode all
-          ./gradlew openapi3 --warning-mode all
           mv build/api-spec/album.json ../infra/swagger/
 
       - name: Configure AWS credentials
