@@ -1,0 +1,172 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "HarpSharp Album API",
+    "description" : "HarpSharp Album API입니다.",
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "https://harpsharp.com"
+  } ],
+  "tags" : [ ],
+  "paths" : {
+    "/api/v1/album/profile/confirm" : {
+      "post" : {
+        "tags" : [ "api" ],
+        "operationId" : "post-confirm",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-album-profile-confirm486549215"
+              },
+              "examples" : {
+                "post-confirm" : {
+                  "value" : "{\"uuid\":\"86f79d4f-7cd2-4655-8652-f6d5a1fe8afa.png\"}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-album-profile-confirm-1838204917"
+                },
+                "examples" : {
+                  "post-confirm" : {
+                    "value" : "{\"timeStamp\":\"2024-08-27 09:31:30\",\"code\":201,\"message\":\"CONFIRM_PROFILE\",\"details\":\"프로필 이미지가 성공적으로 등록되었습니다.\",\"data\":{\"url\":\"https://d2165tdwy08x2f.cloudfront.net/profile/86f79d4f-7cd2-4655-8652-f6d5a1fe8afa.png\",\"uuid\":\"86f79d4f-7cd2-4655-8652-f6d5a1fe8afa.png\",\"type\":\"PROFILE\",\"createdAt\":\"2024-08-27 09:31:30\",\"updatedAt\":\"2024-08-27 09:31:30\"}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/album/profile/presigned/{filename}" : {
+      "get" : {
+        "tags" : [ "api" ],
+        "operationId" : "get-presigned",
+        "parameters" : [ {
+          "name" : "filename",
+          "in" : "path",
+          "description" : "업로드 할 파일명 !!확장자 포함!!",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-album-profile-presigned-filename-1587978554"
+                },
+                "examples" : {
+                  "get-presigned" : {
+                    "value" : "{\"timeStamp\":\"2024-08-27 09:31:29\",\"code\":200,\"message\":\"URL_CREAETD_SUCCESSFULLY\",\"details\":\"URL이 정상적으로 발급되었습니다.\",\"data\":{\"presignedUrl\":\"https://harpimages.s3.ap-northeast-2.amazonaws.com/profile/e5015857-1ca9-422d-ad08-1799531237f5.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240827T003129Z&X-Amz-SignedHeaders=host&X-Amz-Expires=600&X-Amz-Credential=AKIAW3MEBLSDPGTFRGVI%2F20240827%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=e1f656433d459b68e5a571f148c68e24c2f658446d2f3e9a634a9b2144505d23\",\"uuid\":\"e5015857-1ca9-422d-ad08-1799531237f5.jpg\"}}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "api-v1-album-profile-confirm-1838204917" : {
+        "type" : "object",
+        "properties" : {
+          "timeStamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "code" : {
+            "type" : "object",
+            "description" : "상태 코드"
+          },
+          "data" : {
+            "type" : "object",
+            "properties" : {
+              "createdAt" : {
+                "type" : "string",
+                "description" : "생성 시간"
+              },
+              "type" : {
+                "type" : "string",
+                "description" : "type"
+              },
+              "uuid" : {
+                "type" : "string",
+                "description" : "UUID"
+              },
+              "url" : {
+                "type" : "string",
+                "description" : "실제 정적 URL"
+              },
+              "updatedAt" : {
+                "type" : "string",
+                "description" : "수정 시간"
+              }
+            },
+            "description" : "프로필 이미지 메타데이터"
+          },
+          "details" : {
+            "type" : "string",
+            "description" : "상세 메세지"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "조회 성공 여부"
+          }
+        }
+      },
+      "api-v1-album-profile-confirm486549215" : {
+        "type" : "object"
+      },
+      "api-v1-album-profile-presigned-filename-1587978554" : {
+        "type" : "object",
+        "properties" : {
+          "timeStamp" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "code" : {
+            "type" : "object",
+            "description" : "상태 코드"
+          },
+          "data" : {
+            "type" : "object",
+            "properties" : {
+              "presignedUrl" : {
+                "type" : "string",
+                "description" : "presignedURL"
+              },
+              "uuid" : {
+                "type" : "string",
+                "description" : "UUID"
+              }
+            },
+            "description" : "presignedURL과 S3에 저장될 파일명(UUID)"
+          },
+          "details" : {
+            "type" : "string",
+            "description" : "상세 메세지"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "조회 성공 여부"
+          }
+        }
+      }
+    }
+  }
+}

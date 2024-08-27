@@ -50,20 +50,33 @@ jobs:
           java-version: "17"
           distribution: "corretto"
 
+      - name: Set up Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: '8.5'
+
       - name: YML 파일 생성
+        working-directory: .
         run: |
-          mkdir -p auth/src/main/resources
-          echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > auth/src/main/resources/application.yaml
-          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > auth/src/main/resources/application-local.yaml
-          echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > auth/src/main/resources/application-prod.yaml
+          mkdir -p auth/src/main/resources/
+          echo "${{ secrets.APPLICATION_AUTH_DEFAULT }}" | base64 --decode > auth/src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_AUTH_LOCAL }}" | base64 --decode > auth/src/main/resources/application-local.yml
+          echo "${{ secrets.APPLICATION_AUTH_PROD  }}" | base64 --decode > auth/src/main/resources/application-prod.yml
           
-          echo "${{ secrets.APPLICATION_CRUD_DEFAULT }}" | base64 --decode > board/src/main/resources/application.yaml
-          echo "${{ secrets.APPLICATION_CRUD_LOCAL }}" | base64 --decode > board/src/main/resources/application-local.yaml
-          echo "${{ secrets.APPLICATION_CRUD_PROD  }}" | base64 --decode > board/src/main/resources/application-prod.yaml
+          mkdir -p board/src/main/resources/
+          echo "${{ secrets.APPLICATION_CRUD_DEFAULT }}" | base64 --decode > board/src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_CRUD_LOCAL }}" | base64 --decode > board/src/main/resources/application-local.yml
+          echo "${{ secrets.APPLICATION_CRUD_PROD  }}" | base64 --decode > board/src/main/resources/application-prod.yml
           
-          echo "${{ secrets.APPLICATION_CRUD_DEFAULT }}" | base64 --decode > todo/src/main/resources/application.yaml
-          echo "${{ secrets.APPLICATION_CRUD_LOCAL }}" | base64 --decode > todo/src/main/resources/application-local.yaml
-          echo "${{ secrets.APPLICATION_CRUD_PROD  }}" | base64 --decode > todo/src/main/resources/application-prod.yaml
+          mkdir -p todo/src/main/resources/
+          echo "${{ secrets.APPLICATION_CRUD_DEFAULT }}" | base64 --decode > todo/src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_CRUD_LOCAL }}" | base64 --decode > todo/src/main/resources/application-local.yml
+          echo "${{ secrets.APPLICATION_CRUD_PROD  }}" | base64 --decode > todo/src/main/resources/application-prod.yml
+          
+          mkdir -p album/src/main/resources/
+          echo "${{ secrets.APPLICATION_ALBUM_DEFAULT }}" | base64 --decode > album/src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_ALBUM_LOCAL }}" | base64 --decode > album/src/main/resources/application-local.yml
+          echo "${{ secrets.APPLICATION_ALBUM_PROD  }}" | base64 --decode > album/src/main/resources/application-prod.yml
 
       - name: 빌드 및 API 명세서 생성 (Auth)
         working-directory: ./auth
@@ -91,6 +104,12 @@ jobs:
           ./gradlew clean build --warning-mode all
           ./gradlew openapi3 --warning-mode all
           mv build/api-spec/todo.json ../infra/swagger/
+
+      - name: 빌드 및 API 명세서 생성 (Album)
+        working-directory: ./album
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean build --warning-mode all
 
       - name: Configure AWS credentials
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
@@ -166,6 +185,17 @@ jobs:
           cp docker-compose.yml deploy-todo/
           cd ../ && mkdir -p deploy/todo
           mv ./todo/deploy-todo/* deploy/todo 
+
+      - name: 배포 Dir 생성(Album)
+        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
+        working-directory: ./album
+        run: |
+          mkdir -p deploy-album
+          cp build/libs/album-*.jar deploy-album/
+          cp Dockerfile deploy-album/
+          cp docker-compose.yml deploy-album/
+          cd ../ && mkdir -p deploy/album
+          mv ./album/deploy-album/* deploy/album 
 
       - name: 배포 Dir 생성(Nginx)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}

@@ -5,8 +5,8 @@
       <paths name="harpsharp">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$/infra_rds/src/test" web="/" />
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="" local="$PROJECT_DIR$/infra_rds/src/test" web="/" />
+            <mapping deploy="/deploy" local="$PROJECT_DIR$/infra/swagger" web="/" />
             <mapping deploy="" local="$PROJECT_DIR$/../ssh" web="/" />
           </mappings>
         </serverdata>

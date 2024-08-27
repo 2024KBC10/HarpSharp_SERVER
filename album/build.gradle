@@ -1,0 +1,39 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.1'
+	id 'io.spring.dependency-management' version '1.1.5'
+	id 'com.epages.restdocs-api-spec' version "${restdocsApiSpecVersion}"
+	id 'org.hidetake.swagger.generator' version '2.18.2'
+}
+
+openapi3 {
+	servers = [
+			{ url = "https://harpsharp.com" }
+	]
+	title = "HarpSharp Album API"
+	description = "HarpSharp Album API입니다."
+	version = "1.0.0"
+	format = 'json'
+	outputFileNamePrefix = 'album'
+}
+
+
+dependencies {
+	implementation project(':infra_rds')
+
+	implementation 'commons-io:commons-io:2.11.0'
+	implementation platform('software.amazon.awssdk:bom:2.20.56')
+	implementation 'software.amazon.awssdk:s3'
+	implementation 'org.springframework.boot:spring-boot-starter'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation "com.epages:restdocs-api-spec-mockmvc:${restdocsApiSpecVersion}"
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+}
+
+bootJar {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	enabled = true;
+}

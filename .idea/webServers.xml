@@ -2,10 +2,10 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="5a112ec9-a9db-4e60-b266-58d151312dad" name="harpsharp">
-        <fileTransfer accessType="SFTP" host="harpsharp.com" port="22" sshConfigId="9ac2eed4-aba4-4841-a239-61d428041f9a" sshConfig="ubuntu@harpsharp.com:22 password">
+      <webServer id="5a112ec9-a9db-4e60-b266-58d151312dad" name="harpsharp" url="http://172.31.1.120/">
+        <fileTransfer rootFolder="/home/ubuntu" accessType="SFTP" host="harpsharp.com" port="22" sshConfigId="58cb8e6e-70db-4faa-a01d-3566fca6a37c" sshConfig="ubuntu@harpsharp.com:22 password">
           <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" isUseRsync="true" isUseSudo="true" />
           </advancedOptions>
         </fileTransfer>
       </webServer>
