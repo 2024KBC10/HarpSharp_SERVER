@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/api/v1/profile")
+@RequestMapping("/api/v1/album/profile")
 @RequiredArgsConstructor
 public class ProfileImageController {
     private final ProfilePresignedUrlInputPort presignedUrlInputPort;
