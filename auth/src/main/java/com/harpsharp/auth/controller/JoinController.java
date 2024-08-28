@@ -33,18 +33,4 @@ public class JoinController {
                 .status(HttpStatus.OK)
                 .body(apiResponse);
     }
-
-    @PostMapping("/api/v1/admin/join")
-    public ResponseEntity<ApiResponse> joinAdmin(@RequestBody JoinDTO joinDTO){
-        userService.registerUser(joinDTO, "ROLE_ADMIN");
-        ApiResponse apiResponse =
-                new ApiResponse(
-                        LocalDateTime.now(),
-                        HttpStatus.CREATED.value(),
-                        "USER_JOINED_SUCCESSFULLY",
-                        joinDTO.username() + "님이 성공적으로 가입 되셨습니다.");
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(apiResponse);
-    }
 }

@@ -54,7 +54,6 @@ public class TodoPostService {
     }
 
     public Map<Long,ResponseTodoPostDTO> updateTodoPost(RequestUpdateTodoPostDTO updatedPostDTO) {
-
         Long postId = updatedPostDTO.postId();
 
         TodoPost existedPost = todoPostRepository
