@@ -55,7 +55,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/api/v1/", "/api/v1/join", "/api/v1/board/**", "/api/v1/todo/**", "/api/v1/user/board/**", "/api/v1/user/todo/**")
+                        .requestMatchers("/login", "/api/v1/", "/api/v1/join", "/api/v1/user/board/**", "/api/v1/user/todo/**")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/user/**")
                         .permitAll()

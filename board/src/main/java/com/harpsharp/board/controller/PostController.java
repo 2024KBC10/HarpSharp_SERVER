@@ -1,20 +1,17 @@
 package com.harpsharp.board.controller;
 
-import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.infra_rds.dto.board.RequestPostDTO;
 import com.harpsharp.infra_rds.dto.board.RequestUpdatePostDTO;
 import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.board.service.PostService;
 import com.harpsharp.infra_rds.dto.response.ResponseWithData;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -24,7 +21,6 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
-    private final JwtUtil jwtUtil;
 
     @GetMapping("/api/v1/board/posts")
     public ResponseEntity<?> getAllPosts() {
@@ -45,11 +41,7 @@ public class PostController {
 
     @PostMapping("/api/v1/board/posts")
     public ResponseEntity<ResponseWithData<?>> savePost(
-            @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestPostDTO requestPostDTO) {
-
-        if(!isValid(accessToken, requestPostDTO.username()))
-            throw new IllegalArgumentException("INVALID_ACCESS");
 
         Map<Long, ResponsePostDTO> savedPost = postService.savePost(requestPostDTO);
 
@@ -86,11 +78,7 @@ public class PostController {
 
     @PatchMapping("/api/v1/board/posts")
     public ResponseEntity<ResponseWithData<Map<Long, ResponsePostDTO>>> updatePost(
-            @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdatePostDTO requestPostDTO) {
-
-        if(!isValid(accessToken, requestPostDTO.username()))
-            throw new IllegalArgumentException("INVALID_ACCESS");
 
         RequestUpdatePostDTO updated =
                 new RequestUpdatePostDTO(
@@ -116,11 +104,7 @@ public class PostController {
 
     @DeleteMapping("/api/v1/board/posts")
     public ResponseEntity<ApiResponse> deletePost(
-            @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdatePostDTO requestPostDTO) {
-
-        if(!isValid(accessToken, requestPostDTO.username()))
-            throw new IllegalArgumentException("INVALID_ACCESS");
 
         Long postId = requestPostDTO.postId();
 
@@ -135,17 +119,5 @@ public class PostController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(apiResponse);
-    }
-
-    @NotNull
-    private Boolean isValid(String accessToken, String username) {
-        if (accessToken == null || !accessToken.startsWith("Bearer ")) {
-            return false;
-        }
-
-        accessToken = accessToken.substring("Bearer ".length());
-
-
-        return username.equals(jwtUtil.getUsername(accessToken));
     }
 }

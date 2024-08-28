@@ -2,14 +2,11 @@ package com.harpsharp.todo;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.harpsharp.auth.service.RefreshTokenService;
-import com.harpsharp.auth.service.UserService;
 import com.harpsharp.infra_rds.dto.todo.*;
-import com.harpsharp.infra_rds.dto.user.JoinTestDTO;
-import com.harpsharp.infra_rds.dto.user.LoginDTO;
+import com.harpsharp.infra_rds.entity.user.User;
+import com.harpsharp.infra_rds.repository.UserRepository;
 import com.harpsharp.todo.service.TodoCommentService;
 import com.harpsharp.todo.service.TodoPostService;
-import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,21 +48,12 @@ class TodoApplicationTests {
 	private MockMvc mockMvc;
 	@Autowired
 	private ObjectMapper objectMapper;
-	@Autowired
-	private RefreshTokenService refreshTokenService;
-	@Autowired
-	private UserService userService;
-
 	private final String username = "admin";
 	private final String password = "HeisPassWord!15";
 	private final String email    = "admin@gmail.com";
-	private String accessToken    = "EMPTY";
-	private Cookie refreshToken   = null;
 
 	private final String title   = "test!";
 	private final String content = "blahblah!";
-	private final String content_hint = "thisishint";
-	private final String content_goal = "thisisgoal";
 	private final TodoStatus status = TodoStatus.RUNNING;
 	private final LocalDateTime startAt = LocalDateTime.now();
 	private final LocalDateTime endAt = LocalDateTime.now().plusDays(1);
@@ -77,37 +65,13 @@ class TodoApplicationTests {
 
 	Map<Long, ResponseTodoPostDTO> 	  post = null;
 	Map<Long, ResponseTodoCommentDTO> comment = null;
-    @Autowired
-    private DefaultErrorViewResolver conventionErrorViewResolver;
 
-	public void init() throws Exception{
-		JoinTestDTO joinDTO = new JoinTestDTO(username, password, email);
-
-		String joinJson = objectMapper.writeValueAsString(joinDTO);
+	@Autowired
+	private UserRepository userRepository;
 
 
-		this.mockMvc.perform(
-						post("/api/v1/join")
-								.contentType(MediaType.APPLICATION_JSON)
-								.content(joinJson))
-				.andReturn();
-	}
 	public void login() throws Exception {
-		init();
-
-		LoginDTO loginDto = new LoginDTO(username, password);
-
-		String loginJson = objectMapper.writeValueAsString(loginDto);
-
-		MvcResult result = this.mockMvc.perform(
-						post("/login")
-								.contentType(MediaType.APPLICATION_JSON)
-								.content(loginJson))
-				.andExpect(status().isCreated())
-				.andReturn();
-
-		accessToken  = result.getResponse().getHeader("Authorization").split(" ")[1];
-		refreshToken = result.getResponse().getCookie("refresh");
+		userRepository.save(new User(username, password, email, "harp", null, "ROLE_USER"));
 	}
 
 	public Long writePost() throws Exception{
@@ -123,7 +87,6 @@ class TodoApplicationTests {
 
 		MvcResult result = this.mockMvc.perform(
 						post("/api/v1/todo/posts")
-								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(postJson))
 				.andExpect(status().isOk())
@@ -150,7 +113,6 @@ class TodoApplicationTests {
 
 		MvcResult result = this.mockMvc.perform(
 						post("/api/v1/todo/posts")
-								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(postJson))
 				.andExpect(status().isOk())
@@ -169,7 +131,6 @@ class TodoApplicationTests {
 		MvcResult resultComment = this.mockMvc
 				.perform(
 						post("/api/v1/todo/posts/comments")
-								.header("Authorization", "Bearer " + accessToken)
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(commentJson))
 				.andExpect(status().isOk())
@@ -194,32 +155,7 @@ class TodoApplicationTests {
 	public void tearDown() throws Exception {
 		commentService.clear();
 		postService.clear();
-		userService.clear();
-		refreshTokenService.clear();
-	}
-
-	@DisplayName("TODO 루트 페이지")
-	@Test
-	@Transactional
-	public void rootPage() throws Exception {
-		this.mockMvc.perform(get("/api/v1/todo"))
-				.andExpect(status().isOk())
-				.andDo(document("Root Page", // 문서화할 때 사용할 경로와 이름
-						responseFields(
-								fieldWithPath("timeStamp")
-										.type(JsonFieldType.STRING)
-										.description("응답 시간"),
-								fieldWithPath("code")
-										.type(JsonFieldType.VARIES)
-										.description("상태 코드"),
-								fieldWithPath("message")
-										.type(JsonFieldType.STRING)
-										.description("응답 성공 여부"),
-								fieldWithPath("details")
-										.type(JsonFieldType.STRING)
-										.description("상세 메세지")
-						)
-				));
+		userRepository.deleteAll();
 	}
 
 	@DisplayName("TODO 작성 테스트")
@@ -236,11 +172,12 @@ class TodoApplicationTests {
 
 		this.mockMvc.perform(
 						post("/api/v1/todo/posts")
-								.header("Authorization", "Bearer " + accessToken)
+								.header("Authorization", "Bearer ${accessToken}")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(objectMapper.writeValueAsString(postDTO)))
 				.andExpect(status().isOk())
 				.andDo(document("Post", // 문서화할 때 사용할 경로와 이름
+						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("작성자"),
 								fieldWithPath("title").description("제목"),
@@ -249,7 +186,6 @@ class TodoApplicationTests {
 								fieldWithPath("startAt").description("시작 시간"),
 								fieldWithPath("endAt").description("마감 시간")
 						),
-						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -370,7 +306,7 @@ class TodoApplicationTests {
 				endAt);
 
 		this.mockMvc.perform(patch("/api/v1/todo/posts")
-						.header("Authorization", "Bearer " + accessToken)
+						.header("Authorization", "Bearer ${accessToken}")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(requestPostDTO)))
 				.andExpect(status().isOk())
@@ -384,7 +320,53 @@ class TodoApplicationTests {
 								fieldWithPath("startAt").description("시작 시간"),
 								fieldWithPath("endAt").description("마감 시간")
 						),
-						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
+						responseFields(
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.VARIES)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("수정 성공 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지"),
+								fieldWithPath("data").type(JsonFieldType.OBJECT).description("전체 게시글 정보"),
+								fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("작성자 이름"),
+								fieldWithPath("data.*.title").type(JsonFieldType.STRING).description("게시글 제목"),
+								fieldWithPath("data.*.content").type(JsonFieldType.STRING).description("게시글 내용"),
+								fieldWithPath("data.*.status").type(JsonFieldType.STRING).description("작성 일자"),
+								fieldWithPath("data.*.startAt").type(JsonFieldType.STRING).description("작성 일자"),
+								fieldWithPath("data.*.endAt").type(JsonFieldType.STRING).description("수정 일자"),
+								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
+								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
+								fieldWithPath("data.*.likes").type(JsonFieldType.VARIES).description("수정 일자"),
+								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("댓글 정보")
+						)
+				));
+	}
+
+	@DisplayName("TODO 수정 테스트 (Status)")
+	@Test
+	@Transactional
+	public void updateStatus() throws Exception {
+		Long postId = writePost();
+		RequestTodoPostUpdateStatusDTO requestPostDTO = new RequestTodoPostUpdateStatusDTO(
+				postId,
+				status);
+
+		this.mockMvc.perform(patch("/api/v1/todo/posts/status")
+						.header("Authorization", "Bearer ${accessToken}")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(requestPostDTO)))
+				.andExpect(status().isOk())
+				.andDo(document("Update Todo Post",
+						requestFields( // 요청 파라미터 문서화
+								fieldWithPath("postId").description("postId"),
+								fieldWithPath("status").description("진행 상태")
+						),
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -428,7 +410,7 @@ class TodoApplicationTests {
 				startAt,
 				endAt);
 		this.mockMvc.perform(delete("/api/v1/todo/posts")
-						.header("Authorization", "Bearer " + accessToken)
+						.header("Authorization", "Bearer ${accessToken}")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(requestPostDTO)))
 				.andExpect(status().isOk())
@@ -472,7 +454,7 @@ class TodoApplicationTests {
 
 		this.mockMvc.perform(
 						post("/api/v1/todo/posts/comments")
-								.header("Authorization", "Bearer " + accessToken)
+								.header("Authorization", "Bearer ${accessToken}")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isOk())
@@ -583,7 +565,7 @@ class TodoApplicationTests {
 		Long commentId = list_id.get(1);
 		RequestUpdateTodoCommentDTO commentDTO = new RequestUpdateTodoCommentDTO(commentId, username, "Modified!");
 		this.mockMvc.perform(patch("/api/v1/todo/posts/comments")
-						.header("Authorization", "Bearer " + accessToken)
+						.header("Authorization", "Bearer ${accessToken}")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isOk())
@@ -625,7 +607,7 @@ class TodoApplicationTests {
 		Long commentId = list_id.get(1);
 		RequestUpdateTodoCommentDTO commentDTO = new RequestUpdateTodoCommentDTO(commentId, username, content);
 		this.mockMvc.perform(delete("/api/v1/todo/posts/comments")
-						.header("Authorization", "Bearer " + accessToken)
+						.header("Authorization", "Bearer ${accessToken}")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(commentDTO)))
 				.andExpect(status().isOk())

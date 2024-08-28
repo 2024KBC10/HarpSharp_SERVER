@@ -1,9 +1,9 @@
 package com.harpsharp.todo.controller;
 
-import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.infra_rds.dto.response.ResponseWithData;
 import com.harpsharp.infra_rds.dto.todo.RequestTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.RequestTodoPostUpdateStatusDTO;
 import com.harpsharp.infra_rds.dto.todo.RequestUpdateTodoPostDTO;
 import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
 import com.harpsharp.todo.service.TodoPostService;
@@ -21,7 +21,6 @@ import java.util.Map;
 public class TodoPostController {
 
     private final TodoPostService todoPostService;
-    private final JwtUtil jwtUtil;
 
     @GetMapping("/api/v1/todo/posts")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoPostDTO>>> getAllPosts() {
@@ -57,11 +56,7 @@ public class TodoPostController {
 
     @PostMapping("/api/v1/todo/posts")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoPostDTO>>> createPost(
-            @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestTodoPostDTO postDTO) {
-
-        if(!isValid(accessToken, postDTO.username()))
-            throw new IllegalArgumentException("INVALID_ACCESS");
 
         Map<Long, ResponseTodoPostDTO> todoPost = todoPostService.saveTodoPost(postDTO);
         ResponseWithData<Map<Long, ResponseTodoPostDTO>> apiResponse =
@@ -79,20 +74,33 @@ public class TodoPostController {
 
     @PatchMapping("/api/v1/todo/posts")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoPostDTO>>> updatePost(
-            @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdateTodoPostDTO postDTO) {
-
-        if(!isValid(accessToken, postDTO.username()))
-            throw new IllegalArgumentException("INVALID_ACCESS");
-
 
         Map<Long, ResponseTodoPostDTO> todoPost = todoPostService.updateTodoPost(postDTO);
         ResponseWithData<Map<Long, ResponseTodoPostDTO>> apiResponse =
                 new ResponseWithData<>(
                         LocalDateTime.now(),
                         HttpStatus.OK.value(),
-                        "UPDATE_POST_SUCCESSFULLY",
+                        "UPDATE_TODO_SUCCESSFULLY",
                         "TODO 게시글이 정상적으로 업데이트 되었습니다.",
+                        todoPost
+                );
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(apiResponse);
+    }
+
+    @PatchMapping("/api/v1/todo/posts/status")
+    public ResponseEntity<ResponseWithData<Map<Long, ResponseTodoPostDTO>>> updatePost(
+            @RequestBody RequestTodoPostUpdateStatusDTO postDTO) {
+
+        Map<Long, ResponseTodoPostDTO> todoPost = todoPostService.updateTodoStatus(postDTO);
+        ResponseWithData<Map<Long, ResponseTodoPostDTO>> apiResponse =
+                new ResponseWithData<>(
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        "UPDATE_TODO_STATUS_SUCCESSFULLY",
+                        "TODO 게시글의 진행 상태가 정상적으로 업데이트 되었습니다.",
                         todoPost
                 );
         return ResponseEntity
@@ -102,11 +110,7 @@ public class TodoPostController {
 
     @DeleteMapping("/api/v1/todo/posts")
     public ResponseEntity<ApiResponse> deletePost(
-            @RequestHeader("Authorization") String accessToken,
             @RequestBody RequestUpdateTodoPostDTO requestTodoPostDTO) {
-
-        if(!isValid(accessToken, requestTodoPostDTO.username()))
-            throw new IllegalArgumentException("INVALID_ACCESS");
 
         Long postId = requestTodoPostDTO.postId();
 
@@ -114,24 +118,12 @@ public class TodoPostController {
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
-                "REDIRECT_TO_TODO",
+                "DELETE_TODO_SUCCESSFULLY",
                 "게시글이 성공적으로 삭제되었습니다."
         );
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(apiResponse);
-    }
-
-    @NotNull
-    private Boolean isValid(String accessToken, String username) {
-        if (accessToken == null || !accessToken.startsWith("Bearer ")) {
-            return false;
-        }
-
-        accessToken = accessToken.substring("Bearer ".length());
-
-
-        return username.equals(jwtUtil.getUsername(accessToken));
     }
 }

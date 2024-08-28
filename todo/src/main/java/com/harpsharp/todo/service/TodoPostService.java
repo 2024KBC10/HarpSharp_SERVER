@@ -1,6 +1,7 @@
 package com.harpsharp.todo.service;
 
 import com.harpsharp.infra_rds.dto.todo.RequestTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.RequestTodoPostUpdateStatusDTO;
 import com.harpsharp.infra_rds.dto.todo.RequestUpdateTodoPostDTO;
 import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.entity.todo.TodoPost;
@@ -53,7 +54,6 @@ public class TodoPostService {
     }
 
     public Map<Long,ResponseTodoPostDTO> updateTodoPost(RequestUpdateTodoPostDTO updatedPostDTO) {
-
         Long postId = updatedPostDTO.postId();
 
         TodoPost existedPost = todoPostRepository
@@ -65,6 +65,20 @@ public class TodoPostService {
                 .title(updatedPostDTO.title())
                 .content(updatedPostDTO.content())
                 .status(updatedPostDTO.status())
+                .build();
+
+        return todoPostMapper.toMap(todoPostRepository.save(updatedPost));
+    }
+
+    public Map<Long, ResponseTodoPostDTO> updateTodoStatus(RequestTodoPostUpdateStatusDTO updatedStatusDTO){
+        Long postId = updatedStatusDTO.postId();
+        TodoPost existedPost = todoPostRepository
+                .findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
+
+        TodoPost updatedPost = existedPost
+                .toBuilder()
+                .status(updatedStatusDTO.status())
                 .build();
 
         return todoPostMapper.toMap(todoPostRepository.save(updatedPost));
