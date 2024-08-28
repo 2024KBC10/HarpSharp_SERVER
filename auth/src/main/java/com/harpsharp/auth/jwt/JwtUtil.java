@@ -138,7 +138,7 @@ public class JwtUtil {
                     }
                 });
 
-        response.setStatus(HttpStatus.CREATED.value());
+        response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json;charset=UTF-8");
 
         String json = objectMapper.writeValueAsString(apiResponse);
