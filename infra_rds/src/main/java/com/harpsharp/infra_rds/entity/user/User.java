@@ -78,7 +78,7 @@ public class User {
     private List<TodoComment> todoComments;
 
     @Builder(toBuilder = true)
-    public User(String username, String password, String email, String socialType, ProfileImage profileImage,String role){
+    public User(String username, String password, String email, String socialType, ProfileImage profileImage, String role){
         this.username = username;
         this.password = password;
         this.email = email;
