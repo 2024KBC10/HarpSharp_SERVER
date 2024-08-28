@@ -167,7 +167,7 @@ class AuthApplicationTests {
 						post("/login")
 								.contentType(MediaType.APPLICATION_JSON)
 								.content(loginJson))
-				.andExpect(status().isCreated())
+				.andExpect(status().isOk())
 				.andDo(document("Login", // 문서화할 때 사용할 경로와 이름
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("닉네임"),
