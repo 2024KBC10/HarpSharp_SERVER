@@ -3,6 +3,7 @@ package com.harpsharp.todo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.infra_rds.dto.todo.*;
+import com.harpsharp.infra_rds.dto.user.Position;
 import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import com.harpsharp.todo.service.TodoCommentService;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.servlet.error.DefaultErrorViewResolver;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -71,7 +71,7 @@ class TodoApplicationTests {
 
 
 	public void login() throws Exception {
-		userRepository.save(new User(username, password, email, "harp", null, "ROLE_USER"));
+		userRepository.save(new User(username, password, email, Position.FULLSTACK,"harp", null, "ROLE_USER"));
 	}
 
 	public Long writePost() throws Exception{

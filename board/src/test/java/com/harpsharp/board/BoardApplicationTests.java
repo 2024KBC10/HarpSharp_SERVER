@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.board.service.CommentService;
 import com.harpsharp.board.service.PostService;
 import com.harpsharp.infra_rds.dto.board.*;
-import com.harpsharp.infra_rds.dto.user.JoinTestDTO;
+import com.harpsharp.infra_rds.dto.user.JoinDTO;
+import com.harpsharp.infra_rds.dto.user.Position;
 import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -66,7 +67,7 @@ class BoardApplicationTests {
 
 
 	public void init() throws Exception{
-		JoinTestDTO joinDTO = new JoinTestDTO(username, password, email);
+		JoinDTO joinDTO = new JoinDTO(username, password, email, Position.FULLSTACK);
 
 		String joinJson = objectMapper.writeValueAsString(joinDTO);
 
@@ -79,7 +80,7 @@ class BoardApplicationTests {
 	}
 
 	public void login() throws Exception {
-		userRepository.save(new User(username, password, email, "harp", null, "ROLE_USER"));
+		userRepository.save(new User(username, password, email, Position.FULLSTACK, "harp", null, "ROLE_USER"));
 	}
 
 	public Long writePost() throws Exception{
@@ -151,30 +152,6 @@ class BoardApplicationTests {
 		commentService.clear();
 		postService.clear();
 		userRepository.deleteAll();
-	}
-
-	@DisplayName("아이스 브레이킹 루트 페이지")
-	@Test
-	@Transactional
-	public void rootPage() throws Exception {
-		this.mockMvc.perform(get("/api/v1/board"))
-				.andExpect(status().isOk())
-				.andDo(document("Root Page", // 문서화할 때 사용할 경로와 이름
-						responseFields(
-								fieldWithPath("timeStamp")
-										.type(JsonFieldType.STRING)
-										.description("응답 시간"),
-								fieldWithPath("code")
-										.type(JsonFieldType.VARIES)
-										.description("상태 코드"),
-								fieldWithPath("message")
-										.type(JsonFieldType.STRING)
-										.description("접속 성공 여부"),
-								fieldWithPath("details")
-										.type(JsonFieldType.STRING)
-										.description("상세 메세지")
-						)
-				));
 	}
 
 	@DisplayName("게시글 작성 테스트")

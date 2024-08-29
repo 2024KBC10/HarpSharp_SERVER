@@ -16,6 +16,7 @@ public record ResponseUserDTO(
         LocalDateTime createdAt,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         LocalDateTime updatedAt,
+        Position position,
         String socialType,
         String role,
         Map<Long, ResponsePostDTO> posts,

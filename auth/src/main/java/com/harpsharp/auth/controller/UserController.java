@@ -42,11 +42,10 @@ public class UserController {
     private final UserMapper userMapper;
 
 
-    @GetMapping("/api/v1/user")
+    @GetMapping("/api/v1/user/{username}")
     public ResponseEntity<ResponseWithData<Map<Long, ResponseUserDTO>>> getUserDataById
-            (@RequestBody InfoDTO info) {
+            (@PathVariable String username) {
 
-        String username = info.username();
         Map<Long, ResponseUserDTO> user = userService.findByUsername(username);
 
 
@@ -163,10 +162,10 @@ public class UserController {
                 .body(apiResponse);
     }
 
-    @GetMapping("/api/v1/user/board/posts")
-    public ResponseWithData<Map<Long, ResponsePostDTO>> getPostsByUserInfo(@RequestBody InfoDTO info){
+    @GetMapping("/api/v1/user/board/posts/{username}")
+    public ResponseWithData<Map<Long, ResponsePostDTO>> getPostsByUserInfo(@PathVariable String username){
         ResponseUserDTO user = userService
-                .findByUsername(info.username())
+                .findByUsername(username)
                 .values()
                 .stream()
                 .findAny()
@@ -180,10 +179,10 @@ public class UserController {
                 user.posts());
     }
 
-    @GetMapping("/api/v1/user/board/comments")
-    public ResponseWithData<Map<Long, ResponseCommentDTO>> getCommentsByUserInfo(@RequestBody InfoDTO info){
+    @GetMapping("/api/v1/user/board/comments/{username}")
+    public ResponseWithData<Map<Long, ResponseCommentDTO>> getCommentsByUserInfo(@PathVariable String username){
         ResponseUserDTO user = userService
-                        .findByUsername(info.username())
+                        .findByUsername(username)
                         .values()
                         .stream()
                         .findAny()
@@ -198,10 +197,10 @@ public class UserController {
                 user.comments());
     }
 
-    @GetMapping("/api/v1/user/todo/posts")
-    public ResponseWithData<Map<Long, ResponseTodoPostDTO>> getTodoPostsByUserInfo(@RequestBody InfoDTO info){
+    @GetMapping("/api/v1/user/todo/posts/{username}")
+    public ResponseWithData<Map<Long, ResponseTodoPostDTO>> getTodoPostsByUserInfo(@PathVariable String username){
         ResponseUserDTO user = userService
-                .findByUsername(info.username())
+                .findByUsername(username)
                 .values()
                 .stream()
                 .findAny()
@@ -215,10 +214,10 @@ public class UserController {
                 user.todoPosts());
     }
 
-    @GetMapping("/api/v1/user/todo/comments")
-    public ResponseWithData<Map<Long, ResponseTodoCommentDTO>> getTodoCommentsByUserInfo(@RequestBody InfoDTO info){
+    @GetMapping("/api/v1/user/todo/comments/{username}")
+    public ResponseWithData<Map<Long, ResponseTodoCommentDTO>> getTodoCommentsByUserInfo(@PathVariable String username){
         ResponseUserDTO user = userService
-                .findByUsername(info.username())
+                .findByUsername(username)
                 .values()
                 .stream()
                 .findAny()

@@ -8,6 +8,7 @@ import com.harpsharp.infra_rds.dto.user.JoinDTO;
 import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
 import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
+import com.harpsharp.infra_rds.dto.user.Position;
 import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.mapper.*;
 import com.harpsharp.infra_rds.repository.UserRepository;
@@ -35,6 +36,7 @@ public class UserService {
         String username = joinDTO.username();
         String password = joinDTO.password();
         String email = joinDTO.email();
+        Position position = joinDTO.position();
 
         if (userRepository.existsByEmail(email)) {
             throw UserAlreadyExistsException.builder()
@@ -56,13 +58,11 @@ public class UserService {
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .email(email)
+                .position(position)
                 .role(role)
                 .socialType("harp")
                 .build();
-        
-        ;
-        
-        
+
         userRepository.save(user);
         System.out.println("userMapper.toMap(user) = " + userMapper.toMap(user));
         
@@ -118,11 +118,7 @@ public class UserService {
         existUser.setPassword(passwordEncoder.encode(updatedPassword));
         existUser.setEmail(updatedEmail);
 
-        System.out.println("updatedUser.getUserId() = " + existUser.getUserId());
-
         userRepository.save(existUser);
-
-        System.out.println("existUser = " + existUser);
 
         return userMapper.toMap(existUser);
     }

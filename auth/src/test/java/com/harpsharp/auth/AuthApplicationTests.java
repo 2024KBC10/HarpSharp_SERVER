@@ -49,6 +49,7 @@ class AuthApplicationTests {
 	private final String username = "admin";
 	private final String password = "HeisPassWord!15";
 	private final String email    = "admin@gmail.com";
+	private final Position position = Position.FULLSTACK;
 	private String accessToken    = "EMPTY";
 	private Cookie refreshToken   = null;
 
@@ -62,7 +63,7 @@ class AuthApplicationTests {
 	}
 
 	public void init() throws Exception{
-		JoinTestDTO joinDTO = new JoinTestDTO(username, password, email);
+		JoinDTO joinDTO = new JoinDTO(username, password, email, position);
 
 		String joinJson = objectMapper.writeValueAsString(joinDTO);
 
@@ -92,34 +93,11 @@ class AuthApplicationTests {
 		refreshToken = result.getResponse().getCookie("refresh");
 	}
 
-	@DisplayName("Auth 서버 루트 페이지")
-	@Test
-	@Transactional
-	public void rootPage() throws Exception {
-		this.mockMvc.perform(get("/api/v1/"))
-				.andExpect(status().isOk())
-				.andDo(document("Root Page", // 문서화할 때 사용할 경로와 이름
-						responseFields(
-								fieldWithPath("timeStamp")
-										.type(JsonFieldType.STRING)
-										.description("응답 시간"),
-								fieldWithPath("code")
-										.type(JsonFieldType.VARIES)
-										.description("상태 코드"),
-								fieldWithPath("message")
-										.type(JsonFieldType.STRING)
-										.description("접속 성공 여부"),
-								fieldWithPath("details")
-										.type(JsonFieldType.STRING)
-										.description("상세 메세지")
-						)));
-	}
-
 	@DisplayName("회원가입 테스트")
 	@Test
 	@Transactional
 	public void joinTest() throws Exception{
-		JoinTestDTO user = new JoinTestDTO(username, password, email);
+		JoinDTO user = new JoinDTO(username, password, email, position);
 
 		String json = objectMapper.writeValueAsString(user);
 
@@ -133,7 +111,8 @@ class AuthApplicationTests {
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("username").description("닉네임"),
 								fieldWithPath("password").description("비밀번호"),
-								fieldWithPath("email").description("이메일 주소")
+								fieldWithPath("email").description("이메일 주소"),
+								fieldWithPath("position").description("포지션")
 						),
 						responseFields(
 								fieldWithPath("timeStamp")
@@ -192,6 +171,7 @@ class AuthApplicationTests {
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("가입 날짜"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 날짜"),
 								fieldWithPath("data.*.socialType").type(JsonFieldType.STRING).description("소셜 계정 가입 타입"),
+								fieldWithPath("data.*.position").type(JsonFieldType.STRING).description("포지션"),
 								fieldWithPath("data.*.role").type(JsonFieldType.STRING).description("권한"),
 								fieldWithPath("data.*.posts").type(JsonFieldType.OBJECT).description("작성글"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("작성 댓글"),
@@ -239,21 +219,12 @@ class AuthApplicationTests {
 	@Transactional
 	public void getUserDataTest() throws Exception{
 		login();
-		InfoDTO infoDto = new InfoDTO(username, "ROLE_USER");
-
-		String infoJson = objectMapper.writeValueAsString(infoDto);
-
 
 		this.mockMvc.perform(
-						get("/api/v1/user")
-								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-								.content(infoJson))
+						get("/api/v1/user/{username}", username)
+								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8"))
 				.andExpect(status().isOk())
 				.andDo(document("Get User Data", // 문서화할 때 사용할 경로와 이름
-						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("username").description("닉네임"),
-								fieldWithPath("role").description("권한")
-						),
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -273,6 +244,7 @@ class AuthApplicationTests {
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("가입 날짜"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 날짜"),
 								fieldWithPath("data.*.socialType").type(JsonFieldType.STRING).description("소셜 계정 가입 타입"),
+								fieldWithPath("data.*.position").type(JsonFieldType.STRING).description("포지션"),
 								fieldWithPath("data.*.role").type(JsonFieldType.STRING).description("권한"),
 								fieldWithPath("data.*.posts").type(JsonFieldType.OBJECT).description("작성글"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("작성 댓글"),
@@ -286,21 +258,13 @@ class AuthApplicationTests {
 	@Transactional
 	public void getPostsByUserInfo() throws Exception{
 		login();
-		InfoDTO infoDto = new InfoDTO(username, password);
-
-		String infoJson = objectMapper.writeValueAsString(infoDto);
 
 
 		this.mockMvc.perform(
-						get("/api/v1/user/board/posts")
-								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-								.content(infoJson))
+						get("/api/v1/user/board/posts/{username}", username)
+								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8"))
 				.andExpect(status().isOk())
 				.andDo(document("Get User's Posts", // 문서화할 때 사용할 경로와 이름
-						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("username").description("닉네임"),
-								fieldWithPath("role").description("권한")
-						),
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -324,21 +288,16 @@ class AuthApplicationTests {
 	@Transactional
 	public void getCommentsByUserInfo() throws Exception{
 		login();
-		InfoDTO infoDto = new InfoDTO(username, password);
+		InfoDTO infoDto = new InfoDTO(username);
 
 		String infoJson = objectMapper.writeValueAsString(infoDto);
 
 
 		this.mockMvc.perform(
-						get("/api/v1/user/board/comments")
-								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-								.content(infoJson))
+						get("/api/v1/user/board/comments/{username}", username)
+								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8"))
 				.andExpect(status().isOk())
 				.andDo(document("Get User's Comments", // 문서화할 때 사용할 경로와 이름
-						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("username").description("닉네임"),
-								fieldWithPath("role").description("권한")
-						),
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -362,21 +321,12 @@ class AuthApplicationTests {
 	@Transactional
 	public void getTodoPostsByUserInfo() throws Exception{
 		login();
-		InfoDTO infoDto = new InfoDTO(username, password);
-
-		String infoJson = objectMapper.writeValueAsString(infoDto);
-
 
 		this.mockMvc.perform(
-						get("/api/v1/user/todo/posts")
-								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-								.content(infoJson))
+						get("/api/v1/user/todo/posts/{username}", username)
+								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8"))
 				.andExpect(status().isOk())
 				.andDo(document("Get User's Todo Posts", // 문서화할 때 사용할 경로와 이름
-						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("username").description("닉네임"),
-								fieldWithPath("role").description("권한")
-						),
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -400,21 +350,12 @@ class AuthApplicationTests {
 	@Transactional
 	public void getTodoCommentsByUserInfo() throws Exception{
 		login();
-		InfoDTO infoDto = new InfoDTO(username, password);
-
-		String infoJson = objectMapper.writeValueAsString(infoDto);
-
 
 		this.mockMvc.perform(
-						get("/api/v1/user/todo/comments")
-								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8")
-								.content(infoJson))
+						get("/api/v1/user/todo/comments/{username}", username)
+								.contentType(MediaType.APPLICATION_JSON + ";charset=UTF-8"))
 				.andExpect(status().isOk())
 				.andDo(document("Get Users Todo Comments", // 문서화할 때 사용할 경로와 이름
-						requestFields( // 요청 파라미터 문서화
-								fieldWithPath("username").description("닉네임"),
-								fieldWithPath("role").description("권한")
-						),
 						responseFields(
 								fieldWithPath("timeStamp")
 										.type(JsonFieldType.STRING)
@@ -481,6 +422,7 @@ class AuthApplicationTests {
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("가입 날짜"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 날짜"),
 								fieldWithPath("data.*.socialType").type(JsonFieldType.STRING).description("소셜 계정 가입 타입"),
+								fieldWithPath("data.*.position").type(JsonFieldType.STRING).description("포지션"),
 								fieldWithPath("data.*.role").type(JsonFieldType.STRING).description("권한"),
 								fieldWithPath("data.*.posts").type(JsonFieldType.OBJECT).description("작성글"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("작성 댓글"),

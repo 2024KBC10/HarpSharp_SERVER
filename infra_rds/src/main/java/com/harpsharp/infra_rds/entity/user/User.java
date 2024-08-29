@@ -1,6 +1,7 @@
 package com.harpsharp.infra_rds.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.harpsharp.infra_rds.dto.user.Position;
 import com.harpsharp.infra_rds.entity.album.ProfileImage;
 import com.harpsharp.infra_rds.entity.board.Comment;
 import com.harpsharp.infra_rds.entity.board.Post;
@@ -43,6 +44,10 @@ public class User {
     private String email;
 
     @NotNull
+    @Column(name = "position")
+    private Position position;
+
+    @NotNull
     @Column(name = "role")
     private String role;
 
@@ -78,10 +83,11 @@ public class User {
     private List<TodoComment> todoComments;
 
     @Builder(toBuilder = true)
-    public User(String username, String password, String email, String socialType, ProfileImage profileImage, String role){
+    public User(String username, String password, String email, Position position, String socialType, ProfileImage profileImage, String role){
         this.username = username;
         this.password = password;
         this.email = email;
+        this.position = position;
         this.role = role;
         this.socialType = socialType;
         this.profileImage = profileImage;
