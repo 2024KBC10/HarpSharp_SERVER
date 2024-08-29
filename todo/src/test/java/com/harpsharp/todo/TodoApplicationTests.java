@@ -362,7 +362,7 @@ class TodoApplicationTests {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(requestPostDTO)))
 				.andExpect(status().isOk())
-				.andDo(document("Update Todo Post",
+				.andDo(document("Update Todo Status",
 						requestFields( // 요청 파라미터 문서화
 								fieldWithPath("postId").description("postId"),
 								fieldWithPath("status").description("진행 상태")
