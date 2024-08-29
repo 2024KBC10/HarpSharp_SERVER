@@ -288,10 +288,6 @@ class AuthApplicationTests {
 	@Transactional
 	public void getCommentsByUserInfo() throws Exception{
 		login();
-		InfoDTO infoDto = new InfoDTO(username);
-
-		String infoJson = objectMapper.writeValueAsString(infoDto);
-
 
 		this.mockMvc.perform(
 						get("/api/v1/user/board/comments/{username}", username)
