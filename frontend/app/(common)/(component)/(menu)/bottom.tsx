@@ -1,7 +1,10 @@
+"use client"
+
 import Image from "next/image"
 
 import SignUpIcon from "../../../../public/image/sign_up.png"
 import styles from "./bottom.module.css"
+import Link from "next/link"
 
 export default function MenuBottom() {
     return (
@@ -11,10 +14,12 @@ export default function MenuBottom() {
                     <span>로그인</span>
                 </div>
                 <div className={styles.button_wrapper}>
-                    <Image
-                    src={SignUpIcon}
-                    alt="로그인 버튼"
-                    />
+                    <Link href="/login">
+                        <Image
+                        src={SignUpIcon}
+                        alt="로그인 버튼"
+                        />
+                    </Link>
                 </div>
             </div>
         </div>

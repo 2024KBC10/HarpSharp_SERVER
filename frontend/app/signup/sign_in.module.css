@@ -1,0 +1,81 @@
+.container{
+    background-color:  #D9D9D9;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.headimage{
+    margin-bottom: 30px;
+}
+
+.inputdata{
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input{
+    width : 100%;
+    height: 50px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    font-size: large;
+    box-sizing: border-box;
+}
+
+.signinbutton{
+    width: 100%;
+    height: 50px;
+    margin-bottom: 20px;
+    background-color: #5686E1;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+}
+.signinbutton:hover{
+    background-color: #5A77F6;
+    border: none;
+    color: #ffffff;
+}
+.signinbutton:active{
+    border: 2px solid #9d9d9d;
+}
+
+.text{
+    margin-left: 10px;
+}
+
+.subitems{
+    width: 300px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.subtext{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.extraoption{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.detailtext{
+    color: #5A77F6;
+    text-decoration: none;
+}
+.detailtext:hover{
+    text-decoration: underline;
+}

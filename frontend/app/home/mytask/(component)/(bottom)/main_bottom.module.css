@@ -1,0 +1,54 @@
+.container {
+    width: 79.33%;
+    height: 75%;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.container .state_modal_background {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.1);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.state_modal_background .state_modal {
+    width: 300px;
+    height: 150px;
+    padding: 10px;
+    margin-left: 20%;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.state_modal .row_container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.state_modal span {
+    font-size: 16px;
+    font-weight: bold;
+    align-self: flex-start;
+}
+
+.state_modal p {
+    font-size: 14px;
+    text-align: center;
+}
