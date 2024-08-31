@@ -5,8 +5,6 @@ import com.harpsharp.infra_rds.dto.board.like.ResponsePostLikeDTO;
 import com.harpsharp.infra_rds.entity.board.Post;
 import com.harpsharp.infra_rds.entity.board.PostLike;
 import com.harpsharp.infra_rds.entity.user.User;
-import com.harpsharp.infra_rds.mapper.CommentLikeMapper;
-import com.harpsharp.infra_rds.repository.CommentLikeRepository;
 import com.harpsharp.infra_rds.repository.PostLikeRepository;
 import com.harpsharp.infra_rds.repository.PostRepository;
 import com.harpsharp.infra_rds.repository.UserRepository;
