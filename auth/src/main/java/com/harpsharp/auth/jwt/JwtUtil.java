@@ -42,7 +42,7 @@ public class JwtUtil {
     public JwtUtil(@Value("${spring.jwt.secret}") String secret, RefreshTokenService refreshTokenService, ObjectMapper objectMapper){
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
         this.refreshTokenService = refreshTokenService;
-        this.accessTokenExpireTime  = Duration.ofHours(1);
+        this.accessTokenExpireTime  = Duration.ofSeconds(1);
         this.refreshTokenExpireTime = Duration.ofDays(365);
         this.refreshTokenExpireSeconds = 24 * 60 * 60 * 365;
         this.objectMapper = objectMapper;
