@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.max;
+
 @Getter
 @Entity
 @DynamicUpdate
@@ -31,6 +33,9 @@ public class Post extends BasePost {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments;
+
+    public Long incLikes()  {   likes++; return likes;  };
+    public Long decLikes()  {   likes = max(0, likes-1); return likes;  };
 
     public String getUsername() {
         return getUser().getUsername();

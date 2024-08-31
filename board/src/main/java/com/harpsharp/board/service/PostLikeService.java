@@ -19,7 +19,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
-    private final PostService postService;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
@@ -36,12 +35,21 @@ public class PostLikeService {
                     .post(post)
                     .build();
 
+            post.incLikes();
+
+            postRepository.save(post);
             postLikeRepository.save(newPostLike);
-            Long likeCount = postService.likePost(requestPostLikeDTO);
+            Long likeCount = post.getLikes();
+
             return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), likeCount);
         }
 
-        Long likeCount = postService.unlikePost(requestPostLikeDTO);
+        Post post = postRepository.findById(requestPostLikeDTO.postId()).get();
+
+        post.decLikes();
+        postRepository.save(post);
+
+        Long likeCount = post.getLikes();
         postLikeRepository.delete(postLike.get());
 
         return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), likeCount);

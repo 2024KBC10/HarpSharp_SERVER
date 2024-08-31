@@ -46,6 +46,9 @@ public class Comment extends BasePost {
         post.addComment(this);
     }
 
+    public Long incLikes()  {   likes++; return likes;  };
+    public Long decLikes()  {   likes--; return likes;  };
+
     public String getUsername(){
         return getUser().getUsername();
     }

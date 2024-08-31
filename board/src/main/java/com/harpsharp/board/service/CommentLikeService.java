@@ -40,14 +40,23 @@ public class CommentLikeService {
                     .user(user)
                     .comment(comment)
                     .build();
-            
-            Long likeCount = commentService.likePost(requestCommentLikeDTO);
+
+            comment.incLikes();
+            commentRepository.save(comment);
+
+            Long likeCount = comment.getLikes();
+
             commentLikeRepository.save(newCommentLike);
 
             return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), likeCount);
         }
 
-        Long likeCount = commentService.unlikePost(requestCommentLikeDTO);
+        Comment comment = commentRepository.findById(requestCommentLikeDTO.commentId()).get();
+        comment.decLikes();
+        commentRepository.save(comment);
+
+        Long likeCount = comment.getLikes();
+
         commentLikeRepository.delete(commentLike.get());
 
         return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), likeCount);
