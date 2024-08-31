@@ -2,12 +2,11 @@ package com.harpsharp.todo.controller;
 
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.infra_rds.dto.response.ResponseWithData;
-import com.harpsharp.infra_rds.dto.todo.RequestTodoPostDTO;
-import com.harpsharp.infra_rds.dto.todo.RequestTodoPostUpdateStatusDTO;
-import com.harpsharp.infra_rds.dto.todo.RequestUpdateTodoPostDTO;
-import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.post.RequestTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.post.RequestTodoPostUpdateStatusDTO;
+import com.harpsharp.infra_rds.dto.todo.comment.RequestUpdateTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.post.ResponseTodoPostDTO;
 import com.harpsharp.todo.service.TodoPostService;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

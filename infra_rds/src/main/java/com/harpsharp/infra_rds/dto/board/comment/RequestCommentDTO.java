@@ -1,4 +1,4 @@
-package com.harpsharp.infra_rds.dto.board;
+package com.harpsharp.infra_rds.dto.board.comment;
 
 public record RequestCommentDTO(
         Long postId,

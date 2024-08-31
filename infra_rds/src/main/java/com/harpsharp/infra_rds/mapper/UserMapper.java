@@ -1,9 +1,9 @@
 package com.harpsharp.infra_rds.mapper;
 
-import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
-import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
-import com.harpsharp.infra_rds.dto.todo.ResponseTodoCommentDTO;
-import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
+import com.harpsharp.infra_rds.dto.board.comment.ResponseCommentDTO;
+import com.harpsharp.infra_rds.dto.board.post.ResponsePostDTO;
+import com.harpsharp.infra_rds.dto.todo.comment.ResponseTodoCommentDTO;
+import com.harpsharp.infra_rds.dto.todo.post.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.RequestUserDTO;
 import com.harpsharp.infra_rds.entity.user.User;

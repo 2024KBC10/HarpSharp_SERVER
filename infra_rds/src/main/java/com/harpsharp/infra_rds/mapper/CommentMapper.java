@@ -1,6 +1,6 @@
 package com.harpsharp.infra_rds.mapper;
 
-import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
+import com.harpsharp.infra_rds.dto.board.comment.ResponseCommentDTO;
 import com.harpsharp.infra_rds.entity.board.Comment;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +17,7 @@ public class CommentMapper {
                 comment.getContent(),
                 comment.getMemoColor(),
                 comment.getPinColor(),
+                comment.getLikes(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt());
     }

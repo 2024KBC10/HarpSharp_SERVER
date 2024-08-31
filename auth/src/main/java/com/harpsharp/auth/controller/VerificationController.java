@@ -1,11 +1,7 @@
 package com.harpsharp.auth.controller;
 
 import com.harpsharp.auth.jwt.JwtUtil;
-import com.harpsharp.infra_rds.dto.board.RequestCommentDTO;
-import com.harpsharp.infra_rds.dto.board.RequestPostDTO;
-import com.harpsharp.infra_rds.dto.board.RequestUpdatePostDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

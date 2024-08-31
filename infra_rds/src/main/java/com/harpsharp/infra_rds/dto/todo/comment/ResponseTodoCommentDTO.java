@@ -1,16 +1,14 @@
-package com.harpsharp.infra_rds.dto.todo;
+package com.harpsharp.infra_rds.dto.todo.comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 
-public record RequestTodoPostDTO(
+public record ResponseTodoCommentDTO(
         String username,
-        String title,
         String content,
-        TodoStatus status,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-        LocalDateTime startAt,
+        LocalDateTime createdAt,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-        LocalDateTime endAt
+        LocalDateTime updatedAt
 ) {}

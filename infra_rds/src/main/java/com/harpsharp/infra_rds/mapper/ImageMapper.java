@@ -39,6 +39,5 @@ public class ImageMapper {
         return profiles.stream()
                 .collect(Collectors.toMap(ProfileImage::getProfileId, this::profileToResponseDTO));
     }
-
 }
 

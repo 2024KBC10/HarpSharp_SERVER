@@ -1,7 +1,7 @@
 package com.harpsharp.infra_rds.mapper;
 
-import com.harpsharp.infra_rds.dto.board.RequestPostDTO;
-import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
+import com.harpsharp.infra_rds.dto.board.post.RequestPostDTO;
+import com.harpsharp.infra_rds.dto.board.post.ResponsePostDTO;
 import com.harpsharp.infra_rds.entity.board.Post;
 import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.repository.UserRepository;
@@ -37,6 +37,7 @@ public class PostMapper {
                 post.getUsername(),
                 post.getTitle(),
                 post.getContent(),
+                post.getLikes(),
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
                 commentMapper.toMap(post.getComments()));

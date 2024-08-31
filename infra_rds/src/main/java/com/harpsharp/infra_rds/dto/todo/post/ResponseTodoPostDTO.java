@@ -1,6 +1,8 @@
-package com.harpsharp.infra_rds.dto.todo;
+package com.harpsharp.infra_rds.dto.todo.post;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.harpsharp.infra_rds.dto.todo.comment.ResponseTodoCommentDTO;
+import com.harpsharp.infra_rds.dto.todo.TodoStatus;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -18,6 +20,5 @@ public record ResponseTodoPostDTO(
         LocalDateTime createdAt,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         LocalDateTime updatedAt,
-        Long likes,
         Map<Long, ResponseTodoCommentDTO> comments
 ) {}
