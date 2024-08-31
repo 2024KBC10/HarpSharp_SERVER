@@ -1,8 +1,8 @@
 package com.harpsharp.board.controller;
 
-import com.harpsharp.infra_rds.dto.board.RequestPostDTO;
-import com.harpsharp.infra_rds.dto.board.RequestUpdatePostDTO;
-import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
+import com.harpsharp.infra_rds.dto.board.post.RequestPostDTO;
+import com.harpsharp.infra_rds.dto.board.post.RequestUpdatePostDTO;
+import com.harpsharp.infra_rds.dto.board.post.ResponsePostDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.board.service.PostService;
 import com.harpsharp.infra_rds.dto.response.ResponseWithData;
@@ -50,7 +50,7 @@ public class PostController {
                 LocalDateTime.now(),
                 HttpStatus.CREATED.value(),
                 "REDIERCT_TO_ROOT",
-                "게시글이 성공적으로 작성되었습니다. 해당 글로 이동합니다.",
+                "게시글이 성공적으로 작성되었습니다.",
                 savedPost);
 
         return ResponseEntity

@@ -1,10 +1,10 @@
 package com.harpsharp.infra_rds.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
-import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
-import com.harpsharp.infra_rds.dto.todo.ResponseTodoCommentDTO;
-import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
+import com.harpsharp.infra_rds.dto.board.comment.ResponseCommentDTO;
+import com.harpsharp.infra_rds.dto.board.post.ResponsePostDTO;
+import com.harpsharp.infra_rds.dto.todo.comment.ResponseTodoCommentDTO;
+import com.harpsharp.infra_rds.dto.todo.post.ResponseTodoPostDTO;
 
 import java.time.LocalDateTime;
 import java.util.Map;

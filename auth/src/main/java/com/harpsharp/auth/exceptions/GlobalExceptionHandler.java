@@ -77,7 +77,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(e.getMessage(), e);
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
-                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 e.getMessage(),
                 "유효하지 않은 값입니다.");
 

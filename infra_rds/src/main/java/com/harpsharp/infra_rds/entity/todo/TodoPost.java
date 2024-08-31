@@ -47,9 +47,6 @@ public class TodoPost extends BasePost {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime endAt;
 
-    @Column(name = "likes", nullable = false)
-    private Long likes;
-
     @Builder(toBuilder = true)
     public TodoPost(String title, String content, TodoStatus status, LocalDateTime startAt, LocalDateTime endAt, User user) {
         this.title = title;
@@ -58,7 +55,6 @@ public class TodoPost extends BasePost {
         this.startAt = startAt;
         this.endAt = endAt;
         this.user = user;
-        this.likes = 0L;
         this.todoComments = new ArrayList<>();
     }
 }

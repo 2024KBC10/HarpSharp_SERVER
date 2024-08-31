@@ -31,14 +31,18 @@ public class Comment extends BasePost {
     @Column(name = "pin_color")
     String pinColor;
 
+    @NotNull
+    @Column(name = "likes_count")
+    private Long likes;
 
     @Builder(toBuilder = true)
-    public Comment(User user, String content, Post post, String memoColor, String pinColor){
+    public Comment(User user, String content, Post post, String memoColor, String pinColor, Long likes){
         this.setContent(content);
         this.setUser(user);
         this.post = post;
         this.memoColor = memoColor;
         this.pinColor = pinColor;
+        this.likes = likes;
         post.addComment(this);
     }
 
@@ -58,5 +62,11 @@ public class Comment extends BasePost {
         if (this.pinColor == null) {
             this.pinColor = "brown";
         }
+
+        if(this.likes == null){
+            this.likes = 0L;
+        }
     }
+
+
 }

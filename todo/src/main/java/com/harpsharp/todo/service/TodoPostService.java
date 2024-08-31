@@ -1,9 +1,9 @@
 package com.harpsharp.todo.service;
 
-import com.harpsharp.infra_rds.dto.todo.RequestTodoPostDTO;
-import com.harpsharp.infra_rds.dto.todo.RequestTodoPostUpdateStatusDTO;
-import com.harpsharp.infra_rds.dto.todo.RequestUpdateTodoPostDTO;
-import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.post.RequestTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.post.RequestTodoPostUpdateStatusDTO;
+import com.harpsharp.infra_rds.dto.todo.comment.RequestUpdateTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.post.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.entity.todo.TodoPost;
 import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.mapper.TodoPostMapper;

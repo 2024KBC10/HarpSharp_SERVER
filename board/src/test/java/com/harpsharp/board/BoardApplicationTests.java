@@ -4,7 +4,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.board.service.CommentService;
 import com.harpsharp.board.service.PostService;
-import com.harpsharp.infra_rds.dto.board.*;
+import com.harpsharp.infra_rds.dto.board.comment.RequestCommentDTO;
+import com.harpsharp.infra_rds.dto.board.comment.RequestUpdateCommentDTO;
+import com.harpsharp.infra_rds.dto.board.like.RequestCommentLikeDTO;
+import com.harpsharp.infra_rds.dto.board.like.RequestPostLikeDTO;
+import com.harpsharp.infra_rds.dto.board.post.RequestPostDTO;
+import com.harpsharp.infra_rds.dto.board.post.RequestUpdatePostDTO;
 import com.harpsharp.infra_rds.dto.user.JoinDTO;
 import com.harpsharp.infra_rds.dto.user.Position;
 import com.harpsharp.infra_rds.entity.user.User;
@@ -190,6 +195,7 @@ class BoardApplicationTests {
 								fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("작성자 이름"),
 								fieldWithPath("data.*.title").type(JsonFieldType.STRING).description("게시글 제목"),
 								fieldWithPath("data.*.content").type(JsonFieldType.STRING).description("게시글 내용"),
+								fieldWithPath("data.*.likes").type(JsonFieldType.NUMBER).description("좋아요 수"),
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("댓글 정보")
@@ -225,6 +231,7 @@ class BoardApplicationTests {
 								fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("작성자 이름"),
 								fieldWithPath("data.*.title").type(JsonFieldType.STRING).description("게시글 제목"),
 								fieldWithPath("data.*.content").type(JsonFieldType.STRING).description("게시글 내용"),
+								fieldWithPath("data.*.likes").type(JsonFieldType.NUMBER).description("좋아요 수"),
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("댓글 정보")
@@ -259,6 +266,7 @@ class BoardApplicationTests {
 								fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("작성자 이름"),
 								fieldWithPath("data.*.title").type(JsonFieldType.STRING).description("게시글 제목"),
 								fieldWithPath("data.*.content").type(JsonFieldType.STRING).description("게시글 내용"),
+								fieldWithPath("data.*.likes").type(JsonFieldType.NUMBER).description("좋아요 수"),
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("댓글 정보")
@@ -302,6 +310,7 @@ class BoardApplicationTests {
 								fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("작성자 이름"),
 								fieldWithPath("data.*.title").type(JsonFieldType.STRING).description("게시글 제목"),
 								fieldWithPath("data.*.content").type(JsonFieldType.STRING).description("게시글 내용"),
+								fieldWithPath("data.*.likes").type(JsonFieldType.NUMBER).description("좋아요 수"),
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("댓글 정보")
@@ -387,6 +396,7 @@ class BoardApplicationTests {
 								fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성한 댓글 정보"),
 								fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("작성자 이름"),
 								fieldWithPath("data.*.content").type(JsonFieldType.STRING).description("게시글 내용"),
+								fieldWithPath("data.*.likes").type(JsonFieldType.NUMBER).description("좋아요 수"),
 								fieldWithPath("data.*.memoColor").type(JsonFieldType.STRING).description("메모지 색상"),
                                 fieldWithPath("data.*.pinColor").type(JsonFieldType.STRING).description("핀 색상"),
                                 fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
@@ -426,6 +436,7 @@ class BoardApplicationTests {
                                 fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성한 댓글 정보"),
                                 fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("작성자 이름"),
                                 fieldWithPath("data.*.content").type(JsonFieldType.STRING).description("게시글 내용"),
+								fieldWithPath("data.*.likes").type(JsonFieldType.NUMBER).description("좋아요 수"),
 								fieldWithPath("data.*.memoColor").type(JsonFieldType.STRING).description("메모지 색상"),
 								fieldWithPath("data.*.pinColor").type(JsonFieldType.STRING).description("핀 색상"),
                                 fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
@@ -461,6 +472,7 @@ class BoardApplicationTests {
                                         fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성한 댓글 정보"),
                                         fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("작성자 이름"),
                                         fieldWithPath("data.*.content").type(JsonFieldType.STRING).description("게시글 내용"),
+										fieldWithPath("data.*.likes").type(JsonFieldType.NUMBER).description("좋아요 수"),
 										fieldWithPath("data.*.memoColor").type(JsonFieldType.STRING).description("메모지 색상"),
 										fieldWithPath("data.*.pinColor").type(JsonFieldType.STRING).description("핀 색상"),
                                         fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
@@ -506,6 +518,7 @@ class BoardApplicationTests {
                                 fieldWithPath("data").type(JsonFieldType.OBJECT).description("작성한 댓글 정보"),
                                 fieldWithPath("data.*.username").type(JsonFieldType.STRING).description("작성자 이름"),
                                 fieldWithPath("data.*.content").type(JsonFieldType.STRING).description("게시글 내용"),
+								fieldWithPath("data.*.likes").type(JsonFieldType.NUMBER).description("좋아요 수"),
 								fieldWithPath("data.*.memoColor").type(JsonFieldType.STRING).description("메모지 색상"),
 								fieldWithPath("data.*.pinColor").type(JsonFieldType.STRING).description("핀 색상"),
                                 fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
@@ -553,5 +566,88 @@ class BoardApplicationTests {
 						)
 				));
 	}
+
+
+	@DisplayName("게시글 좋아요 테스트")
+	@Test
+	@Transactional
+	public void postLikeTest() throws Exception {
+		List<Long> list_id = writePC();
+		Long postId    = list_id.get(0);
+		RequestPostLikeDTO postLikeDTO = new RequestPostLikeDTO(username, postId);
+
+		this.mockMvc.perform(post("/api/v1/board/posts/likes")
+				.header("Authorization", "Bearer ${accessToken})")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(postLikeDTO)))
+				.andExpect(status().isOk())
+				.andDo(document("Update Post Likes",
+						requestFields(
+								fieldWithPath("username").description("작성자"),
+								fieldWithPath("postId").description("게시글 식별자")
+						),
+						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
+						responseFields(
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.VARIES)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("삭제 성공 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지"),
+								fieldWithPath("data").type(JsonFieldType.OBJECT).description("게시글 좋아요 현황"),
+								fieldWithPath("data.username").type(JsonFieldType.STRING).description("작성자 이름"),
+								fieldWithPath("data.postId").type(JsonFieldType.NUMBER).description("게시글 식별자"),
+								fieldWithPath("data.likes").type(JsonFieldType.NUMBER).description("좋아요 수")
+				)));
+
+	}
+
+
+	@DisplayName("댓글 좋아요 테스트")
+	@Test
+	@Transactional
+	public void commentLikeTest() throws Exception {
+		List<Long> list_id = writePC();
+		Long commentId = list_id.get(1);
+		RequestCommentLikeDTO commentLikeDTO = new RequestCommentLikeDTO(username, commentId);
+		this.mockMvc.perform(post("/api/v1/board/comments/likes")
+						.header("Authorization", "Bearer ${accessToken})")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(commentLikeDTO)))
+				.andExpect(status().isOk())
+				.andDo(document("Update Comment Likes",
+						requestFields(
+								fieldWithPath("username").description("작성자"),
+								fieldWithPath("commentId").description("댓글 식별자")
+						),
+						requestHeaders(headerWithName("Authorization").description("유효한 access token")),
+						responseFields(
+								fieldWithPath("timeStamp")
+										.type(JsonFieldType.STRING)
+										.description("응답 시간"),
+								fieldWithPath("code")
+										.type(JsonFieldType.VARIES)
+										.description("상태 코드"),
+								fieldWithPath("message")
+										.type(JsonFieldType.STRING)
+										.description("삭제 성공 여부"),
+								fieldWithPath("details")
+										.type(JsonFieldType.STRING)
+										.description("상세 메세지"),
+								fieldWithPath("data").type(JsonFieldType.OBJECT).description("댓글 좋아요 현황"),
+								fieldWithPath("data.username").type(JsonFieldType.STRING).description("작성자 이름"),
+								fieldWithPath("data.commentId").type(JsonFieldType.NUMBER).description("댓글 식별자"),
+								fieldWithPath("data.likes").type(JsonFieldType.NUMBER).description("좋아요 수")
+						)));
+
+	}
+
+
 
 }

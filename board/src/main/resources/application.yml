@@ -26,11 +26,3 @@ spring:
     show_sql: true
   logging.level:
     org.hibernate.SQL: debug
-
-  data:
-    redis:
-      repositories:
-        enabled:
-          false
-      host: 127.0.0.1
-      port: 6379

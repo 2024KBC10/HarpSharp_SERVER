@@ -36,5 +36,8 @@ out/
 ### VS Code ###
 .vscode/
 
+application.yml
+application-*.yml
+
 # Ignore Gradle build output directory
 build

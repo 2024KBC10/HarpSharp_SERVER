@@ -1,8 +1,10 @@
 package com.harpsharp.board.service;
 
-import com.harpsharp.infra_rds.dto.board.RequestCommentDTO;
-import com.harpsharp.infra_rds.dto.board.RequestUpdateCommentDTO;
-import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
+import com.harpsharp.infra_rds.dto.board.comment.RequestCommentDTO;
+import com.harpsharp.infra_rds.dto.board.comment.RequestUpdateCommentDTO;
+import com.harpsharp.infra_rds.dto.board.comment.ResponseCommentDTO;
+import com.harpsharp.infra_rds.dto.board.like.RequestCommentLikeDTO;
+import com.harpsharp.infra_rds.dto.board.like.RequestPostLikeDTO;
 import com.harpsharp.infra_rds.entity.board.Comment;
 import com.harpsharp.infra_rds.entity.board.Post;
 import com.harpsharp.infra_rds.mapper.CommentMapper;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.lang.Math.max;
 
 @Service
 @Transactional
@@ -106,6 +110,35 @@ public class CommentService {
         }
 
         commentRepository.delete(comment);
+    }
+
+    public Long likePost(RequestCommentLikeDTO requestCommentLikeDTO){
+        Comment existedComment = commentRepository
+                .findById(requestCommentLikeDTO.commentId())
+                .orElseThrow(() -> new IllegalArgumentException("COMMENT_NOT_FOUND"));
+
+        Comment updatedComment = existedComment
+                .toBuilder()
+                .likes(existedComment.getLikes()+1)
+                .build();
+
+        commentRepository.save(updatedComment);
+        return updatedComment.getLikes();
+    }
+
+    public Long unlikePost(RequestCommentLikeDTO requestCommentLikeDTO){
+        Comment existedComment = commentRepository
+                .findById(requestCommentLikeDTO.commentId())
+                .orElseThrow(() -> new IllegalArgumentException("COMMENT_NOT_FOUND"));
+        Long likeCount = max(0, existedComment.getLikes()-1);
+
+        Comment updatedComment = existedComment
+                .toBuilder()
+                .likes(likeCount)
+                .build();
+
+        commentRepository.save(updatedComment);
+        return updatedComment.getLikes();
     }
 
     public void clear(){

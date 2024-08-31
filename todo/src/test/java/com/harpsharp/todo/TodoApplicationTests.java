@@ -3,6 +3,13 @@ package com.harpsharp.todo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harpsharp.infra_rds.dto.todo.*;
+import com.harpsharp.infra_rds.dto.todo.comment.RequestTodoCommentDTO;
+import com.harpsharp.infra_rds.dto.todo.comment.RequestUpdateTodoCommentDTO;
+import com.harpsharp.infra_rds.dto.todo.comment.RequestUpdateTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.comment.ResponseTodoCommentDTO;
+import com.harpsharp.infra_rds.dto.todo.post.RequestTodoPostDTO;
+import com.harpsharp.infra_rds.dto.todo.post.RequestTodoPostUpdateStatusDTO;
+import com.harpsharp.infra_rds.dto.todo.post.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.dto.user.Position;
 import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.repository.UserRepository;
@@ -208,7 +215,6 @@ class TodoApplicationTests {
 								fieldWithPath("data.*.endAt").type(JsonFieldType.STRING).description("수정 일자"),
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
-								fieldWithPath("data.*.likes").type(JsonFieldType.VARIES).description("수정 일자"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("댓글 정보")
 						)
 				));
@@ -247,7 +253,6 @@ class TodoApplicationTests {
 								fieldWithPath("data.*.endAt").type(JsonFieldType.STRING).description("수정 일자"),
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
-								fieldWithPath("data.*.likes").type(JsonFieldType.VARIES).description("수정 일자"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("댓글 정보")
 						)
 				));
@@ -285,7 +290,6 @@ class TodoApplicationTests {
 										fieldWithPath("data.*.endAt").type(JsonFieldType.STRING).description("수정 일자"),
 										fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
 										fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
-										fieldWithPath("data.*.likes").type(JsonFieldType.VARIES).description("수정 일자"),
 										fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("댓글 정보")
 								)));
 	}
@@ -342,7 +346,6 @@ class TodoApplicationTests {
 								fieldWithPath("data.*.endAt").type(JsonFieldType.STRING).description("수정 일자"),
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
-								fieldWithPath("data.*.likes").type(JsonFieldType.VARIES).description("수정 일자"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("댓글 정보")
 						)
 				));
@@ -389,7 +392,6 @@ class TodoApplicationTests {
 								fieldWithPath("data.*.endAt").type(JsonFieldType.STRING).description("수정 일자"),
 								fieldWithPath("data.*.createdAt").type(JsonFieldType.STRING).description("작성 일자"),
 								fieldWithPath("data.*.updatedAt").type(JsonFieldType.STRING).description("수정 일자"),
-								fieldWithPath("data.*.likes").type(JsonFieldType.VARIES).description("수정 일자"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("댓글 정보")
 						)
 				));

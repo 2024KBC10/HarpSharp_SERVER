@@ -50,12 +50,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CustomOAuth2UserService customOAuth2UserService) throws Exception {
         http
-                //.cors(cors -> cors.configurationSource(request -> corsConfiguration))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/api/v1/", "/api/v1/join", "/api/v1/user/board/**", "/api/v1/user/todo/**")
+                        .requestMatchers("/login", "/api/v1/join", "/api/v1/user/board/**", "/api/v1/user/todo/**")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/user/**")
                         .permitAll()

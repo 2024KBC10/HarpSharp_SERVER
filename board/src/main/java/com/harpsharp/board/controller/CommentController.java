@@ -1,6 +1,8 @@
 package com.harpsharp.board.controller;
-import com.harpsharp.infra_rds.dto.board.*;
 import com.harpsharp.board.service.CommentService;
+import com.harpsharp.infra_rds.dto.board.comment.RequestCommentDTO;
+import com.harpsharp.infra_rds.dto.board.comment.RequestUpdateCommentDTO;
+import com.harpsharp.infra_rds.dto.board.comment.ResponseCommentDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.infra_rds.dto.response.ResponseWithData;
 import lombok.RequiredArgsConstructor;

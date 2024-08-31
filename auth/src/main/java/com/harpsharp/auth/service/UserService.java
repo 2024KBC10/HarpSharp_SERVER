@@ -1,9 +1,9 @@
 package com.harpsharp.auth.service;
 
-import com.harpsharp.infra_rds.dto.board.ResponseCommentDTO;
-import com.harpsharp.infra_rds.dto.board.ResponsePostDTO;
-import com.harpsharp.infra_rds.dto.todo.ResponseTodoCommentDTO;
-import com.harpsharp.infra_rds.dto.todo.ResponseTodoPostDTO;
+import com.harpsharp.infra_rds.dto.board.comment.ResponseCommentDTO;
+import com.harpsharp.infra_rds.dto.board.post.ResponsePostDTO;
+import com.harpsharp.infra_rds.dto.todo.comment.ResponseTodoCommentDTO;
+import com.harpsharp.infra_rds.dto.todo.post.ResponseTodoPostDTO;
 import com.harpsharp.infra_rds.dto.user.JoinDTO;
 import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
