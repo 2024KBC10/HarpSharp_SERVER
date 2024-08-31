@@ -42,7 +42,7 @@ public class CommentLikeService {
                     .user(user)
                     .comment(comment)
                     .build();
-            
+
             commentLikeRepository.save(newCommentLike);
 
             return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), likeCount);
