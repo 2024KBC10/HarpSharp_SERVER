@@ -27,7 +27,6 @@ public class PostLikeService {
         Optional<PostLike> postLike = postLikeRepository.findByUsernameAndPostId(requestPostLikeDTO.username(), requestPostLikeDTO.postId());
 
         if(postLike.isEmpty()){
-            Long likeCount = postService.likePost(requestPostLikeDTO);
             User user = userRepository.findByUsername(requestPostLikeDTO.username()).get();
             Post post = postRepository.findById(requestPostLikeDTO.postId()).get();
 
@@ -38,6 +37,7 @@ public class PostLikeService {
                     .build();
 
             postLikeRepository.save(newPostLike);
+            Long likeCount = postService.likePost(requestPostLikeDTO);
             return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), likeCount);
         }
 
