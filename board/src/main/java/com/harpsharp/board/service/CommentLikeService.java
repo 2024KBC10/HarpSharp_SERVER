@@ -32,8 +32,6 @@ public class CommentLikeService {
         Optional<CommentLike> commentLike = commentLikeRepository.findByUsernameAndPostId(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId());
 
         if(commentLike.isEmpty()){
-            Long likeCount = commentService.likePost(requestCommentLikeDTO);
-
             User user = userRepository.findByUsername(requestCommentLikeDTO.username()).get();
             Comment comment = commentRepository.findById(requestCommentLikeDTO.commentId()).get();
 
@@ -43,6 +41,7 @@ public class CommentLikeService {
                     .comment(comment)
                     .build();
 
+            Long likeCount = commentService.likePost(requestCommentLikeDTO);
             commentLikeRepository.save(newCommentLike);
 
             return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), likeCount);
