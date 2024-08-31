@@ -40,7 +40,7 @@ public class CommentLikeService {
                     .user(user)
                     .comment(comment)
                     .build();
-
+            
             Long likeCount = commentService.likePost(requestCommentLikeDTO);
             commentLikeRepository.save(newCommentLike);
 
