@@ -61,35 +61,6 @@ public class PostService {
         return postMapper.toMap(updatedPost);
     }
 
-    public Long likePost(RequestPostLikeDTO requestPostLikeDTO){
-        Post existedPost = postRepository
-                .findById(requestPostLikeDTO.postId())
-                .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
-
-        Post updatedPost = existedPost
-                .toBuilder()
-                .likes(existedPost.getLikes()+1)
-                .build();
-
-        postRepository.save(updatedPost);
-        return updatedPost.getLikes();
-    }
-
-    public Long unlikePost(RequestPostLikeDTO requestPostLikeDTO){
-        Post existedPost = postRepository
-                .findById(requestPostLikeDTO.postId())
-                .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
-        Long likeCount = max(0, existedPost.getLikes()-1);
-
-        Post updatedPost = existedPost
-                .toBuilder()
-                .likes(likeCount)
-                .build();
-
-        postRepository.save(updatedPost);
-        return updatedPost.getLikes();
-    }
-
     public void deletePost(Long id) {
         Post post = postRepository
                 .findById(id)
