@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.lang.Math.max;
@@ -73,7 +74,9 @@ public class CommentService {
         post.addComment(comment);
         postRepository.save(post);
 
-        return commentMapper.toMap(post.getComments().getLast());
+        List<Comment> comments = post.getComments();
+
+        return commentMapper.toMap(comments.get(comments.size()-1));
     }
 
     public Map<Long, ResponseCommentDTO> updateComment(RequestUpdateCommentDTO commentDTO) {

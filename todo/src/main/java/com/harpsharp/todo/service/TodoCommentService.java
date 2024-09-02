@@ -11,6 +11,8 @@ import com.harpsharp.infra_rds.repository.TodoPostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 
 
@@ -51,7 +53,8 @@ public class TodoCommentService {
         post.addComment(comment);
         todoPostRepository.save(post);
 
-        return commentMapper.toMap(post.getTodoComments().getLast());
+        List<TodoComment> todoComments = post.getTodoComments();
+        return commentMapper.toMap(todoComments.get(todoComments.size() - 1));
     }
 
     public Map<Long,ResponseTodoCommentDTO> updateComment(RequestUpdateTodoCommentDTO commentDTO) {
