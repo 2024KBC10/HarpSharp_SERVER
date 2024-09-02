@@ -54,6 +54,7 @@ public class CommentLikeService {
                     .build();
 
             comment.addLike(newCommentLike);
+            commentLikeRepository.save(newCommentLike);
             Comment update = commentRepository.save(comment);
             em.flush();
 
@@ -62,6 +63,7 @@ public class CommentLikeService {
         }
 
         comment.removeLike(commentLike.get());
+        commentLikeRepository.delete(commentLike.get());
         Comment update = commentRepository.save(comment);
         em.flush();
 

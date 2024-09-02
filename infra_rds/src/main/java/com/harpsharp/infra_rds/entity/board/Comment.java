@@ -50,13 +50,13 @@ public class Comment extends BasePost {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentLike> commentLikes;
 
-    public void addLike   (CommentLike like)  {
-        isValid();
+    public void addLike(CommentLike like)  {
+        initLikes();
         commentLikes.add(like);
-        likes = commentLikes.stream().count();
+        updateLikes();
     }
 
-    public void isValid(){
+    public void initLikes(){
         if(commentLikes == null){
             commentLikes = new ArrayList<>();
         }
@@ -64,15 +64,15 @@ public class Comment extends BasePost {
 
     public void removeLike(CommentLike like)  {
         commentLikes.remove(like);
-        likes = commentLikes.stream().count();
+        updateLikes();
     }
 
     public String getUsername(){
         return getUser().getUsername();
     }
 
-    public void clearPost(){
-        post = null;
+    public void updateLikes(){
+        likes = commentLikes.stream().count();
     }
 
     @PrePersist

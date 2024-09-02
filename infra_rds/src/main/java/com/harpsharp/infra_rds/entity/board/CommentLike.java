@@ -26,3 +26,5 @@ public class CommentLike {
     @JoinColumn(name = "comment_id")
     private Comment comment;
 }
+
+//
