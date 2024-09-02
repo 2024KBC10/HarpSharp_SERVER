@@ -29,12 +29,14 @@ public class PostLikeService {
 
     public ResponsePostLikeDTO triggerLike(RequestPostLikeDTO requestPostLikeDTO){
         Optional<PostLike> postLike = postLikeRepository.findByUsernameAndPostId(requestPostLikeDTO.username(), requestPostLikeDTO.postId());
-        Post post = postRepository.findById(requestPostLikeDTO.postId()).get();
-        Hibernate.initialize(post.getPostLikes());  // 명시적으로 지연 로딩 초기화
-
+        Post post = postRepository
+                .findById(requestPostLikeDTO.postId())
+                .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND"));
 
         if(postLike.isEmpty()){
-            User user = userRepository.findByUsername(requestPostLikeDTO.username()).get();
+            User user = userRepository
+                    .findByUsername(requestPostLikeDTO.username())
+                    .orElseThrow(() -> new IllegalArgumentException("USER_NOT_FOUND"));
 
             PostLike newPostLike = PostLike
                     .builder()
@@ -43,7 +45,6 @@ public class PostLikeService {
                     .build();
 
             post.addLike(newPostLike);
-
             Post update = postRepository.save(post);
 
             return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), update.getLikes());
