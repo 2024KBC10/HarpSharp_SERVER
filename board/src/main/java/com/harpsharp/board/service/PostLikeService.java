@@ -12,6 +12,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -29,6 +30,8 @@ public class PostLikeService {
     public ResponsePostLikeDTO triggerLike(RequestPostLikeDTO requestPostLikeDTO){
         Optional<PostLike> postLike = postLikeRepository.findByUsernameAndPostId(requestPostLikeDTO.username(), requestPostLikeDTO.postId());
         Post post = postRepository.findById(requestPostLikeDTO.postId()).get();
+        Hibernate.initialize(post.getPostLikes());  // 명시적으로 지연 로딩 초기화
+
 
         if(postLike.isEmpty()){
             User user = userRepository.findByUsername(requestPostLikeDTO.username()).get();

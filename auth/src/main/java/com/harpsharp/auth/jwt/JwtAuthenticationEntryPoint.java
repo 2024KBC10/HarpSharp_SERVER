@@ -30,9 +30,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         Throwable cause = authException.getCause();
         if (cause instanceof SignatureException) {
-            responseUtils.writeResponseEntity(response, HttpStatus.UNAUTHORIZED.value(), cause.getMessage(), "유효하지 않은 인가입니다.");
+            responseUtils.writeResponseEntity(response, HttpStatus.UNAUTHORIZED.value(), "INVALID_TOKEN", "유효하지 않은 토큰입니다.");
         } else {
-            responseUtils.writeResponseEntity(response, HttpStatus.BAD_REQUEST.value(), cause.getMessage(), "잘못된 접근입니다.");
+            responseUtils.writeResponseEntity(response, HttpStatus.BAD_REQUEST.value(), "INVALID_INPUT", "잘못된 입력입니다.");
         }
     }
 }

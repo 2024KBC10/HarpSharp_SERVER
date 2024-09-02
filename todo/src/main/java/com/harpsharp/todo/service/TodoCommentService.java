@@ -8,6 +8,8 @@ import com.harpsharp.infra_rds.entity.todo.TodoPost;
 import com.harpsharp.infra_rds.mapper.TodoCommentMapper;
 import com.harpsharp.infra_rds.repository.TodoCommentRepository;
 import com.harpsharp.infra_rds.repository.TodoPostRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,9 @@ public class TodoCommentService {
     private final TodoCommentRepository commentRepository;
     private final TodoCommentMapper commentMapper;
     private final TodoPostRepository todoPostRepository;
+    @PersistenceContext
+    private final EntityManager em;
+
 
 
     public Map<Long, ResponseTodoCommentDTO> getAllComments() {
@@ -52,6 +57,7 @@ public class TodoCommentService {
 
         post.addComment(comment);
         todoPostRepository.save(post);
+        em.persist(comment);
 
         List<TodoComment> todoComments = post.getTodoComments();
         return commentMapper.toMap(todoComments.get(todoComments.size() - 1));

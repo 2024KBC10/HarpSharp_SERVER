@@ -65,6 +65,8 @@ public class TodoPostService {
                 .title(updatedPostDTO.title())
                 .content(updatedPostDTO.content())
                 .status(updatedPostDTO.status())
+                .startAt(updatedPostDTO.startAt())
+                .endAt(updatedPostDTO.endAt())
                 .build();
 
         return todoPostMapper.toMap(todoPostRepository.save(updatedPost));

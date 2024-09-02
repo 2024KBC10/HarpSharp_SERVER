@@ -2,6 +2,7 @@ package com.harpsharp.infra_rds.repository;
 
 import com.harpsharp.infra_rds.entity.board.PostLike;
 import com.harpsharp.infra_rds.entity.user.User;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

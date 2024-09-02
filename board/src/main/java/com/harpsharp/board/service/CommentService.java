@@ -14,8 +14,11 @@ import com.harpsharp.infra_rds.repository.CommentLikeRepository;
 import com.harpsharp.infra_rds.repository.CommentRepository;
 import com.harpsharp.infra_rds.repository.PostRepository;
 import com.harpsharp.infra_rds.repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -31,9 +34,9 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final CommentMapper commentMapper;
-    private final CommentLikeRepository commentLikeRepository;
+    @PersistenceContext
+    private EntityManager em;
 
     public Map<Long, ResponseCommentDTO> getCommentsByPostId(Long postId) {
         Post rootPost = postRepository
@@ -73,6 +76,7 @@ public class CommentService {
 
         post.addComment(comment);
         postRepository.save(post);
+        em.flush();
 
         List<Comment> comments = post.getComments();
 

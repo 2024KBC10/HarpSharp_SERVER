@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -30,6 +31,9 @@ public class Post extends BasePost {
     @Column(name = "post_id")
     private Long postId;
 
+    @Version
+    Long version;
+
     @NotNull
     @Column(name = "title")
     String title;
@@ -43,11 +47,28 @@ public class Post extends BasePost {
 
     public void addComment   (Comment comment) {
          comments.add(comment);
+        Hibernate.initialize(comment.getCommentLikes());
     }
-    public void removeComment(Comment comment) { comments.remove(comment); }
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
+    }
 
-    public void addLike   (PostLike like)  { postLikes.add(like);       }
-    public void removeLike(PostLike like)  { postLikes.remove(like);    }
+    public void addLike   (PostLike like) {
+        isValid();
+        postLikes.add(like);
+        likes = postLikes.stream().count();
+    }
+
+    public void removeLike(PostLike like)  {
+        postLikes.remove(like);
+        likes = postLikes.stream().count();
+    }
+
+    public void isValid(){
+        if(postLikes == null){
+            postLikes = new ArrayList<>();
+        }
+    }
 
     @NotNull
     @Column(name = "likes_count")
@@ -69,14 +90,5 @@ public class Post extends BasePost {
         if(this.comments == null){
             this.comments = new ArrayList<>();
         }
-    }
-
-    @PreUpdate
-    private void updateLikesCount() {
-        if (this.postLikes == null) {
-            this.postLikes = new ArrayList<>();
-        }
-
-        this.likes = postLikes.stream().count();
     }
 }

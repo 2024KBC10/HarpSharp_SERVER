@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @DynamicUpdate
 @Entity
+@DynamicInsert
 @Table(name = "comments")
 @SuperBuilder(toBuilder = true)
 @AllArgsConstructor
@@ -29,6 +31,9 @@ public class Comment extends BasePost {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @Version
+    Long version;
 
     @NotNull
     @Column(name = "memo_color")
@@ -45,8 +50,22 @@ public class Comment extends BasePost {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentLike> commentLikes;
 
-    public void addLike   (CommentLike like)  { commentLikes.add(like);       }
-    public void removeLike(CommentLike like)  { commentLikes.remove(like);    }
+    public void addLike   (CommentLike like)  {
+        isValid();
+        commentLikes.add(like);
+        likes = commentLikes.stream().count();
+    }
+
+    public void isValid(){
+        if(commentLikes == null){
+            commentLikes = new ArrayList<>();
+        }
+    }
+
+    public void removeLike(CommentLike like)  {
+        commentLikes.remove(like);
+        likes = commentLikes.stream().count();
+    }
 
     public String getUsername(){
         return getUser().getUsername();
@@ -72,14 +91,5 @@ public class Comment extends BasePost {
         if(this.likes == null){
             likes = 0L;
         }
-    }
-
-    @PreUpdate
-    private void updateLikesCount() {
-        if(this.commentLikes == null){
-            this.commentLikes = new ArrayList<>();
-        }
-
-        this.likes = commentLikes.stream().count();
     }
 }
