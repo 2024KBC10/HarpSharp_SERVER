@@ -36,14 +36,14 @@ public class CommentLikeService {
                     .build();
 
             comment.addLike(newCommentLike);
-            commentRepository.save(comment);
+            Comment update = commentRepository.save(comment);
 
-            return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), comment.getLikes());
+            return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), update.getLikes());
         }
 
         comment.removeLike(commentLike.get());
-        commentRepository.save(comment);
+        Comment update = commentRepository.save(comment);
 
-        return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), comment.getLikes());
+        return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), update.getLikes());
     }
 }

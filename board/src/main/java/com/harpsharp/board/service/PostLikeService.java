@@ -8,6 +8,8 @@ import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.repository.PostLikeRepository;
 import com.harpsharp.infra_rds.repository.PostRepository;
 import com.harpsharp.infra_rds.repository.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    @PersistenceContext
+    EntityManager em;
 
     public ResponsePostLikeDTO triggerLike(RequestPostLikeDTO requestPostLikeDTO){
         Optional<PostLike> postLike = postLikeRepository.findByUsernameAndPostId(requestPostLikeDTO.username(), requestPostLikeDTO.postId());
@@ -34,17 +38,17 @@ public class PostLikeService {
                     .user(user)
                     .post(post)
                     .build();
+
             post.addLike(newPostLike);
 
-            postRepository.save(post);
+            Post update = postRepository.save(post);
 
-            return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), post.getLikes());
+            return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), update.getLikes());
         }
 
         post.removeLike(postLike.get());
+        Post update = postRepository.save(post);
 
-        postRepository.save(post);
-
-        return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), post.getLikes());
+        return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), update.getLikes());
     }
 }

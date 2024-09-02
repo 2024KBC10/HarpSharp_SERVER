@@ -73,7 +73,7 @@ public class Post extends BasePost {
 
     @PreUpdate
     private void updateLikesCount() {
-        if(this.postLikes == null){
+        if (this.postLikes == null) {
             this.postLikes = new ArrayList<>();
         }
 
