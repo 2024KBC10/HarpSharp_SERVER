@@ -10,6 +10,9 @@ import com.harpsharp.infra_rds.repository.CommentRepository;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,6 +25,12 @@ public class CommentLikeService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
+
+    @Retryable(
+            retryFor = {ObjectOptimisticLockingFailureException.class},
+            maxAttempts = 1000,
+            backoff = @Backoff(100)
+    )
     public ResponseCommentLikeDTO triggerLike(RequestCommentLikeDTO requestCommentLikeDTO){
         Optional<CommentLike> commentLike = commentLikeRepository.findByUsernameAndCommentId(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId());
         Comment comment = commentRepository.findById(requestCommentLikeDTO.commentId()).get();

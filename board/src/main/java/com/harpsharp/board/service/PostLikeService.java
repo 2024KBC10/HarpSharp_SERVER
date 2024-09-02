@@ -13,6 +13,9 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,9 +27,12 @@ public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    @PersistenceContext
-    EntityManager em;
 
+    @Retryable(
+            retryFor = {ObjectOptimisticLockingFailureException.class},
+            maxAttempts = 1000,
+            backoff = @Backoff(100)
+    )
     public ResponsePostLikeDTO triggerLike(RequestPostLikeDTO requestPostLikeDTO){
         Optional<PostLike> postLike = postLikeRepository.findByUsernameAndPostId(requestPostLikeDTO.username(), requestPostLikeDTO.postId());
         Post post = postRepository
