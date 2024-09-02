@@ -27,6 +27,8 @@ public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    @PersistenceContext
+    private final EntityManager em;
 
     @Retryable(
             retryFor = {ObjectOptimisticLockingFailureException.class},
@@ -52,12 +54,13 @@ public class PostLikeService {
 
             post.addLike(newPostLike);
             Post update = postRepository.save(post);
-
+            em.flush();
             return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), update.getLikes());
         }
 
         post.removeLike(postLike.get());
         Post update = postRepository.save(post);
+        em.flush();
 
         return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), update.getLikes());
     }

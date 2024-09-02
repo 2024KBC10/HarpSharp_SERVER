@@ -27,9 +27,9 @@ public class CommentLikeService {
     private final CommentLikeRepository commentLikeRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+
     @PersistenceContext
     private final EntityManager em;
-
 
     @Retryable(
             retryFor = {ObjectOptimisticLockingFailureException.class},
@@ -55,8 +55,8 @@ public class CommentLikeService {
 
             comment.addLike(newCommentLike);
             Comment update = commentRepository.save(comment);
-
             em.flush();
+
 
             return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), update.getLikes());
         }

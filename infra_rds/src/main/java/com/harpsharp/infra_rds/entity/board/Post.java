@@ -47,8 +47,8 @@ public class Post extends BasePost {
 
     public void addComment   (Comment comment) {
          comments.add(comment);
-        Hibernate.initialize(comment.getCommentLikes());
     }
+
     public void removeComment(Comment comment) {
         comments.remove(comment);
     }
