@@ -8,6 +8,9 @@ import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.repository.CommentLikeRepository;
 import com.harpsharp.infra_rds.repository.CommentRepository;
 import com.harpsharp.infra_rds.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -24,6 +27,8 @@ public class CommentLikeService {
     private final CommentLikeRepository commentLikeRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    @PersistenceContext
+    private final EntityManager em;
 
 
     @Retryable(
@@ -33,10 +38,14 @@ public class CommentLikeService {
     )
     public ResponseCommentLikeDTO triggerLike(RequestCommentLikeDTO requestCommentLikeDTO){
         Optional<CommentLike> commentLike = commentLikeRepository.findByUsernameAndCommentId(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId());
-        Comment comment = commentRepository.findById(requestCommentLikeDTO.commentId()).get();
+        Comment comment = commentRepository
+                .findById(requestCommentLikeDTO.commentId())
+                .orElseThrow(()->new IllegalArgumentException("USER_NOT_FOUND"));
 
         if(commentLike.isEmpty()){
-            User user = userRepository.findByUsername(requestCommentLikeDTO.username()).get();
+            User user = userRepository
+                    .findByUsername(requestCommentLikeDTO.username())
+                    .orElseThrow(()->new IllegalArgumentException("USER_NOT_FOUND"));
 
             CommentLike newCommentLike = CommentLike
                     .builder()
@@ -47,11 +56,14 @@ public class CommentLikeService {
             comment.addLike(newCommentLike);
             Comment update = commentRepository.save(comment);
 
+            em.flush();
+
             return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), update.getLikes());
         }
 
         comment.removeLike(commentLike.get());
         Comment update = commentRepository.save(comment);
+        em.flush();
 
         return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), update.getLikes());
     }
