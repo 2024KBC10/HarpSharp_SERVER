@@ -27,19 +27,20 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        // 헤더에서 access키에 담긴 토큰을 꺼냄
         String accessToken = request.getHeader("Authorization");
-        // 토큰이 없다면 다음 필터로 넘김
-        if (accessToken == null) {
+
+        if (accessToken == null){
             filterChain.doFilter(request, response);
             return;
         }
+
 
         if(!accessToken.startsWith("Bearer ")){
-            filterChain.doFilter(request, response);
-            return;
+            System.out.println("accessToken = " + accessToken);
+            System.out.println("Illegal Access Token");
+            throw new IllegalArgumentException("BAD_REQUEST_TOKEN");
         }
+
 
         accessToken = accessToken.substring("Bearer ".length());
 
@@ -58,38 +59,33 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         if(refreshToken == null){
-            filterChain.doFilter(request, response);
-            return;
+            System.out.println("Illegal Refresh Token");
+            throw new IllegalArgumentException("BAD_REQUEST_TOKEN");
         }
 
 
-        if (!jwtUtil.getCategory(accessToken).equals("Authorization")) {
+        if (!jwtUtil.getCategory(accessToken).equals("Authorization")){
 
-            throw JwtAuthenticationException
-                    .builder()
-                    .code(HttpStatus.UNAUTHORIZED.value())
-                    .message("INVALID_ACCESS_TOKEN")
-                    .build();
+            throw new IllegalArgumentException("BAD_REQUEST_TOKEN");
         }
 
-        if (!jwtUtil.getCategory(refreshToken).equals("refresh"))
-            throw JwtAuthenticationException
-                    .builder()
-                    .code(HttpStatus.UNAUTHORIZED.value())
-                    .message("INVALID_ACCESS_TOKEN")
-                    .build();
+
+        if (!jwtUtil.getCategory(refreshToken).equals("refresh")){
+            throw new IllegalArgumentException("BAD_REQUEST_TOKEN");
+        }
+
 
         String username = jwtUtil.getUsername(accessToken);
         String role = jwtUtil.getRole(accessToken);
 
-        if(jwtUtil.isExpired(refreshToken)){
+        if(jwtUtil.isExpired(accessToken, refreshToken)){
             filterChain.doFilter(request, response);
             return;
         }
 
-        if(jwtUtil.isExpired(accessToken)) {
-            responseUtils.writeResponseEntity(response, jwtUtil.reissueToken(username, role, accessToken, refreshToken));
-        }
+//        if(jwtUtil.isExpired(accessToken, refreshToken)) {
+//            responseUtils.writeResponseEntity(response, jwtUtil.reissueToken(username, role, accessToken, refreshToken));
+//        }
 
         User user = User.builder()
                 .username(username)

@@ -56,7 +56,7 @@ public class CommentController {
     public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> addComment(
             @RequestBody RequestCommentDTO commentDTO) throws IllegalAccessException {;
 
-        Map<Long, ResponseCommentDTO> object = commentService.save(commentDTO);
+        Map<Long, ResponseCommentDTO> object = commentService.addComment(commentDTO);
 
         ResponseWithData<Map<Long, ResponseCommentDTO>> apiResponse
                 = new ResponseWithData<>(

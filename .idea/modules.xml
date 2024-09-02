@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/album/harpsharp-backend.album.main.iml" filepath="$PROJECT_DIR$/.idea/modules/album/harpsharp-backend.album.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/auth/harpsharp-backend.auth.main.iml" filepath="$PROJECT_DIR$/.idea/modules/auth/harpsharp-backend.auth.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/board/harpsharp-backend.board.main.iml" filepath="$PROJECT_DIR$/.idea/modules/board/harpsharp-backend.board.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/infra_rds/harpsharp-backend.infra_rds.main.iml" filepath="$PROJECT_DIR$/.idea/modules/infra_rds/harpsharp-backend.infra_rds.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/todo/harpsharp-backend.todo.main.iml" filepath="$PROJECT_DIR$/.idea/modules/todo/harpsharp-backend.todo.main.iml" />
     </modules>

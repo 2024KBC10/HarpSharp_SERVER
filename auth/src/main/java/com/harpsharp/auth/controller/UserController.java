@@ -2,6 +2,7 @@ package com.harpsharp.auth.controller;
 
 
 import com.harpsharp.auth.entity.RefreshToken;
+import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.RefreshTokenService;
 import com.harpsharp.infra_rds.dto.board.comment.ResponseCommentDTO;
 import com.harpsharp.infra_rds.dto.board.post.ResponsePostDTO;
@@ -12,7 +13,6 @@ import com.harpsharp.infra_rds.dto.user.DeleteDTO;
 import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
-import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.UserService;
 import com.harpsharp.infra_rds.mapper.UserMapper;
 import jakarta.servlet.http.Cookie;
@@ -131,12 +131,31 @@ public class UserController {
 
     @DeleteMapping("/api/v1/user")
     public ResponseEntity<ApiResponse> deleteUser(
+            HttpServletRequest request,
             @RequestHeader("Authorization") String accessToken,
             @RequestBody DeleteDTO deleteDTO) throws IOException {
 
         if (accessToken == null || !accessToken.startsWith("Bearer ")) {
             System.out.println("invalid access");
             throw new IllegalArgumentException("Invalid access");
+        }
+
+        String refreshToken = null;
+        Cookie[] cookies = request.getCookies();
+
+        if(cookies == null) {
+            System.out.println("Illegal Cookie");
+            throw new IllegalArgumentException("BAD_REQUEST_TOKEN");
+        }
+
+        for(Cookie cookie: cookies){
+            if(cookie.getName().equals("refresh")){
+                refreshToken = cookie.getValue();
+            }
+        }
+
+        if(refreshToken == null){
+            throw new IllegalArgumentException("BAD_REQUEST_COOKIE");
         }
 
         accessToken = accessToken.substring("Bearer ".length());
@@ -147,7 +166,7 @@ public class UserController {
             throw new IllegalArgumentException("INVALID_PASSWORD");
 
         userService.deleteByUsername(username, accessToken);
-        jwtUtil.deleteByToken(accessToken);
+        jwtUtil.deleteByToken(accessToken, refreshToken);
 
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),

@@ -9,14 +9,19 @@ import com.harpsharp.infra_rds.dto.user.ResponseUserDTO;
 import com.harpsharp.infra_rds.dto.user.UpdateUserDTO;
 import com.harpsharp.auth.exceptions.UserAlreadyExistsException;
 import com.harpsharp.infra_rds.dto.user.Position;
+import com.harpsharp.infra_rds.entity.board.CommentLike;
+import com.harpsharp.infra_rds.entity.board.PostLike;
 import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.mapper.*;
+import com.harpsharp.infra_rds.repository.CommentLikeRepository;
+import com.harpsharp.infra_rds.repository.PostLikeRepository;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -24,6 +29,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final CommentLikeRepository commentLikeRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     private final UserMapper userMapper;
@@ -139,6 +147,10 @@ public class UserService {
         User deletedUser = userRepository
                 .findByUsername(username)
                 .orElseThrow(()->new IllegalArgumentException("INVALID_USER_ID"));
+
+
+        postLikeRepository.setLikesToNullByUser(deletedUser);
+        commentLikeRepository.setLikesToNullByUser(deletedUser);
 
         userRepository.deleteById(deletedUser.getUserId());
 

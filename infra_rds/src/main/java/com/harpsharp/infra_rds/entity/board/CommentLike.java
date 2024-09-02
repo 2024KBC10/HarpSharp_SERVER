@@ -3,14 +3,14 @@ package com.harpsharp.infra_rds.entity.board;
 
 import com.harpsharp.infra_rds.entity.user.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Entity
 @Table(name = "likes_comment")
+@Builder(toBuilder = true)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentLike {
     @Id
@@ -19,17 +19,10 @@ public class CommentLike {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comment comment;
-
-    @Builder(toBuilder = true)
-    public CommentLike(Long id, User user, Comment comment){
-        this.id = id;
-        this.user = user;
-        this.comment = comment;
-    }
 }

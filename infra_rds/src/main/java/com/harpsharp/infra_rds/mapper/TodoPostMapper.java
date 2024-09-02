@@ -8,6 +8,7 @@ import com.harpsharp.infra_rds.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,12 +51,15 @@ public class TodoPostMapper {
     }
 
     public List<ResponseTodoPostDTO> convertPostsToResponse(List<TodoPost> todoPosts) {
+        if(todoPosts == null || todoPosts.isEmpty()) return new ArrayList<>();
         return todoPosts.stream()
                 .map(this::entityToResponseDTO)
                 .collect(Collectors.toList());
     }
 
     public Map<Long, ResponseTodoPostDTO> toMap(List<TodoPost> todoPosts) {
+        if(todoPosts == null) return new HashMap<>();
+
         return todoPosts.stream().collect(
                 Collectors.toMap(TodoPost::getTodoId, this::entityToResponseDTO));
     }

@@ -6,6 +6,8 @@ import com.harpsharp.infra_rds.entity.album.ProfileImage;
 import com.harpsharp.infra_rds.entity.album.ProfileUUID;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,12 +32,16 @@ public class ImageMapper {
     }
 
     public List<ResponseProfileImageDTO> profilestoList(List<ProfileImage> profileImages) {
+        if(profileImages == null) return new ArrayList<>();
+
         return profileImages.stream()
                 .map(this::profileToResponseDTO)
                 .collect(Collectors.toList());
     }
 
     public Map<Long, ResponseProfileImageDTO> profilesToMap(List<ProfileImage> profiles) {
+        if(profiles == null) return new HashMap<>();
+
         return profiles.stream()
                 .collect(Collectors.toMap(ProfileImage::getProfileId, this::profileToResponseDTO));
     }

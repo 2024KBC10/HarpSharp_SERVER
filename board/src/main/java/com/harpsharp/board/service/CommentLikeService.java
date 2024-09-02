@@ -29,11 +29,11 @@ public class CommentLikeService {
     private final CommentRepository commentRepository;
 
     public ResponseCommentLikeDTO triggerLike(RequestCommentLikeDTO requestCommentLikeDTO){
-        Optional<CommentLike> commentLike = commentLikeRepository.findByUsernameAndPostId(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId());
+        Optional<CommentLike> commentLike = commentLikeRepository.findByUsernameAndCommentId(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId());
+        Comment comment = commentRepository.findById(requestCommentLikeDTO.commentId()).get();
 
         if(commentLike.isEmpty()){
             User user = userRepository.findByUsername(requestCommentLikeDTO.username()).get();
-            Comment comment = commentRepository.findById(requestCommentLikeDTO.commentId()).get();
 
             CommentLike newCommentLike = CommentLike
                     .builder()
@@ -41,24 +41,15 @@ public class CommentLikeService {
                     .comment(comment)
                     .build();
 
-            comment.incLikes();
+            comment.addLike(newCommentLike);
             commentRepository.save(comment);
 
-            Long likeCount = comment.getLikes();
-
-            commentLikeRepository.save(newCommentLike);
-
-            return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), likeCount);
+            return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), comment.getLikes());
         }
 
-        Comment comment = commentRepository.findById(requestCommentLikeDTO.commentId()).get();
-        comment.decLikes();
+        comment.removeLike(commentLike.get());
         commentRepository.save(comment);
 
-        Long likeCount = comment.getLikes();
-
-        commentLikeRepository.delete(commentLike.get());
-
-        return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), likeCount);
+        return new ResponseCommentLikeDTO(requestCommentLikeDTO.username(), requestCommentLikeDTO.commentId(), comment.getLikes());
     }
 }

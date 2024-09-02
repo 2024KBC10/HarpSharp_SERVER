@@ -6,6 +6,8 @@ import com.harpsharp.infra_rds.entity.board.PostLike;
 import com.harpsharp.infra_rds.entity.user.User;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,12 +26,15 @@ public class PostLikeMapper {
     }
 
     public List<ResponsePostLikeDTO> postLikeToList(List<PostLike> postLikes) {
+        if(postLikes == null) return new ArrayList<>();
+
         return postLikes.stream()
                 .map(this::postLikeToResponseDTO)
                 .collect(Collectors.toList());
     }
 
     public Map<Long, ResponsePostLikeDTO> profilesToMap(List<PostLike> postLikes) {
+        if(postLikes == null) return new HashMap<>();
         return postLikes.stream()
                 .collect(Collectors.toMap(PostLike::getId, this::postLikeToResponseDTO));
     }

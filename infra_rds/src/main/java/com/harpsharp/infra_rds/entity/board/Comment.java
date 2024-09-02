@@ -5,12 +5,19 @@ import com.harpsharp.infra_rds.entity.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicUpdate;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @DynamicUpdate
 @Entity
 @Table(name = "comments")
+@SuperBuilder(toBuilder = true)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BasePost {
 
@@ -33,21 +40,13 @@ public class Comment extends BasePost {
 
     @NotNull
     @Column(name = "likes_count")
-    private Long likes;
+    Long likes;
 
-    @Builder(toBuilder = true)
-    public Comment(User user, String content, Post post, String memoColor, String pinColor, Long likes){
-        this.setContent(content);
-        this.setUser(user);
-        this.post = post;
-        this.memoColor = memoColor;
-        this.pinColor = pinColor;
-        this.likes = likes;
-        post.addComment(this);
-    }
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CommentLike> commentLikes;
 
-    public Long incLikes()  {   likes++; return likes;  };
-    public Long decLikes()  {   likes--; return likes;  };
+    public void addLike   (CommentLike like)  { commentLikes.add(like);       }
+    public void removeLike(CommentLike like)  { commentLikes.remove(like);    }
 
     public String getUsername(){
         return getUser().getUsername();
@@ -58,7 +57,7 @@ public class Comment extends BasePost {
     }
 
     @PrePersist
-    public void prePersist() {
+    public void onCreate() {
         if (this.memoColor == null) {
             this.memoColor = "yellow";
         }
@@ -66,10 +65,21 @@ public class Comment extends BasePost {
             this.pinColor = "brown";
         }
 
+        if(this.commentLikes == null){
+            this.commentLikes = new ArrayList<>();
+        }
+
         if(this.likes == null){
-            this.likes = 0L;
+            likes = 0L;
         }
     }
 
+    @PreUpdate
+    private void updateLikesCount() {
+        if(this.commentLikes == null){
+            this.commentLikes = new ArrayList<>();
+        }
 
+        this.likes = commentLikes.stream().count();
+    }
 }

@@ -44,7 +44,14 @@ public class TodoCommentService {
 
     public Map<Long,ResponseTodoCommentDTO> addComment(RequestTodoCommentDTO commentDTO) {
         TodoComment comment = commentMapper.requestToEntity(commentDTO);
-        return commentMapper.toMap(commentRepository.save(comment));
+        TodoPost post = todoPostRepository
+                .findById(commentDTO.postId())
+                .orElseThrow(()->new IllegalArgumentException("TODO_NOT_FOUND"));
+
+        post.addComment(comment);
+        todoPostRepository.save(post);
+
+        return commentMapper.toMap(post.getTodoComments().getLast());
     }
 
     public Map<Long,ResponseTodoCommentDTO> updateComment(RequestUpdateTodoCommentDTO commentDTO) {
@@ -67,12 +74,8 @@ public class TodoCommentService {
 
         TodoPost post = comment.getTodoPost();
 
-        if (post != null) {
-            post.getTodoComments().remove(comment);
-            comment.clearTodoPost();
-        }
-
-        commentRepository.delete(comment);
+        post.removeComment(comment);
+        todoPostRepository.save(post);
     }
 
     public void clear(){

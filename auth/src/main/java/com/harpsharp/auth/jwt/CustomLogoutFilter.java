@@ -1,10 +1,6 @@
 package com.harpsharp.auth.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.harpsharp.auth.service.RefreshTokenService;
-import com.harpsharp.infra_rds.dto.response.ApiResponse;
 import com.harpsharp.infra_rds.util.ResponseUtils;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -15,9 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.GenericFilterBean;
-
 import java.io.IOException;
-import java.time.LocalDateTime;
+
 
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
@@ -30,7 +25,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
     }
 
     private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        //path and method verify
         String accessToken = request.getHeader("Authorization");
         String requestUri = request.getRequestURI();
 
@@ -45,34 +39,29 @@ public class CustomLogoutFilter extends GenericFilterBean {
             return;
         }
 
-        //get refresh token
-        String refresh = null;
+        String refreshToken = null;
         Cookie[] cookies = request.getCookies();
 
         if(cookies == null) throw new IllegalArgumentException("INVALID_COOKIE");
 
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("refresh")) {
-                refresh = cookie.getValue();
+                refreshToken = cookie.getValue();
             }
         }
 
-        if(refresh == null) throw new IllegalArgumentException("INVALID_REFRESH_TOKEN");
+        if(refreshToken == null) throw new IllegalArgumentException("INVALID_REFRESH_TOKEN");
 
-        if(jwtUtil.isExpired(refresh)) throw new IllegalArgumentException("REFRESH_TOKEN_EXPIRED");
+        if(jwtUtil.isExpired(accessToken, refreshToken)) throw new IllegalArgumentException("REFRESH_TOKEN_EXPIRED");
 
-        String category = jwtUtil.getCategory(refresh);
+        String category = jwtUtil.getCategory(refreshToken);
 
         if (accessToken == null) throw new IllegalArgumentException("ACCESS_TOKEN_IS_NULL");
         if (!category.equals("refresh")) throw new IllegalArgumentException("INVALID_REFRESH_TOKEN");
 
         accessToken = accessToken.replace("Bearer ", "");
 
-        boolean isExist = jwtUtil.existsByToken(accessToken);
-        if (!isExist) throw new IllegalArgumentException("INVALID_ACCESS_TOKEN");
-
-
-        jwtUtil.deleteByToken(accessToken);
+        jwtUtil.deleteByToken(accessToken, refreshToken);
 
         Cookie cookie = new Cookie("refresh", null);
         cookie.setMaxAge(0);

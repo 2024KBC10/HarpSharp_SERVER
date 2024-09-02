@@ -6,10 +6,8 @@ import com.harpsharp.infra_rds.entity.BasePost;
 import com.harpsharp.infra_rds.entity.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
@@ -18,10 +16,12 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @DynamicUpdate
 @Table(name = "todo_posts")
+@SuperBuilder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TodoPost extends BasePost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class TodoPost extends BasePost {
     @Column(name = "status", nullable = false)
     private TodoStatus status;
 
-    @OneToMany(mappedBy = "todoPost", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "todoPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TodoComment> todoComments;
 
     @Column(name = "start_at")
@@ -47,14 +47,18 @@ public class TodoPost extends BasePost {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime endAt;
 
-    @Builder(toBuilder = true)
-    public TodoPost(String title, String content, TodoStatus status, LocalDateTime startAt, LocalDateTime endAt, User user) {
-        this.title = title;
-        this.content = content;
-        this.status = status;
-        this.startAt = startAt;
-        this.endAt = endAt;
-        this.user = user;
-        this.todoComments = new ArrayList<>();
+    public void addComment(TodoComment comment) {
+        todoComments.add(comment);
+    }
+
+    public void removeComment(TodoComment comment){
+        todoComments.remove(comment);
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if(this.todoComments == null){
+            todoComments = new ArrayList<>();
+        }
     }
 }

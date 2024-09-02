@@ -3,16 +3,16 @@ package com.harpsharp.infra_rds.entity.board;
 
 import com.harpsharp.infra_rds.entity.user.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 
 @Getter
 @Entity
 @Table(name = "likes_post")
+@Builder(toBuilder = true)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostLike {
     @Id
@@ -21,17 +21,10 @@ public class PostLike {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
-
-    @Builder(toBuilder = true)
-    public PostLike(Long id, User user, Post post){
-        this.id = id;
-        this.user = user;
-        this.post = post;
-    }
 }

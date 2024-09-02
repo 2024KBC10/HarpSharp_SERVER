@@ -6,8 +6,11 @@ import com.harpsharp.infra_rds.dto.board.comment.ResponseCommentDTO;
 import com.harpsharp.infra_rds.dto.board.like.RequestCommentLikeDTO;
 import com.harpsharp.infra_rds.dto.board.like.RequestPostLikeDTO;
 import com.harpsharp.infra_rds.entity.board.Comment;
+import com.harpsharp.infra_rds.entity.board.CommentLike;
 import com.harpsharp.infra_rds.entity.board.Post;
+import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.mapper.CommentMapper;
+import com.harpsharp.infra_rds.repository.CommentLikeRepository;
 import com.harpsharp.infra_rds.repository.CommentRepository;
 import com.harpsharp.infra_rds.repository.PostRepository;
 import com.harpsharp.infra_rds.repository.UserRepository;
@@ -29,6 +32,7 @@ public class CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentMapper commentMapper;
+    private final CommentLikeRepository commentLikeRepository;
 
     public Map<Long, ResponseCommentDTO> getCommentsByPostId(Long postId) {
         Post rootPost = postRepository
@@ -58,27 +62,18 @@ public class CommentService {
         return object;
     }
 
-    public Map<Long, ResponseCommentDTO> save(RequestCommentDTO commentDTO) {
+    public Map<Long, ResponseCommentDTO> addComment(RequestCommentDTO commentDTO) {
 
-        Comment comment = Comment
-                .builder()
-                .user(userRepository
-                        .findByUsername(commentDTO.username())
-                        .orElseThrow(()-> new IllegalArgumentException("USER_NOT_FOUND")))
-                .content(commentDTO.content())
-                .memoColor(commentDTO.memoColor())
-                .pinColor(commentDTO.pinColor())
-                .post(postRepository
-                        .findById(commentDTO.postId())
-                        .orElseThrow(() -> new IllegalArgumentException("POST_NOT_FOUND")))
-                .build();
+        Comment comment = commentMapper.requestToComment(commentDTO);
 
-        Comment savedComment = commentRepository.save(comment);
-        Map<Long, ResponseCommentDTO> object = new HashMap<>();
+        Post post = postRepository
+                .findById(commentDTO.postId())
+                .orElseThrow(()->new IllegalArgumentException("POST_NOT_FOUND"));
 
-        object.put(savedComment.getCommentId(),
-                commentMapper.commentToResponseDTO(savedComment));
-        return object;
+        post.addComment(comment);
+        postRepository.save(post);
+
+        return commentMapper.toMap(post.getComments().getLast());
     }
 
     public Map<Long, ResponseCommentDTO> updateComment(RequestUpdateCommentDTO commentDTO) {
@@ -104,41 +99,8 @@ public class CommentService {
 
         Post post = comment.getPost();
 
-        if (post != null) {
-            post.getComments().remove(comment);
-            comment.clearPost();
-        }
-
-        commentRepository.delete(comment);
-    }
-
-    public Long likePost(RequestCommentLikeDTO requestCommentLikeDTO){
-        Comment existedComment = commentRepository
-                .findById(requestCommentLikeDTO.commentId())
-                .orElseThrow(() -> new IllegalArgumentException("COMMENT_NOT_FOUND"));
-
-        Comment updatedComment = existedComment
-                .toBuilder()
-                .likes(existedComment.getLikes()+1)
-                .build();
-
-        commentRepository.save(updatedComment);
-        return updatedComment.getLikes();
-    }
-
-    public Long unlikePost(RequestCommentLikeDTO requestCommentLikeDTO){
-        Comment existedComment = commentRepository
-                .findById(requestCommentLikeDTO.commentId())
-                .orElseThrow(() -> new IllegalArgumentException("COMMENT_NOT_FOUND"));
-        Long likeCount = max(0, existedComment.getLikes()-1);
-
-        Comment updatedComment = existedComment
-                .toBuilder()
-                .likes(likeCount)
-                .build();
-
-        commentRepository.save(updatedComment);
-        return updatedComment.getLikes();
+        post.removeComment(comment);
+        postRepository.save(post);
     }
 
     public void clear(){

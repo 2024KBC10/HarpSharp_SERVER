@@ -76,6 +76,8 @@ public class UserMapper {
     }
 
     public Map<Long, ResponseUserDTO> toMap(List<User> users){
+        if(users == null) return new HashMap<>();
+
         return users.stream().collect(
                 Collectors.toMap(User::getUserId, this::userToResponseDTO));
     }

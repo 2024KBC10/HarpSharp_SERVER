@@ -2,12 +2,15 @@ package com.harpsharp.infra_rds.mapper;
 
 import com.harpsharp.infra_rds.dto.board.post.RequestPostDTO;
 import com.harpsharp.infra_rds.dto.board.post.ResponsePostDTO;
+import com.harpsharp.infra_rds.dto.todo.comment.ResponseTodoCommentDTO;
 import com.harpsharp.infra_rds.entity.board.Post;
+import com.harpsharp.infra_rds.entity.todo.TodoComment;
 import com.harpsharp.infra_rds.entity.user.User;
 import com.harpsharp.infra_rds.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,12 +47,16 @@ public class PostMapper {
     }
 
     public List<ResponsePostDTO> convertPostsToResponse(List<Post> posts) {
+        if(posts == null) return new ArrayList<>();
+
         return posts.stream() // 스트림 시작
                 .map(this::postToResponseDTO) // 각 Post 객체에 postToDTO 함수 적용
                 .collect(Collectors.toList()); // 결과를 List로 수집
     }
 
     public Map<Long, ResponsePostDTO> toMap(List<Post> posts) {
+        if(posts == null) return new HashMap<>();
+
         return posts.stream().collect(
                 Collectors.toMap(Post::getPostId, this::postToResponseDTO));
     }

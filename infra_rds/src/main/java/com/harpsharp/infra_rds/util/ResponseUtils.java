@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Getter
 @Component
@@ -47,6 +46,36 @@ public class ResponseUtils {
                         details);
 
         response.setStatus(HttpStatus.OK.value());
+        response.setContentType("application/json;charset=UTF-8");
+        String json = objectMapper.writeValueAsString(apiResponse);
+        response.getWriter().write(json);
+        response.getWriter().flush();
+    }
+
+    public void writeUnauthorizedEntity(HttpServletResponse response, Integer status, String message, String details) throws IOException {
+        ApiResponse apiResponse =
+                new ApiResponse(
+                        LocalDateTime.now(),
+                        status,
+                        message,
+                        details);
+
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType("application/json;charset=UTF-8");
+        String json = objectMapper.writeValueAsString(apiResponse);
+        response.getWriter().write(json);
+        response.getWriter().flush();
+    }
+
+    public void writeBadRequestEntity(HttpServletResponse response, Integer status, String message, String details) throws IOException {
+        ApiResponse apiResponse =
+                new ApiResponse(
+                        LocalDateTime.now(),
+                        status,
+                        message,
+                        details);
+
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.setContentType("application/json;charset=UTF-8");
         String json = objectMapper.writeValueAsString(apiResponse);
         response.getWriter().write(json);

@@ -5,6 +5,7 @@ import com.harpsharp.infra_rds.entity.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -20,6 +21,8 @@ import static java.lang.Math.max;
 @DynamicUpdate
 @Table(name = "posts")
 @DynamicInsert
+@SuperBuilder(toBuilder = true)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends BasePost {
     @Id
@@ -31,36 +34,49 @@ public class Post extends BasePost {
     @Column(name = "title")
     String title;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
-
-    public Long incLikes()  {   likes++; return likes;  };
-    public Long decLikes()  {   likes = max(0, likes-1); return likes;  };
 
     public String getUsername() {
         return getUser().getUsername();
     }
-    public void addComment(Comment comment) {
-        comments.add(comment);
+
+    public void addComment   (Comment comment) {
+         comments.add(comment);
     }
+    public void removeComment(Comment comment) { comments.remove(comment); }
+
+    public void addLike   (PostLike like)  { postLikes.add(like);       }
+    public void removeLike(PostLike like)  { postLikes.remove(like);    }
 
     @NotNull
     @Column(name = "likes_count")
-    private Long likes;
+    Long likes;
 
-    @Builder(toBuilder = true)
-    public Post(User user, String content, String title, Long likes){
-        this.setUser(user);
-        this.setContent(content);
-        this.title = title;
-        this.comments = new ArrayList<>();
-        this.likes = likes;
-    }
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostLike> postLikes;
 
     @PrePersist
     protected void onCreate() {
-        if(this.likes == null){
-            this.likes = 0L;
+        if(this.postLikes == null){
+            this.postLikes = new ArrayList<>();
         }
+
+        if(this.likes == null){
+            likes = 0L;
+        }
+
+        if(this.comments == null){
+            this.comments = new ArrayList<>();
+        }
+    }
+
+    @PreUpdate
+    private void updateLikesCount() {
+        if(this.postLikes == null){
+            this.postLikes = new ArrayList<>();
+        }
+
+        this.likes = postLikes.stream().count();
     }
 }

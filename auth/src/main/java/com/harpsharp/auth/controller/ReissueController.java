@@ -1,7 +1,6 @@
 package com.harpsharp.auth.controller;
 
 import com.harpsharp.infra_rds.dto.response.ApiResponse;
-import com.harpsharp.auth.entity.RefreshToken;
 import com.harpsharp.auth.jwt.JwtUtil;
 import com.harpsharp.auth.service.RefreshTokenService;
 import io.jsonwebtoken.JwtException;
@@ -30,7 +29,8 @@ public class ReissueController {
         String accessToken  = request.getHeader("Authorization");
 
         if(accessToken == null || !accessToken.startsWith("Bearer ")) {
-            throw new IllegalArgumentException("Invalid token");
+            System.out.println("Illegal Access Token");
+            throw new IllegalArgumentException("BAD_REQUEST_TOKEN");
         }
 
         accessToken = accessToken.substring("Bearer ".length());
@@ -38,7 +38,7 @@ public class ReissueController {
         Cookie[] cookies = request.getCookies();
 
         if(cookies == null) {
-            throw new IllegalArgumentException("Invalid cookies");
+            throw new IllegalArgumentException("BAD_REQUEST_COOKIE");
         }
 
         for(Cookie cookie: cookies){
@@ -48,27 +48,17 @@ public class ReissueController {
         }
 
         if(refreshToken == null){
-            throw new IllegalArgumentException("Invalid cookies");
+            throw new IllegalArgumentException("BAD_REQUEST_COOKIE");
         }
 
-        try{
-            if(jwtUtil.isExpired(refreshToken))
-                throw new JwtException("INVALID REFRESH_TOKEN");
-        }catch(JwtException e){
-            throw new IllegalArgumentException("INVALID REFRESH_TOKEN");
-        }
-
+        if(jwtUtil.isExpired(accessToken, refreshToken))
+            throw new JwtException("EXPIRED_TOKEN");
 
         String category = jwtUtil.getCategory(refreshToken);
 
         if(!category.equals("refresh")){
-            throw new IllegalArgumentException("Invalid cookies");
-        }
-
-        boolean isExist = refreshTokenService.existsByToken(accessToken);
-
-        if(!isExist){
-            throw new IllegalArgumentException("Invalid cookies");
+            System.out.println("Illegal Refresh Token");
+            throw new IllegalArgumentException("BAD_REQUEST_TOKEN");
         }
 
         String username = jwtUtil.getUsername(refreshToken);
@@ -77,15 +67,7 @@ public class ReissueController {
         String newAccess  = jwtUtil.createAccessToken (username, role);
         String newRefresh = jwtUtil.createRefreshToken(username, role);
 
-        refreshTokenService.deleteByToken(accessToken);
-
-        RefreshToken refreshEntity = RefreshToken
-                .builder()
-                .accessToken(newAccess)
-                .refreshToken(newRefresh)
-                .build();
-
-        refreshTokenService.save(refreshEntity);
+        jwtUtil.deleteByToken(accessToken, refreshToken);
 
         HttpHeaders headers = new HttpHeaders();
 

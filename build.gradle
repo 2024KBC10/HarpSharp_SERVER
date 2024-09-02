@@ -56,6 +56,9 @@ subprojects {
         implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+        implementation 'org.springframework.retry:spring-retry'
+        implementation 'org.springframework:spring-aspects'
+
         testImplementation 'org.projectlombok:lombok:1.18.20'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

@@ -42,7 +42,7 @@ public class JwtUtil {
     public JwtUtil(@Value("${spring.jwt.secret}") String secret, RefreshTokenService refreshTokenService, ObjectMapper objectMapper){
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
         this.refreshTokenService = refreshTokenService;
-        this.accessTokenExpireTime  = Duration.ofSeconds(1);
+        this.accessTokenExpireTime  = Duration.ofHours(1);
         this.refreshTokenExpireTime = Duration.ofDays(365);
         this.refreshTokenExpireSeconds = 24 * 60 * 60 * 365;
         this.objectMapper = objectMapper;
@@ -69,8 +69,11 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
 
-    public Boolean isExpired(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+    public Boolean isExpired(String accessToken, String refreshToken) {
+        System.out.println("accessToken = " + accessToken);
+        System.out.println("refreshToken = " + refreshToken);
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(accessToken).getPayload().getExpiration().before(new Date())
+                || refreshTokenService.existsByToken(refreshToken);
     }
 
     public String createAccessToken(String username, String role){
@@ -106,10 +109,14 @@ public class JwtUtil {
         if(oldAccessToken == null || oldRefreshToken == null)
             throw new IllegalArgumentException("TOKEN_IS_NULL");
 
-        if(isExpired(oldRefreshToken))
-            throw new JwtAuthenticationException(HttpStatus.UNAUTHORIZED.value(), "REFRESH_IS_EXPIRED");
+        if(isExpired(oldAccessToken, oldRefreshToken))
+            throw new JwtAuthenticationException(HttpStatus.UNAUTHORIZED.value(), "REFRESH_TOKEN_EXPIRED");
 
-        refreshTokenService.deleteByToken(oldAccessToken);
+        if(refreshTokenService.existsByToken(oldAccessToken)){
+            throw new JwtAuthenticationException(HttpStatus.UNAUTHORIZED.value(), "REFRESH_TOKEN_EXPIRED");
+        }
+
+        deleteByToken(oldAccessToken, oldRefreshToken);
 
         ApiResponse apiResponse = new ApiResponse(
                 LocalDateTime.now(),
@@ -150,14 +157,6 @@ public class JwtUtil {
         String newAccessToken = createAccessToken(username, role);
         String newRefreshToken = createRefreshToken(username, role);
 
-        RefreshToken refreshEntity = RefreshToken
-                .builder()
-                .accessToken(newAccessToken)
-                .refreshToken(newRefreshToken)
-                .build();
-
-        refreshTokenService.save(refreshEntity);
-
         HttpHeaders headers = new HttpHeaders();
 
         headers.set("Authorization", "Bearer " + newAccessToken);
@@ -178,12 +177,14 @@ public class JwtUtil {
         return refreshTokenService.existsByToken(accessToken);
     }
 
-    public void deleteByToken(String accessToken) {
-        refreshTokenService.deleteByToken(accessToken);
-    }
+    public void deleteByToken(String accessToken, String refreshToken) {
+        RefreshToken blackList = RefreshToken
+                .builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
 
-    public void save(RefreshToken refreshToken) {
-        refreshTokenService.save(refreshToken);
+        refreshTokenService.save(blackList);
     }
 
     public Boolean isAuthor(String username, String token){

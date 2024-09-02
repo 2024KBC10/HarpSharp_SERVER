@@ -24,34 +24,27 @@ public class PostLikeService {
 
     public ResponsePostLikeDTO triggerLike(RequestPostLikeDTO requestPostLikeDTO){
         Optional<PostLike> postLike = postLikeRepository.findByUsernameAndPostId(requestPostLikeDTO.username(), requestPostLikeDTO.postId());
+        Post post = postRepository.findById(requestPostLikeDTO.postId()).get();
 
         if(postLike.isEmpty()){
             User user = userRepository.findByUsername(requestPostLikeDTO.username()).get();
-            Post post = postRepository.findById(requestPostLikeDTO.postId()).get();
 
             PostLike newPostLike = PostLike
                     .builder()
                     .user(user)
                     .post(post)
                     .build();
-
-            post.incLikes();
+            post.addLike(newPostLike);
 
             postRepository.save(post);
-            postLikeRepository.save(newPostLike);
-            Long likeCount = post.getLikes();
 
-            return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), likeCount);
+            return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), post.getLikes());
         }
 
-        Post post = postRepository.findById(requestPostLikeDTO.postId()).get();
+        post.removeLike(postLike.get());
 
-        post.decLikes();
         postRepository.save(post);
 
-        Long likeCount = post.getLikes();
-        postLikeRepository.delete(postLike.get());
-
-        return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), likeCount);
+        return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), post.getLikes());
     }
 }
