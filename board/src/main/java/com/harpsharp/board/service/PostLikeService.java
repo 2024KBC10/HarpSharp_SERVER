@@ -53,12 +53,14 @@ public class PostLikeService {
                     .build();
 
             post.addLike(newPostLike);
+            postLikeRepository.save(newPostLike);
             Post update = postRepository.save(post);
             em.flush();
             return new ResponsePostLikeDTO(requestPostLikeDTO.username(), requestPostLikeDTO.postId(), update.getLikes());
         }
 
         post.removeLike(postLike.get());
+        postLikeRepository.delete(postLike.get());
         Post update = postRepository.save(post);
         em.flush();
 
