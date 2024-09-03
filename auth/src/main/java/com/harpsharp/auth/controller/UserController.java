@@ -247,5 +247,4 @@ public class UserController {
                 user.username() + "님이 작성한 Todo 댓글 입니다",
                 user.todoComments());
     }
-
 }

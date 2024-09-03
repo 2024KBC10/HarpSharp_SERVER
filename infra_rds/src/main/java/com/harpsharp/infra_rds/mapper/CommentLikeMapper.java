@@ -29,7 +29,7 @@ public class CommentLikeMapper {
         if(commentLikes == null || commentLikes.isEmpty()){ return new ArrayList<>(); }
         return commentLikes
                 .stream()
-                .map(CommentLike::getId)
+                .map(CommentLike::getCommentId)
                 .collect(Collectors.toList());
     }
 
