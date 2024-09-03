@@ -7,6 +7,7 @@ import com.harpsharp.infra_rds.dto.todo.comment.ResponseTodoCommentDTO;
 import com.harpsharp.infra_rds.dto.todo.post.ResponseTodoPostDTO;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 public record ResponseUserDTO(
@@ -22,6 +23,7 @@ public record ResponseUserDTO(
         Map<Long, ResponsePostDTO> posts,
         Map<Long, ResponseCommentDTO> comments,
         Map<Long, ResponseTodoPostDTO> todoPosts,
-        Map<Long, ResponseTodoCommentDTO> todoComments)
+        Map<Long, ResponseTodoCommentDTO> todoComments,
+        List<Long> likeComments)
 {
 }

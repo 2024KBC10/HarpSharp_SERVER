@@ -148,10 +148,6 @@ public class UserService {
                 .findByUsername(username)
                 .orElseThrow(()->new IllegalArgumentException("INVALID_USER_ID"));
 
-
-        postLikeRepository.setLikesToNullByUser(deletedUser);
-        commentLikeRepository.setLikesToNullByUser(deletedUser);
-
         userRepository.deleteById(deletedUser.getUserId());
 
         return userMapper.toMap(deletedUser);

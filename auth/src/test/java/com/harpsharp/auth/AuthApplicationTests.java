@@ -175,6 +175,7 @@ class AuthApplicationTests {
 								fieldWithPath("data.*.role").type(JsonFieldType.STRING).description("권한"),
 								fieldWithPath("data.*.posts").type(JsonFieldType.OBJECT).description("작성글"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("작성 댓글"),
+								fieldWithPath("data.*.likeComments").type(JsonFieldType.ARRAY).description("좋아요 누른 댓글 ID"),
 								fieldWithPath("data.*.todoPosts").type(JsonFieldType.OBJECT).description("작성글(TODO)"),
 								fieldWithPath("data.*.todoComments").type(JsonFieldType.OBJECT).description("작성 댓글(TODO)")
 
@@ -248,6 +249,7 @@ class AuthApplicationTests {
 								fieldWithPath("data.*.role").type(JsonFieldType.STRING).description("권한"),
 								fieldWithPath("data.*.posts").type(JsonFieldType.OBJECT).description("작성글"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("작성 댓글"),
+								fieldWithPath("data.*.likeComments").type(JsonFieldType.ARRAY).description("좋아요 누른 댓글 ID"),
 								fieldWithPath("data.*.todoPosts").type(JsonFieldType.OBJECT).description("작성글(TODO)"),
 								fieldWithPath("data.*.todoComments").type(JsonFieldType.OBJECT).description("작성 댓글(TODO)"))
 				));
@@ -422,6 +424,7 @@ class AuthApplicationTests {
 								fieldWithPath("data.*.role").type(JsonFieldType.STRING).description("권한"),
 								fieldWithPath("data.*.posts").type(JsonFieldType.OBJECT).description("작성글"),
 								fieldWithPath("data.*.comments").type(JsonFieldType.OBJECT).description("작성 댓글"),
+								fieldWithPath("data.*.likeComments").type(JsonFieldType.ARRAY).description("좋아요 누른 댓글 ID"),
 								fieldWithPath("data.*.todoPosts").type(JsonFieldType.OBJECT).description("작성글(TODO)"),
 								fieldWithPath("data.*.todoComments").type(JsonFieldType.OBJECT).description("작성 댓글(TODO)"))
 				));

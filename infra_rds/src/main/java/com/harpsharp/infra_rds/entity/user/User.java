@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.harpsharp.infra_rds.dto.user.Position;
 import com.harpsharp.infra_rds.entity.album.ProfileImage;
 import com.harpsharp.infra_rds.entity.board.Comment;
+import com.harpsharp.infra_rds.entity.board.CommentLike;
 import com.harpsharp.infra_rds.entity.board.Post;
 import com.harpsharp.infra_rds.entity.todo.TodoComment;
 import com.harpsharp.infra_rds.entity.todo.TodoPost;
@@ -81,6 +82,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<TodoComment> todoComments;
+
+    @OneToMany(mappedBy = "user")
+    private List<CommentLike> commentLikes;
 
     @Builder(toBuilder = true)
     public User(String username, String password, String email, Position position, String socialType, ProfileImage profileImage, String role){

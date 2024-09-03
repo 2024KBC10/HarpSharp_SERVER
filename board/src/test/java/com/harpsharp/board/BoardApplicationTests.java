@@ -532,7 +532,6 @@ class BoardApplicationTests {
 	@Transactional
 	public void deleteComment() throws Exception {
 		List<Long> list_id = writePC();
-		Long postId    = list_id.get(0);
 		Long commentId = list_id.get(1);
 		RequestUpdateCommentDTO commentDTO = new RequestUpdateCommentDTO(commentId, username, "Modified!",memoColor, pinColor);
 
@@ -647,7 +646,5 @@ class BoardApplicationTests {
 						)));
 
 	}
-
-
 
 }

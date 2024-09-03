@@ -25,6 +25,14 @@ public class CommentLikeMapper {
         );
     }
 
+    public List<Long> commentLikesToListOfId(List<CommentLike> commentLikes){
+        if(commentLikes == null || commentLikes.isEmpty()){ return new ArrayList<>(); }
+        return commentLikes
+                .stream()
+                .map(CommentLike::getId)
+                .collect(Collectors.toList());
+    }
+
     public List<ResponseCommentLikeDTO> commentLikeToList(List<CommentLike> commentLikes) {
         if(commentLikes == null) return new ArrayList<>();
 

@@ -23,12 +23,14 @@ public class UserMapper {
     private final CommentMapper commentMapper;
     private final TodoPostMapper todoPostMapper;
     private final TodoCommentMapper todoCommentMapper;
+    private final CommentLikeMapper commentLikeMapper;
 
     public ResponseUserDTO convertUserToResponse(User user){
         Map<Long, ResponsePostDTO> postDTOs = postMapper.toMap(user.getPosts());
         Map<Long, ResponseCommentDTO> commentDTOs = commentMapper.toMap(user.getComments());
         Map<Long, ResponseTodoPostDTO> todoPostDTOs = todoPostMapper.toMap(user.getTodoPosts());
         Map<Long, ResponseTodoCommentDTO> todoCommentDTOs = todoCommentMapper.toMap(user.getTodoComments());
+        List<Long> commentLikesIds = commentLikeMapper.commentLikesToListOfId(user.getCommentLikes());
 
         return new ResponseUserDTO(
                 user.getUsername(),
@@ -41,7 +43,8 @@ public class UserMapper {
                 postDTOs,
                 commentDTOs,
                 todoPostDTOs,
-                todoCommentDTOs);
+                todoCommentDTOs,
+                commentLikesIds);
     }
 
     public RequestUserDTO userToRequestDTO(User user){
@@ -63,7 +66,8 @@ public class UserMapper {
                 postMapper.toMap(user.getPosts()),
                 commentMapper.toMap(user.getComments()),
                 todoPostMapper.toMap(user.getTodoPosts()),
-                todoCommentMapper.toMap(user.getTodoComments())
+                todoCommentMapper.toMap(user.getTodoComments()),
+                commentLikeMapper.commentLikesToListOfId(user.getCommentLikes())
         );
     }
 
