@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus/config/:/etc/prometheus/
+      - ./prometheus/prometheus-volume:/prometheus
+    expose:
+      - 9090
+    command: # web.enalbe-lifecycle은 api 재시작없이 설정파일들을 reload 할 수 있게 해줌
+      - '--web.enable-lifecycle'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    restart: always
+    networks:
+      - harpsharp
+
+networks:
+  harpsharp:
+    external: true

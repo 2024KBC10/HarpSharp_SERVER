@@ -23,7 +23,9 @@ export namespace TaskProvider {
         switch(status) {
             case "RUNNING":
             case "STOP":
-            case "DONE": status = status as TaskState
+            case "DONE":
+                status = status as TaskState
+                break
             default: status = "RUNNING"
         }
 
@@ -36,7 +38,6 @@ export namespace TaskProvider {
             endAt: json['endAt'],
             createdAt: json['createdAt'],
             updatedAt: json['updatedAt'],
-            likes: parseInt(json['likes'] ?? 0),
             replies,
             status,
         } satisfies TaskDto
@@ -66,7 +67,6 @@ export namespace TaskProvider {
                 endAt: task.endAt,
                 createdAt: task.createdAt,
                 updatedAt: task.updatedAt,
-                likes: task.likes,
                 comments,
                 status: task.status,
             }

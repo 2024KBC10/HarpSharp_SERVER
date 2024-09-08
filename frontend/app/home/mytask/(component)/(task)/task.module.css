@@ -50,3 +50,10 @@
     height: 15px;
     color: #737575;
 }
+
+.title_wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}

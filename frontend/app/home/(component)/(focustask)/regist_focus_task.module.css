@@ -1,0 +1,107 @@
+.regist_background {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+}
+
+.regist_background .regist_container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.regist_container .regist_task_container {
+    width: 650px;
+    height: 250px;
+    border-radius: 15px;
+    border: 1px solid #C6C6C7;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.regist_task_container ul {
+    margin-left: 10px;
+    overflow: scroll;
+    width: 300px;
+    height: 100%;
+}
+
+.regist_task_container ul li {
+    padding: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #C6C6C7;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.regist_task_container ul li span {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.regist_task_container .prev_box {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.regist_task_container .empty_text {
+    width: 50%;
+    font-size: 18px;
+    font-weight: 400;
+    align-self: center;
+    text-align: center;
+}
+
+.prev_box .sel_task_container {
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.sel_task_container p {
+    font-size: 14px;
+    text-align: center;
+}
+
+.sel_task_container span {
+    font-size: 16px;
+}
+
+.sel_task_container .state_text {
+    font-size: 12px;
+}
+
+.sel_task_container .date_text {
+    font-size: 10px;
+    height: 18px;
+    color: #737575;
+}
+
+
+.regist_background .close_icon {
+    right: 15px;
+    top: 15px;
+    cursor: pointer;
+    position: fixed;
+}

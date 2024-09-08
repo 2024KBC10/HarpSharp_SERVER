@@ -31,3 +31,89 @@
     font-size: 18px;
     font-weight: 400;
 }
+
+/* ------------------------------------- */
+
+.task_container {
+    width: 100%;
+    height: 100%;
+    border: solid 1px #C6C6C7;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.task_container .top {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.task_container .title_text {
+    font-size: 18px;
+    padding: 20px;
+}
+
+.top .state_container {
+    padding-right: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.state_container span {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.state_container .state {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+}
+
+.running {
+    width: 500px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.running .progress_text {
+    font-size: 16px;
+    text-align: center;
+}
+
+.running progress {
+    appearance: none;
+    width: 100%;
+    height: 30px;
+    margin:0;
+	background: none;
+	border: 0;
+}
+
+.running progress[value]::-webkit-progress-value {
+    transition: .75s ease-in-out;
+	border-radius: 100px;
+    background-color: #24E34D;
+}
+
+.running progress::-webkit-progress-bar {
+    margin: 0 auto;
+	background-color: #DDD9D9;
+	border-radius: 100px;
+}
+
+.running .running_icon {
+    transition: .75s ease-in-out;
+}
+
+.running p {
+    font-size: 12px;
+    text-align: center;
+}

@@ -25,6 +25,20 @@ services:
     networks:
       - datasource
 
+  mongoDB:
+    container_name: mongoDB
+    image: mongo:latest
+    expose:
+      - "27017"
+    volumes:
+      - ./mongoDB/data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: wlghks24461!
+    restart: always
+    networks:
+      - datasource
+
 networks:
   datasource:
     external: true

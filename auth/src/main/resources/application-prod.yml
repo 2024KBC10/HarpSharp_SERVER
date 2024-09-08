@@ -35,3 +35,16 @@ spring:
       repositories:
         enabled:
           false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    web:
+      server:
+        auto-time-requests: true

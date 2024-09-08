@@ -13,6 +13,7 @@ import {
 import { IceBreakingProvider } from "../../(common)/(provider)"
 import { SessionStorage } from "@/app/(common)/(storage)"
 import { APIManager } from "@/app/(common)/(api)"
+import { userModel } from "@/app/(common)/(model)"
 import RegistIBK from "./(component)/(regist)"
 import IBKMainBottom from "./(component)/(bottom)/ibk_main_bottom"
 
@@ -54,9 +55,11 @@ export default function IceBreaking() {
     const addIBKQuestion = (question: IceBreakingDto) => {
         const key = "ibk_posts"
         const cache: IceBreakingDto[] = JSON.parse(SessionStorage.get(key) ?? "[]")
+        const newQuestions = [question, ...cache]
 
-        SessionStorage.set(key, JSON.stringify([question, ...cache]))
-        setQuestions([question, ...questions])
+        SessionStorage.set(key, JSON.stringify(newQuestions))
+        userModel.addLog(`아이스 브레이킹 ${question.title}을(를) 등록했습니다.`)
+        setQuestions(newQuestions)
     }
 
     // 주어진 기준 상세화 필요

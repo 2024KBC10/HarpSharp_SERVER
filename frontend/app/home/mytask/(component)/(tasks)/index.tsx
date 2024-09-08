@@ -16,7 +16,7 @@ export default function Tasks({
                 <Spacer spacing={10} direction="row"/>
                 {state}
                 <Spacer spacing={10} direction="row"/>
-                <span>0</span>
+                <span>{tasks.length}</span>
             </div>
             {
                 tasks.length > 0

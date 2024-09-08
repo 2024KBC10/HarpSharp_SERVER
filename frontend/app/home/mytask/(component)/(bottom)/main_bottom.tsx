@@ -143,7 +143,7 @@ export default function MyTaskMainBottom({
 
                 if(typeof result === "boolean" && result) {
                     onCloseModal()
-                    onRemoveTask(task.id)
+                    onRemoveTask(task)
                     return
                 }
                 throw new Error(`API 요청 실패`)
@@ -220,6 +220,6 @@ export default function MyTaskMainBottom({
 
 interface MyTaskMainBottom {
     tasks: TaskDto[]
-    onRemoveTask: (id: string) => void
+    onRemoveTask: (task: TaskDto) => void
     onRefreshTasks: (task: TaskDto) => void
 }

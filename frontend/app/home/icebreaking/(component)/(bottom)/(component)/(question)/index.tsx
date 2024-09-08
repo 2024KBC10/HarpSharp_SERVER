@@ -13,6 +13,7 @@ export default function Question({
         href={{
             pathname: `/home/icebreaking/${question.id}`,
             query: {
+                title: question.title,
                 content: question.content,
                 createdAt: `${question.createdAt}`,
             }
@@ -22,7 +23,7 @@ export default function Question({
             <li className={styles.container}>
                 <p>{question.title}</p>
                 <div className={styles.action_container}>
-                    <p>0개의 관심</p>
+                    <p>{question.likes}개의 관심</p>
                     <Spacer spacing={10} direction="row"/>
                     <p>{question.replies.length}개의 답변</p>
                 </div>

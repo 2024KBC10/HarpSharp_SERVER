@@ -6,9 +6,7 @@ import {
     useState 
 } from "react"
 
-import { TaskDto, TaskJson } from "../../(common)/(interface)/task.dto"
-import { APIManager } from "@/app/(common)/(api)"
-import { TaskProvider } from "@/app/(common)/(provider)"
+import { TaskDto } from "../../(common)/(interface)/task.dto"
 import { userModel } from "@/app/(common)/(model)"
 import MyTaskMainBottom from "./(component)/(bottom)/main_bottom"
 import MyTaskMainTop from "./(component)/(top)/main_top"
@@ -24,28 +22,8 @@ export default function Mytask() {
 
     const getTasks = async () => {
         try {
-            const result = await APIManager.get<TaskJson>({
-                route: "/todo/posts",
-            })
-            .then(res => {
-                const arr: TaskDto[] = []
-                if(typeof res !== "boolean") {
-                    if("error" in res) return arr
-                    const keys = Object.keys(res)
-                    if(keys.length > 0) {
-                        for(let i=0; i<keys.length; ++i) {
-                            const key = keys[i]
-                            arr
-                            .push(
-                                TaskProvider
-                                .toDto(key, res[key])
-                            )
-                        }
-                    }
-                }
-                return arr
-            })
-            setTasks(result)
+            const user = userModel.getUserData()
+            setTasks(user!.myTodos)
         } catch(e) {
             alert("일정을 조회하는데 실패했습니다.\n원활한 통신 환경에 있는지 확인하고 재 시도 해주세요.")
             throw e
@@ -56,16 +34,25 @@ export default function Mytask() {
             if(task.id === item.id) return task
             return item
         })
-        alert(`${task.title}의 상태를 변경했습니다.`)
+        const message = `${task.title}의 상태를 변경했습니다.`
+        userModel.updateTasks(newTasks, message)
+
+        alert(message)
         setTasks(newTasks)
     }
     const addTask = (task: TaskDto) => {
+        const newTasks = [...tasks, task]
+        const message = `${task.title}을 내 일정에 등록했습니다.`
+        userModel.updateTasks(newTasks, message)
+
         alert("성공적으로 일정을 등록했습니다.")
         setOpenRegistWindow(false)
-        setTasks([...tasks, task])
+        setTasks(newTasks)
     }
-    const removeTask = (id: string) => {
-        const newTasks = tasks.filter(task => task.id !== id)
+    const removeTask = (task: TaskDto) => {
+        const newTasks = tasks.filter(item => item.id !== task.id)
+        const message = `${task.title}을 내 일정에서 삭제했습니다.`
+        userModel.updateTasks(newTasks, message)
         alert("내 일정을 삭제했습니다.")
         setTasks(newTasks)
     }
@@ -75,6 +62,7 @@ export default function Mytask() {
             setIsLogin(true)
         }
     }, [])
+
     useEffect(() => { initMyTasks() }, [initMyTasks])
 
     return (

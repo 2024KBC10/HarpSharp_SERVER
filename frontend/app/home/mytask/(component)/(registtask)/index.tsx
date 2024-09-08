@@ -46,6 +46,9 @@ export default function RegistTask({
             else if(!dateValidator(start) || !dateValidator(end)) {
                 alert("시작일과 종료일을 양식에 맞게 작성 해주세요.")
                 return
+            } else if(title.length < 0 || memo.length < 0) {
+                alert("제목과 메모는 최소 한 글자 이상 기입하여야 합니다.")
+                return
             }
             const token = LocalStorage.get("token")
             const startAt = syncDateFromServer(new Date(start))

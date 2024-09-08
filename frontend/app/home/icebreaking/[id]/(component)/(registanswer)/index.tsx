@@ -17,6 +17,7 @@ import CloseIcon from "../../../../../../public/image/close.png"
 import styles from "./regist_answer.module.css"
 
 export default function RegistAnswerModal({
+    question_title,
     question_id,
     isShowing,
     onAddComment,
@@ -63,6 +64,7 @@ export default function RegistAnswerModal({
             return
         }
 
+        userModel.addLog(`아이스 브레이킹 ${question_title}에 답변을 등록했습니다.`)
         onShowModal(false)
         onAddComment(result)
     }
@@ -199,6 +201,7 @@ export function getPinIconFromColor(color: PinColor | string | null) {
 }
 
 interface RegistAnswerModalProps {
+    question_title: string
     question_id: string
     isShowing: boolean
     onAddComment: (comment: IceBreakingCommentDto) => void

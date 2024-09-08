@@ -25,11 +25,65 @@
     border: solid 1px #C6C6C7;
     border-radius: 15px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
 }
 
 .activity_wrapper span {
     font-size: 16px;
     font-weight: 400;
+    align-self: center;
+}
+
+.activity_logs_container {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: auto;
+    text-overflow: ellipsis;
+}
+
+.activity_logs_container .pin {
+    width: 24px;
+    align-items: center;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+}
+
+.activity_wrapper ul {
+    height: 300px;
+    overflow: scroll;
+}
+
+.pin .head {
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background-color: #bbbbbb;
+}
+
+.pin .body {
+    width: 1px;
+    height: 30px;
+    background-color: #bbbbbb;
+}
+
+.activity_logs_container .message {
+    width: 100%;
+    height: 50px;
+    justify-content: space-evenly;
+    display: flex;
+    flex-direction: column;
+}
+
+.message p {
+    font-size: 14px;
+}
+
+.message span {
+    font-size: 12px;
+    align-self: flex-start;
+    color: #737575;
 }

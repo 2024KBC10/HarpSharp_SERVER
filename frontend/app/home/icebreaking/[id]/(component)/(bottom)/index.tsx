@@ -40,13 +40,7 @@ export default function IBKDetailBottom({
 function Single(comment: IceBreakingCommentDto, key: number) {
     return (
         <li key={key + 1} className={styles.detail_single_wrapper}>
-            <AnswerDetail
-            username={comment.username}
-            pinIcon={getPinIconFromColor(comment.pinColor)}
-            memoColor={getColor(comment.memoColor) ?? "#FFFA5E"}
-            content={comment.content}
-            createdAt={new Date(comment.createdAt)}
-            />
+            <AnswerDetail comment={comment}/>
         </li>
     )
 }
@@ -54,21 +48,9 @@ function Single(comment: IceBreakingCommentDto, key: number) {
 function Double(comments: IceBreakingCommentDto[], key: number) {
     return (
         <li key={key + 1} className={styles.detail_wrapper}>
-            <AnswerDetail
-            username={comments[0].username}
-            pinIcon={getPinIconFromColor(comments[0].pinColor)}
-            memoColor={getColor(comments[0].memoColor) ?? "#FFFA5E"}
-            content={comments[0].content}
-            createdAt={new Date(comments[0].createdAt)}
-            />
+            <AnswerDetail comment={comments[0]}/>
             <Spacer spacing={10}/>
-            <AnswerDetail
-            username={comments[1].username}
-            pinIcon={getPinIconFromColor(comments[1].pinColor)}
-            memoColor={getColor(comments[1].memoColor) ?? "#FFFA5E"}
-            content={comments[1].content}
-            createdAt={new Date(comments[1].createdAt)}
-            />
+            <AnswerDetail comment={comments[1]}/>
         </li>
     )
 }

@@ -9,7 +9,6 @@ export interface TaskDto {
     content: string
     updatedAt: Date
     endAt: Date
-    likes: number
 }
 
 export interface TaskCommentDto {
@@ -31,7 +30,6 @@ export type TaskJson = {
         status: TaskState
         updatedAt: Date
         endAt: Date
-        likes: number
     }
 }
 

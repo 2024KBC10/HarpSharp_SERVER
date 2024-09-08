@@ -50,6 +50,7 @@ export default function IBKDetail({
             .then(comments => {
                 setComments(comments)
                 setData({
+                    question_title: searchParams.title,
                     content: searchParams.content,
                     createdAt: new Date(searchParams.createdAt),
                 })
@@ -69,6 +70,7 @@ export default function IBKDetail({
             {
                 showRegistAnswerModal
                 ?   <RegistAnswerModal
+                    question_title={data?.question_title ?? "empty"}
                     question_id={params.id}
                     onAddComment={addComment}
                     onShowModal={setShowRegistAnswerModal} 
@@ -83,12 +85,14 @@ export default function IBKDetail({
 interface IBKDetailProps {
     params: { id: string }
     searchParams: {
+        title: string
         content: string
         createdAt: string
     }
 }
 
 interface IIBKDetail {
+    question_title: string
     content: string
     createdAt: Date
 }

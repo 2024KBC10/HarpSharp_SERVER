@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { 
+    useCallback,
     useEffect, 
     useRef, 
     useState 
@@ -14,6 +15,7 @@ import Spacer from "../(spacer)"
 import AIIcon from "../../../../public/image/AI_Icon_entered_phone.png"
 import SendIcon from "../../../../public/image/send.png"
 import styles from "./ai_phone.module.css"
+import {userModel} from "@/app/(common)/(model)";
 
 export default function AIPhone({
     isOpen
@@ -23,11 +25,11 @@ export default function AIPhone({
     const [isAutoScroll, setIsAutoScroll] = useState(true)
     const chatContainerRef = useRef<HTMLUListElement>(null)
 
-    const scrollToBottom = () => {
+    const scrollToBottom = useCallback(() => {
         if (chatContainerRef.current && isAutoScroll) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
-    }
+    }, [chatContainerRef, isAutoScroll])
 
     const handleScroll = () => {
         if (chatContainerRef.current) {
@@ -41,13 +43,22 @@ export default function AIPhone({
         try {
             if(input.length > 0) {
                 const prompt = input
+                const user = userModel.getUserData()
                 const question_bubble: IChatBubble = { message: prompt, role: "user" }
                 setBubbles([...bubbles, question_bubble])
                 setInput("")
+                let username = "guest";
+
+                if(user != null){
+                    username = user.username;
+                }
 
                 await APIManager.post<{ generated_text: string }>({
                     route: "/gpt/chat",
-                    body: { prompt }
+                    body: {
+                        username,
+                        prompt
+                    }
                 })
                 .
                 then(result => {
@@ -64,7 +75,7 @@ export default function AIPhone({
 
     }
 
-    useEffect(() => { scrollToBottom() }, [bubbles])
+    useEffect(() => { scrollToBottom() }, [scrollToBottom, bubbles])
 
     return (
         <div className={styles[`container_${isOpen ? "open" : "close"}`]}>

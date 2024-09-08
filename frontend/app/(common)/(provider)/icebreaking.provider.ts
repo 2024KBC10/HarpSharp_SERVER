@@ -24,6 +24,7 @@ export namespace IceBreakingProvider {
             content: json['content'],
             username: json['username'],
             replies,
+            likes: json['likes'],
             createdAt: json['createdAt'],
             updatedAt: json['updatedAt'],
         } satisfies IceBreakingDto
@@ -38,6 +39,7 @@ export namespace IceBreakingProvider {
                 comment[`${reply.id}`] = {
                     content: reply.content,
                     username: reply.username,
+                    likes: reply.likes,
                     memoColor: reply.memoColor,
                     pinColor: reply.pinColor,
                     createdAt: reply.createdAt,
@@ -52,6 +54,7 @@ export namespace IceBreakingProvider {
                 content: question.content,
                 username: question.username,
                 comment,
+                likes: question.likes,
                 createdAt: question.createdAt,
                 updatedAt: question.updatedAt,
             }
@@ -63,6 +66,7 @@ export namespace IceBreakingCommentProvider {
     export const toDto = (key: string, json: any): IceBreakingCommentDto => ({
         id: key,
         content: json['content'],
+        likes: json['likes'],
         username: json['username'],
         memoColor: json['memoColor'],
         pinColor: json['pinColor'],
@@ -74,6 +78,7 @@ export namespace IceBreakingCommentProvider {
         [`${comment.id}`]: {
             username: comment.username,
             content: comment.content,
+            likes: comment.likes,
             memoColor: comment.memoColor,
             pinColor: comment.pinColor,
             createdAt: comment.createdAt,

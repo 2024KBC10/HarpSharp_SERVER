@@ -2,6 +2,17 @@
 version: '3'
 
 services:
+  mongo:
+    expose:
+      - "27017"
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: wlghks24461!
+    networks:
+      - datasource
+
   dalle:
     expose:
       - "5001"
@@ -11,10 +22,15 @@ services:
     container_name: dalle
     networks:
       - harpsharp
+      - datasource
     restart: always
     env_file:
       - .env
+    depends_on:
+      - mongo
 
 networks:
   harpsharp:
+    external: true
+  datasource:
     external: true
