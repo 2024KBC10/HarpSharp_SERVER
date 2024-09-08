@@ -20,7 +20,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/api/v1/board/posts/{postId}/comments")
-    public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> getCommentsByPostId(@PathVariable Long postId) {
+    public ResponseWithData<Map<Long, ResponseCommentDTO>> getCommentsByPostId(@PathVariable Long postId) {
 
         Map<Long, ResponseCommentDTO> comments = commentService.getCommentsByPostId(postId);
         ResponseWithData<Map<Long, ResponseCommentDTO>> apiResponse
@@ -31,13 +31,11 @@ public class CommentController {
                 "postId: "+postId.toString() + " 게시글에 속한 댓글들입니다.",
                 comments);
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(apiResponse);
+        return apiResponse;
     }
 
     @GetMapping("/api/v1/board/posts/{postId}/comments/{commentId}")
-    public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> getCommentByCommentId(@PathVariable Long commentId) {
+    public ResponseWithData<Map<Long, ResponseCommentDTO>> getCommentByCommentId(@PathVariable Long commentId) {
         Map<Long, ResponseCommentDTO> comment = commentService.getCommentById(commentId);
         ResponseWithData<Map<Long, ResponseCommentDTO>> apiResponse
                 = new ResponseWithData<>(
@@ -47,13 +45,11 @@ public class CommentController {
                 "요청한 댓글이 성공적으로 조회되었습니다.",
                 comment);
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(apiResponse);
+        return apiResponse;
     }
 
     @PostMapping("/api/v1/board/posts/comments")
-    public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> addComment(
+    public ResponseWithData<Map<Long, ResponseCommentDTO>> addComment(
             @RequestBody RequestCommentDTO commentDTO) throws IllegalAccessException {;
 
         Map<Long, ResponseCommentDTO> object = commentService.addComment(commentDTO);
@@ -66,14 +62,12 @@ public class CommentController {
                 "댓글이 성공적으로 작성되었습니다.",
                 object);
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(apiResponse);
+        return apiResponse;
 
     }
 
     @PatchMapping("/api/v1/board/posts/comments")
-    public ResponseEntity<ResponseWithData<Map<Long, ResponseCommentDTO>>> updateComment(
+    public ResponseWithData<Map<Long, ResponseCommentDTO>> updateComment(
             @RequestBody RequestUpdateCommentDTO updatedComment) throws IllegalAccessException {
 
         Map<Long, ResponseCommentDTO> object
@@ -88,14 +82,12 @@ public class CommentController {
                 "댓글이 성공적으로 수정되었습니다.",
                 object);
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(apiResponse);
+        return apiResponse;
     }
 
 
     @DeleteMapping("/api/v1/board/posts/comments")
-    public ResponseEntity<ApiResponse> deleteComment(
+    public ApiResponse deleteComment(
             @RequestBody RequestUpdateCommentDTO commentDTO) throws IllegalAccessException {
 
         Long commentId = commentDTO.commentId();
@@ -108,8 +100,6 @@ public class CommentController {
                 "DELETE_COMMNET_SUCCESSFULLY",
                 "댓글이 성공적으로 삭제되었습니다.");
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(apiResponse);
+        return apiResponse;
     }
 }
