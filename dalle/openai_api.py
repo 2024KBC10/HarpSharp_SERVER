@@ -14,7 +14,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 translator = Translator()
 
 # MongoDB URL 설정
-db_url = os.getenv("MONGO_DB_URL", "mongodb://mongo") # localhost -> harpsharp.com 으로 교체
+db_url = os.getenv("MONGO_DB_URL", "mongodb://root:mongo123!@mongo:27017") # localhost -> harpsharp.com 으로 교체
 history_service = HistoryService(db_url)
 
 # 비동기 번역 함수

@@ -10,7 +10,7 @@ services:
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: wlghks24461!
+      MONGO_INITDB_ROOT_PASSWORD: mongo123!
     networks:
       - datasource
 
