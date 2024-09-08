@@ -111,3 +111,4 @@ wsproto==1.2.0
 xxhash==3.4.1
 xyzservices==2024.6.0
 yarl==1.9.4
+pymongo
