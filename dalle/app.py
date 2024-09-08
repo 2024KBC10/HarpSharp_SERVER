@@ -14,7 +14,7 @@ class PromptRequest(BaseModel):
     prompt: str   # 사용자가 입력한 질문 또는 명령어
 
 # 텍스트 또는 이미지 생성을 위한 엔드포인트 정의
-@app.post("/chat")
+@app.post("/generate")
 async def generate_route(data: PromptRequest):
     username = data.username
     prompt = data.prompt
@@ -38,10 +38,7 @@ async def generate_route(data: PromptRequest):
             
             # 이미지 생성이 성공적으로 완료된 경우, 이미지를 반환
             if image:
-                img_io = BytesIO()
-                image.save(img_io, 'PNG')
-                img_io.seek(0)
-                return StreamingResponse(img_io, media_type="image/png")
+                return create_response("GENERATED_IMAGE", "이미지 생성에 성공했습니다", 201, image)
             else:
                 return create_response("GENERATED_FAILED", "이미지 생성에 실패했습니다.", 500, None)
         else:

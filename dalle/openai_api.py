@@ -14,7 +14,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 translator = Translator()
 
 # MongoDB URL 설정
-db_url = os.getenv("MONGO_DB_URL", "mongodb://root:mongo123!@mongo:27017") # localhost -> harpsharp.com 으로 교체
+db_url = os.getenv("MONGO_DB_URL", "mongodb://mongodb") # localhost -> harpsharp.com 으로 교체
 history_service = HistoryService(db_url)
 
 # 비동기 번역 함수
@@ -43,15 +43,10 @@ async def generate_image_from_text(username, kr_prompt):
         )
 
         image_url = response['data'][0]['url']
+        # 히스토리 저장 (질문과 이미지 URL을 저장)
+        history_service.save_history(username, kr_prompt, image_url)
 
-        async with aiohttp.ClientSession() as session:
-            image_data = await fetch_image(session, image_url)
-            image = Image.open(BytesIO(image_data))
-            
-            # 히스토리 저장 (질문과 이미지 URL을 저장)
-            history_service.save_history(username, kr_prompt, image_url)
-
-            return image
+        return image_url
     except Exception as e:
         print(f"An error occurred: {e}")
         raise HTTPException(status_code=500, detail="Image generation failed")
