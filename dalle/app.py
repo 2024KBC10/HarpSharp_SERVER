@@ -14,7 +14,7 @@ class PromptRequest(BaseModel):
     prompt: str   # 사용자가 입력한 질문 또는 명령어
 
 # 텍스트 또는 이미지 생성을 위한 엔드포인트 정의
-@app.post("/generate")
+@app.post("/chat")
 async def generate_route(data: PromptRequest):
     username = data.username
     prompt = data.prompt

@@ -225,7 +225,7 @@ jobs:
         working-directory: ./frontend
         run: |
           mkdir -p deploy-front
-          echo "${{ secrets.ENV }}" | base64 --decode >> ./deploy-front/env.local
+          echo "${{ secrets.ENV_NEXT }}" | base64 --decode >> ./deploy-front/env.local
           mv .dockerignore dockerignore
           mv .eslintrc.json eslintrc.json
           rsync -av --exclude='deploy-front' --exclude='node_modules' ./ deploy-front/
