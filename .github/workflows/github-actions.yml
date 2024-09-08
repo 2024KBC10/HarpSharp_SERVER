@@ -145,6 +145,7 @@ jobs:
           cp ./docker-compose.yml ./deploy-dalle
           cp ./Dockerfile ./deploy-dalle
           cp ./openai_api.py ./deploy-dalle
+          cp ./history_service.py ./deploy-ai
           cp ./requirements.txt ./deploy-dalle
           cd ../ && mkdir -p deploy/dalle
           mv ./dalle/deploy-dalle/* deploy/dalle
