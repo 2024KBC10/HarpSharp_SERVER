@@ -57,28 +57,25 @@ cd /home/ubuntu/deploy/db/
 docker-compose up -d
 
 cd /home/ubuntu/deploy/auth
-serviceDown auth
-swaggerDown "swagger-auth"
+docker-compose down
 docker-compose up --build -d
 
 cd /home/ubuntu/deploy/board
-serviceDown board
-swaggerDown "swagger-board"
+docker-compose down
 docker-compose up --build -d
 
 cd /home/ubuntu/deploy/todo
-serviceDown todo
-swaggerDown "swagger-todo"
+docker-compose down
 docker-compose up --build -d
 
 cd /home/ubuntu/deploy/ai
 mv env .env
-serviceDown gpt4o
+docker-compose down
 docker-compose up -d --build
 
 cd /home/ubuntu/deploy/dalle
 mv env .env
-serviceDown dalle
+docker-compose down
 docker-compose up -d --build
 
 cd /home/ubuntu/deploy/front
@@ -89,7 +86,7 @@ docker-compose down
 docker-compose up -d --build
 
 cd /home/ubuntu/deploy/swagger
-serviceDown swagger
+docker-compose down
 docker-compose up -d --build
 
 reloadNginx
