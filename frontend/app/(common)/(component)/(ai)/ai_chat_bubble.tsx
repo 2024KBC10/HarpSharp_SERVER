@@ -19,7 +19,7 @@ export default function ChatBubble({
 function UserChatBubble(content: string, type: ChatBubbleType) {
     const user = userModel.getUserData();
     const username = (user == null) ? "게스트": user.username;
-    const role =  (user == null) ? "guest" : user.role;
+    const position =  (user == null) ? "guest" : user.position;
     return (
         <li className={styles.user_chat_bubble_container}>
             <div 
@@ -29,7 +29,7 @@ function UserChatBubble(content: string, type: ChatBubbleType) {
                     alignSelf: "flex-end",
                     marginLeft: "0px",
                     marginRight: "10px", 
-                }}> {username} / {role} </span>
+                }}> {username} / {position} </span>
                 <Spacer spacing={5} direction="column"/>
                 <div 
                 className={styles.chat_bubble_wrapper}
