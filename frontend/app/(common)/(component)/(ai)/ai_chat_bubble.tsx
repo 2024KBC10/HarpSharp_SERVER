@@ -1,4 +1,5 @@
 import Image from "next/image"
+import { useState } from "react"
 
 import AIIcon from "../../../../public/image/AI_Icon_entered_phone.png"
 import UserIcon from "../../../../public/image/default_user_icon.png"
@@ -8,12 +9,13 @@ import Spacer from "../(spacer)"
 export default function ChatBubble({
     content,
     role,
+    answer_type = "text",
 }: ChatBubbleProps) {
-    content = "<p>" + content.replaceAll(/\s\s/g, "<br/>") + "</p>"
-    return role === "user" ? UserChatBubble(content) : AIChatBubble(content)
+    if(!/(https:\/\/)/.test(content)) content = "<p>" + content.replaceAll(/\s\s/g, "<br/>") + "</p>"
+    return role === "user" ? UserChatBubble(content, answer_type) : AIChatBubble(content, answer_type)
 }
 
-function UserChatBubble(content: string) {
+function UserChatBubble(content: string, type: ChatBubbleType) {
     return (
         <li className={styles.user_chat_bubble_container}>
             <div 
@@ -43,7 +45,14 @@ function UserChatBubble(content: string) {
     )
 }
 
-function AIChatBubble(content: string) {
+function AIChatBubble(content: string, type: ChatBubbleType) {
+    const [isHover, setIsHover] = useState<boolean>()
+
+    const onOpenImageWindow = () => {
+        if(typeof window !== undefined) {
+            window.open(content, "_blank", "noopener,noreferrer")
+        }
+    }
     return (
         <li className={styles.ai_chat_bubble_container}>
             <Image
@@ -58,12 +67,22 @@ function AIChatBubble(content: string) {
             >
                 <span>AI Shark</span>
                 <Spacer spacing={5} direction="column"/>
-                <div 
-                className={styles.chat_bubble_wrapper}
-                style={{ backgroundColor: "#dfe5ff" }}
-                dangerouslySetInnerHTML={{ __html: content }}
-                >
-                </div>
+                {
+                    type === "text"
+                    ? <div 
+                      className={styles.chat_bubble_wrapper}
+                      style={{ backgroundColor: "#dfe5ff" }}
+                      dangerouslySetInnerHTML={{ __html: content }}
+                      />
+                    : <div 
+                      className={styles.chat_bubble_image_wrapper}
+                      onMouseOver={(_) => setIsHover(true)}
+                      onMouseLeave={(_) => setIsHover(false)}
+                      >
+                        <div className={styles.hint} style={{ opacity: `${isHover ? 1 : 0}`, display: isHover ? "block" : "none" }}>이미지를 클릭하면 크게 볼 수 있습니다</div>
+                        <Image src={content} onClick={onOpenImageWindow} width={200} height={200} alt="AI 생성 이미지"/>
+                      </div>
+                }
             </div>
         </li>
     )
@@ -71,5 +90,8 @@ function AIChatBubble(content: string) {
 
 interface ChatBubbleProps {
     content: string
+    answer_type: ChatBubbleType
     role: "user" | "ai"
 }
+
+export type ChatBubbleType = "text" | "image"

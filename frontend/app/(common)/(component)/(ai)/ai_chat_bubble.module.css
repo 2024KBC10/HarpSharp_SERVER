@@ -45,6 +45,23 @@
     word-wrap: break-word;
 }
 
+.chat_bubble_image_wrapper {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat_bubble_image_wrapper .hint {
+    font-size: 10px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.616);
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 5px;
+    transition: .25s ease;
+}
+
 .icon {
     padding: 0px 6px 0px 6px;
 }

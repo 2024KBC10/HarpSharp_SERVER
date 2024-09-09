@@ -9,7 +9,7 @@ import {
 } from "react"
 
 import { APIManager } from "../../(api)"
-import ChatBubble from "./ai_chat_bubble"
+import ChatBubble, { ChatBubbleType } from "./ai_chat_bubble"
 import Spacer from "../(spacer)"
 
 import AIIcon from "../../../../public/image/AI_Icon_entered_phone.png"
@@ -43,28 +43,26 @@ export default function AIPhone({
         try {
             if(input.length > 0) {
                 const prompt = input
-                const user = userModel.getUserData()
-                const question_bubble: IChatBubble = { message: prompt, role: "user" }
+                const question_bubble: IChatBubble = { message: prompt, role: "user", answer_type: "text" }
+                const user = userModel.getUserData();
+
                 setBubbles([...bubbles, question_bubble])
                 setInput("")
-                let username = "guest";
+                const username = (user == null) ? "guest" : user.username;
 
-                if(user != null){
-                    username = user.username;
-                }
-
-                await APIManager.post<{ generated_text: string }>({
+                await APIManager.post({
                     route: "/gpt/chat",
                     body: {
                         username,
                         prompt
                     }
                 })
-                .
-                then(result => {
+                .then(result => {
                     if("data" in result) {
-                        const answer_bubble: IChatBubble = { message: result['data']!['generated_text'], role: "ai" }
-                        setBubbles([...bubbles, question_bubble, answer_bubble])
+                        if(result.type) {
+                            const answer_bubble: IChatBubble = { message: result['data']! as string, role: "ai", answer_type: result.type! as ChatBubbleType }
+                            setBubbles([...bubbles, question_bubble, answer_bubble])
+                        }
                     }
                 })
             }
@@ -109,6 +107,7 @@ export default function AIPhone({
                 <ChatBubble
                 content="안녕하세요! AI_Shark 입니다.
                 무엇이든 물어보세요!"
+                answer_type="text"
                 role="ai"
                 />
                 { 
@@ -116,6 +115,7 @@ export default function AIPhone({
                         <ChatBubble 
                         key={index} 
                         content={bubble.message} 
+                        answer_type={bubble.answer_type}
                         role={bubble.role}/>
                     )) 
                 }
@@ -143,4 +143,5 @@ interface AIPhoneProps {
 interface IChatBubble {
     message: string
     role: "user" | "ai"
+    answer_type: ChatBubbleType
 }

@@ -76,7 +76,7 @@ class UserModel {
                 position: args.position,
             }
         })
-
+        
         if("message" in response && response.code === 201) return true
         return false
     }

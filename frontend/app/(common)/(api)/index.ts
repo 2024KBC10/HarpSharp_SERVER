@@ -18,7 +18,7 @@ export namespace APIManager {
         try {
             if(typeof BASE_URL === "undefined") throw new Error("<p>요청에 실패했습니다.<br/>브라우저를 종료하고 재 접속 후, 다시시도 해주세요.</p>")
             const signal = _onRequestTimeLimit()
-            const response = await fetch(`${BASE_URL}/api/v1${args.route}`, {
+            const response = await fetch(`${BASE_URL}${args.route}`, {
                 headers: {
                     ...BASE_HEADERS,
                     ...args.headers,
@@ -44,7 +44,7 @@ export namespace APIManager {
         try {
             if(typeof BASE_URL === "undefined") throw new Error("<p>요청에 실패했습니다.<br/>브라우저를 종료하고 재 접속 후, 다시시도 해주세요.</p>")
             const signal = _onRequestTimeLimit()
-            const response = await fetch(`${BASE_URL}/api/v1${args.route}`, {
+            const response = await fetch(`${BASE_URL}${args.route}`, {
                 body: args.body ? JSON.stringify(args.body) : undefined,
                 method: "POST",
                 headers: {
@@ -75,7 +75,7 @@ export namespace APIManager {
         try {
             if(typeof BASE_URL === "undefined") throw new Error("<p>요청에 실패했습니다.<br/>브라우저를 종료하고 재 접속 후, 다시시도 해주세요.</p>")
             const signal = _onRequestTimeLimit()
-            const response = await fetch(`${BASE_URL}/api/v1${args.route}`, {
+            const response = await fetch(`${BASE_URL}${args.route}`, {
                 body: args.body ? JSON.stringify(args.body) : undefined,
                 method: "PATCH",
                 headers: {
@@ -102,7 +102,7 @@ export namespace APIManager {
         try {
             if(typeof BASE_URL === "undefined") throw new Error("<p>요청에 실패했습니다.<br/>브라우저를 종료하고 재 접속 후, 다시시도 해주세요.</p>")
             const signal = _onRequestTimeLimit()
-            const response = await fetch(`${BASE_URL}/api/v1${args.route}`, {
+            const response = await fetch(`${BASE_URL}${args.route}`, {
                 body: args.body ? JSON.stringify(args.body) : undefined,
                 method: "DELETE",
                 headers: {
@@ -164,6 +164,7 @@ interface SuccessResponse<T> extends Response {
     readonly details: string // 결과 상태 상세 메시지
     readonly authorization?: string // JWT 토큰
     readonly data?: T
+    readonly type?: string
 }
 
 interface FailureReponse extends Response {
