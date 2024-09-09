@@ -14,8 +14,8 @@ JWT 인증/인가를 담당하는 **Auth** <br>
 일정 관리 및 진행 상태 CRUD 기능을 가진 **Todo** <br>
 ChatGPT API를 연결한 **생성형 AI 챗봇 서버**로 구성되어 있습니다. <br>
 <br> 
-현재 https://harpsharp.com 로 접근 가능하며 <br>
-AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
+현재 AWS EC2에서 개별 컨테이너로 배포 중이며,
+https://harpsharp.com 로 이용 가능합니다.
 <br>
 
 ### 🛠️ 기술 스택
@@ -102,8 +102,7 @@ AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
 1. 클라이언트가 로그인을 요청합니다.
 2. 스프링 시큐리티에서 회원 DB를 확인해 해당 클라이언트가 가입된 회원인지를 검증합니다.
 3. 회원의 식별자 + username + role을 조합해 Access Token과 Refresh Token을 발급합니다.
-4. Refresh Token은 차후 Access Token 검증 과정에 활용되며, Redis에 저장합니다.
-   (Key: Access Token, Value: RefreshEntity)
+4. Refresh Token은 차후 Access Token 검증 과정에 활용됩니다.
 6. HTTP 통신을 통해 Access Token은 헤더에 담고, Refresh Token은 쿠키에 담아 클라이언트에게 전달합니다.
 
 <br>
@@ -114,9 +113,11 @@ AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
 1. 클라이언트가 헤더에 Access Token을 담아 NGINX(프록시 서버)로 Request를 전달합니다.
 2. Request가 인가가 필요한 API인 경우, Auth 서버로 해당 Request를 전달합니다.
 3. Request에 담긴 Access Token을 꺼내 유효성을 검증합니다.
-4. Redis 내부에 Access Token을 키로 가진 Refresh Entity가 존재하는 지 확인합니다.
-5. Access Token과 Refresh Token의 유효성 여부를 NGINX로 전달합니다.
-6. 유효성이 검증된 경우, 기존 엔드포인트로 해당 요청을 전달합니다.
+4. Black List(Redis) 내부에 Access Token을 키로 가진 Refresh Entity가 존재하는 지 확인합니다.
+5. Black List에 존재하는 경우, 만료된 토큰으로 간주합니다.
+6. Access Token과 Refresh Token의 유효성 여부를 NGINX로 전달합니다.
+7. 유효성이 검증된 경우, 기존 엔드포인트로 해당 요청을 전달합니다.
+8. 로그아웃 혹은 회원탈퇴로 기존 토큰을 만료시킬 필요가 있는 경우 발급한 Refresh Token을 Black List(Redis)에 추가합니다.
    
 
 <br>
@@ -141,6 +142,7 @@ AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
 + [CORS 우회 + 프론트 서버 배포](https://www.notion.so/CORS-a30c1ff0fab74786a5d32a216bd9513e)
 + [CORS 적용 + 프론트 로컬 환경 정상화](https://www.notion.so/CORS-Cookie-5efe82a5e13445ef924ee7e72ebf12c9)
 + [S3 + CDN + Lambda@Edge를 활용한 이미지 서버를 구성하며 겪었던 시행 착오들](https://www.notion.so/CDN-lambda-edge-530b31415f404afdaa0fca55cf8b0ae2)
++ []
 
 <br>
 
@@ -153,7 +155,7 @@ AWS EC2에서 개별 컨테이너로 배포 및 개발 중입니다. <br>
 2024.08.09 ~ 2024.08.11
 ![스크린샷 2024-08-19 002057](https://github.com/user-attachments/assets/1dd4cdd7-9abe-4b4d-be90-a94b94d704d1)
 #### 프론트 서버 배포 및 API 서버와 연동 테스트
-2024.08.09 ~ <br>
+2024.08.09 ~ 2024.09.09 <br>
 ![2024-08-2000 32 13-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/8d7fd9ef-02cd-4042-b215-044e458b6194)
 
 <br>
