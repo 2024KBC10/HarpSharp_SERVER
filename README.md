@@ -139,7 +139,7 @@ https://harpsharp.com 로 이용 가능합니다.
 
 ### 시연 영상
 ![image](https://github.com/user-attachments/assets/c579ba62-e765-417c-9725-cde6cfb86ac8)
-🎥 ![유튜브](https://www.youtube.com/watch?v=asTGkZcJ5AM)
+🎥링크: https://www.youtube.com/watch?v=asTGkZcJ5AM
 
 
 ### 💣 트러블 슈팅
