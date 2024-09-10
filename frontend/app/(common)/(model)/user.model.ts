@@ -47,7 +47,10 @@ class UserModel {
             },
         });
         if("data" in response && response.data){
-            const token = response.authorization
+
+            const token = response.authorization;
+            console.log("Receive Token : ", token);
+            console.log("reponse : ",response);
             if(token) {
                 const key = Object.keys(response.data)[0]
                 this.userData = UserProvider.userinfoDto(key, response.data[key])
@@ -76,7 +79,6 @@ class UserModel {
                 position: args.position,
             }
         })
-        
         if("message" in response && response.code === 201) return true
         return false
     }

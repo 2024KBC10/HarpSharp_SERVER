@@ -5,7 +5,6 @@ import AIIcon from "../../../../public/image/AI_Icon_entered_phone.png"
 import UserIcon from "../../../../public/image/default_user_icon.png"
 import styles from "./ai_chat_bubble.module.css"
 import Spacer from "../(spacer)"
-import {userModel} from "@/app/(common)/(model)";
 
 export default function ChatBubble({
     content,
@@ -17,9 +16,6 @@ export default function ChatBubble({
 }
 
 function UserChatBubble(content: string, type: ChatBubbleType) {
-    const user = userModel.getUserData();
-    const username = (user == null) ? "게스트": user.username;
-    const position =  (user == null) ? "guest" : user.position;
     return (
         <li className={styles.user_chat_bubble_container}>
             <div 
@@ -29,7 +25,7 @@ function UserChatBubble(content: string, type: ChatBubbleType) {
                     alignSelf: "flex-end",
                     marginLeft: "0px",
                     marginRight: "10px", 
-                }}> {username} / {position} </span>
+                }}>kangmin.han(한강민) / 클라우드</span>
                 <Spacer spacing={5} direction="column"/>
                 <div 
                 className={styles.chat_bubble_wrapper}

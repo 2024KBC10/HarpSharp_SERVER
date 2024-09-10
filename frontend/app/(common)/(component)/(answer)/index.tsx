@@ -17,8 +17,6 @@ export default function AnswerDetail({
     comment,
 }: AnswerDetailProps) {
     const [subscribe, setSubscribe] = useState<boolean>(false)
-
-    
     const init = useCallback(() => {
         if(!userModel.getUserData()) return
         setSubscribe(userModel.isSubscribeComment(comment.id))
@@ -48,7 +46,6 @@ export default function AnswerDetail({
             alert("요청을 처리하는데 문제가 발생했습니다.")
             return
         }
-
     }
 
     return (

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import Image from "next/image";
 
 import Spacer from "@/app/(common)/(component)/(spacer)";
@@ -33,7 +34,6 @@ export default function RegistFocusTask({
         if(userModel.setFocusTask(selTask)) onSelectFocusTask(selTask)
         else alert("이미 진행중인 공략이 있습니다.")
     }
-
     useEffect(() => {
         const temp: TaskDto[] = []
         for(let i=0; i<tasks.length; ++i) {
@@ -41,7 +41,6 @@ export default function RegistFocusTask({
         }
         setValidTasks(temp)
     }, [tasks])
-
     return (
         <div className={styles.regist_background}>
             <div className={styles.regist_container}>

@@ -11,6 +11,7 @@ import {
     UserDto 
 } from "@/app/(common)/(interface)"
 
+// @ts-ignore
 import ViewInArIcon from "../../../../public/image/view_in_ar.png"
 import RegistFocusTask from "./regist_focus_task"
 import styles from "./focus_task.module.css"
@@ -95,7 +96,9 @@ export default function FocusTask() {
     )
 }
 
+// @ts-ignore
 import RunningIcon from "../../../../public/image/running.png"
+// @ts-ignore
 import DoneIcon from "../../../../public/image/done.png"
 
 function ProgressBar({ 

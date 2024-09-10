@@ -1,14 +1,7 @@
-import { IceBreakingDto, IceBreakingJson } from "./icebreaking.dto"
-import { TaskDto, TaskJson } from "./task.dto"
-
 export interface UserDto{
     readonly id: string
     readonly email: string
     readonly createdAt: Date
-    myTodos: TaskDto[]
-    myQuestions: IceBreakingDto[]
-    likeComments: number[]
-    position: string
     username: string
     updatedAt: Date
     socialType: string
@@ -19,13 +12,22 @@ export type UserJson = {
     [id: string]:{
         email: string
         createdAt: Date
-        myTodos: TaskJson[]
-        myQuestions: IceBreakingJson[]
-        likeComments: number[]
         username: string
-        position: string
         updatedAt: Date
         socialType: string
         role: string
     }
 }
+
+/*"2": {
+      "username": "admin",
+      "email": "admin@gmail.com",
+      "createdAt": "2024-08-12 02:38:18",
+      "updatedAt": "2024-08-12 02:38:18",
+      "socialType": "harp",
+      "role": "ROLE_USER",
+      "posts": {},
+      "comments": {},
+      "todoPosts": {},
+      "todoComments": {}
+    }*/

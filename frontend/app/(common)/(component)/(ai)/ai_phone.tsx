@@ -15,7 +15,6 @@ import Spacer from "../(spacer)"
 import AIIcon from "../../../../public/image/AI_Icon_entered_phone.png"
 import SendIcon from "../../../../public/image/send.png"
 import styles from "./ai_phone.module.css"
-import {userModel} from "@/app/(common)/(model)";
 
 export default function AIPhone({
     isOpen
@@ -44,18 +43,12 @@ export default function AIPhone({
             if(input.length > 0) {
                 const prompt = input
                 const question_bubble: IChatBubble = { message: prompt, role: "user", answer_type: "text" }
-                const user = userModel.getUserData();
-
                 setBubbles([...bubbles, question_bubble])
                 setInput("")
-                const username = (user == null) ? "guest" : user.username;
 
                 await APIManager.post({
                     route: "/gpt/chat",
-                    body: {
-                        username,
-                        prompt
-                    }
+                    body: { prompt }
                 })
                 .then(result => {
                     if("data" in result) {
@@ -72,7 +65,6 @@ export default function AIPhone({
         }
 
     }
-
     useEffect(() => { scrollToBottom() }, [scrollToBottom, bubbles])
 
     return (

@@ -1,5 +1,4 @@
 import Image from "next/image"
-
 import SignUpIcon from "../../../../public/image/sign_up.png"
 import SignOutIcon from "../../../../public/image/sign_out.png"
 import styles from "./bottom.module.css"
@@ -33,7 +32,7 @@ export default function MenuBottom({
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 interface MenuBottomProps {

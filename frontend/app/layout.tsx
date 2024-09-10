@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+// @ts-ignore
 import AppIcon from "../public/image/signature_icon.jpg"
 import "./globals.css";
 
