@@ -122,6 +122,26 @@ https://harpsharp.com 로 이용 가능합니다.
 
 <br>
 
+### Ice Breaking
+#### 좋아요 기능 (토글)
+![image](https://github.com/user-attachments/assets/b14e8138-4e1e-4e65-8268-9a8ffb086daa)
+
+<br>
+
+### 🎨 Album 서버
+#### 이미지 CRUD
+![image](https://github.com/user-attachments/assets/77b84d2b-6b9c-43f1-933d-69e67060a268)
+#### 이미지 리사이징 / 캐싱
+![image](https://github.com/user-attachments/assets/c3f9c2e8-a3d0-4545-89c7-114a9aa6faa1)
+
+<br>
+
+
+### 시연 영상
+![image](https://github.com/user-attachments/assets/c579ba62-e765-417c-9725-cde6cfb86ac8)
+🎥 ![유튜브](https://www.youtube.com/watch?v=asTGkZcJ5AM)
+
+
 ### 💣 트러블 슈팅
 
 + [CI/CD 구축](https://www.notion.so/CI-CD-Auth-affecce9d61240faa17cb4f0cf91ec1a)
@@ -142,7 +162,6 @@ https://harpsharp.com 로 이용 가능합니다.
 + [CORS 우회 + 프론트 서버 배포](https://www.notion.so/CORS-a30c1ff0fab74786a5d32a216bd9513e)
 + [CORS 적용 + 프론트 로컬 환경 정상화](https://www.notion.so/CORS-Cookie-5efe82a5e13445ef924ee7e72ebf12c9)
 + [S3 + CDN + Lambda@Edge를 활용한 이미지 서버를 구성하며 겪었던 시행 착오들](https://www.notion.so/CDN-lambda-edge-530b31415f404afdaa0fca55cf8b0ae2)
-+ []
 
 <br>
 
