@@ -7,6 +7,7 @@ from googletrans import Translator
 from fastapi import HTTPException
 from dotenv import load_dotenv
 from history_service import HistoryService
+import traceback
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -33,13 +34,14 @@ async def fetch_image(session, url):
 
 async def generate_image_from_text(username, kr_prompt):
     translated_prompt = await translate_text(kr_prompt)
-    
+
     try:
         response = await openai.Image.acreate(
             prompt=translated_prompt,
             n=1,
-            size='256x256',
-            model='dall-e-2'
+            size='1024x1024',
+            model='dall-e-3',
+            quality='hd'
         )
 
         image_url = response['data'][0]['url']
@@ -49,6 +51,7 @@ async def generate_image_from_text(username, kr_prompt):
         return image_url
     except Exception as e:
         print(f"An error occurred: {e}")
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail="Image generation failed")
 
 # 텍스트 생성 관련 함수
