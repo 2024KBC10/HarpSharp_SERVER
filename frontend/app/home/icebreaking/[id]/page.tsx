@@ -65,6 +65,7 @@ export default function IBKDetail({
             <IBKDetailTop
             content={data ? data.content : "...loading"}
             createdAt={data ? new Date(data.createdAt) : new Date()}
+            comments={comments}
             onShowModal={setShowRegistAnswerModal}/>
             <IBKDetailBottom replies={comments}/>
             {

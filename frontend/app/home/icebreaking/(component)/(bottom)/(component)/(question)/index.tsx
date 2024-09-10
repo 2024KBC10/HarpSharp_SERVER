@@ -23,7 +23,6 @@ export default function Question({
             <li className={styles.container}>
                 <p>{question.title}</p>
                 <div className={styles.action_container}>
-                    <p>{question.likes}개의 관심</p>
                     <Spacer spacing={10} direction="row"/>
                     <p>{question.replies.length}개의 답변</p>
                 </div>
