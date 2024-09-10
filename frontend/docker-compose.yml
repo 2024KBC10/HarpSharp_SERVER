@@ -9,8 +9,7 @@ services:
       - "3000"
     environment:
       - NEXT_PUBLIC_API_URL=https://harpsharp.com
-      - NEXT_PUBLIC_PROXY_URL=http://localhost:3000/api/v1
-      - NEXT_PUBLIC_SIGNAL_TTL=10000
+      - NEXT_PUBLIC_SIGNAL_TTL=30000
 networks:
   harpsharp:
     external: true
