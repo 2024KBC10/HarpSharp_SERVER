@@ -44,8 +44,9 @@ https://harpsharp.com 로 이용 가능합니다.
 <br></br>
 
 #### API 서버 구성도
-<img src = "https://github.com/user-attachments/assets/11003ee2-1868-4fbe-a3d1-f2afdeae2753" width = "80%" height = "80%"></img>
+<img src = "https://github.com/user-attachments/assets/5920d1e6-850a-4bf0-8a11-b410cb98e532" width = "80%" height = "80%"></img>
 <br></br>
+
 
 #### 🏭 배포 절차
 1. main or dev 브랜치로 push 혹은 PR이 발생하면 CI 스크립트에 따라 Actions에서 빌드 및 테스트가 진행됩니다. 
