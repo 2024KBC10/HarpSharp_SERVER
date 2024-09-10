@@ -119,21 +119,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: 배포 Dir 생성 (AI)
-        if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
-        working-directory: ./ai
-        run: |
-          mkdir -p deploy-ai
-          echo "${{ secrets.ENV_PY }}" | base64 --decode >> ./deploy-ai/env
-          ls deploy-ai -a
-          cp ./app.py ./deploy-ai
-          cp ./docker-compose.yml ./deploy-ai
-          cp ./Dockerfile ./deploy-ai
-          cp ./openai_api.py ./deploy-ai
-          cp ./requirements.txt ./deploy-ai
-          cd ../ && mkdir -p deploy/ai
-          mv ./ai/deploy-ai/* deploy/ai
-
       - name: 배포 Dir 생성 (Dall-e)
         if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' }}
         working-directory: ./dalle
